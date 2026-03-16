@@ -26,19 +26,19 @@ export function LookbookGallery({ collections }: LookbookGalleryProps) {
       return;
     }
 
+    const imageCount = activeGroup.images.length;
+
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setActiveGroup(null);
       }
       if (event.key === "ArrowRight") {
         setActiveIndex((current) =>
-          current === activeGroup.images.length - 1 ? 0 : current + 1,
+          current === imageCount - 1 ? 0 : current + 1,
         );
       }
       if (event.key === "ArrowLeft") {
-        setActiveIndex((current) =>
-          current === 0 ? activeGroup.images.length - 1 : current - 1,
-        );
+        setActiveIndex((current) => (current === 0 ? imageCount - 1 : current - 1));
       }
     }
 

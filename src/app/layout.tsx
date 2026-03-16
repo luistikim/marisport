@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://marisport.vercel.app",
+  ),
   title: {
     default: "Mari Sport | Moda Fitness e Looks Esportivos",
     template: "%s | Mari Sport",

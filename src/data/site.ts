@@ -3,6 +3,7 @@ export type CatalogProduct = {
   name: string;
   badge: string;
   description: string;
+  unitPrice: number | null;
 };
 
 const whatsappMessage =
@@ -12,6 +13,13 @@ export const whatsappPhone = "5562984592770";
 
 export function buildWhatsAppLink(message: string) {
   return `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(message)}`;
+}
+
+export function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(amount);
 }
 
 export const whatsappLink = buildWhatsAppLink(whatsappMessage);
@@ -60,38 +68,48 @@ export const productGrid: CatalogProduct[] = [
     name: "Legging Motion Fit",
     badge: "Mais vendida",
     description: "Modelagem firme, cintura alta e conforto para treino diario.",
+    unitPrice: null,
   },
   {
     id: "top-sprint-pulse",
     name: "Top Sprint Pulse",
     badge: "Novo",
     description: "Sustentacao e liberdade de movimento para academia e corrida.",
+    unitPrice: null,
   },
   {
     id: "short-energy-move",
     name: "Short Energy Move",
     badge: "Corrida",
     description: "Leve, fresco e com caimento pensado para mobilidade total.",
+    unitPrice: null,
   },
   {
     id: "camiseta-dry-active",
     name: "Camiseta Dry Active",
     badge: "Essencial",
     description: "Tecido tecnologico de secagem rapida para alto desempenho.",
+    unitPrice: null,
   },
   {
     id: "jaqueta-urban-run",
     name: "Jaqueta Urban Run",
     badge: "Premium",
     description: "Visual contemporaneo para compor treino, rua e viagem.",
+    unitPrice: null,
   },
   {
     id: "conjunto-power-set",
     name: "Conjunto Power Set",
     badge: "Academia",
     description: "Look coordenado para quem gosta de estilo forte no treino.",
+    unitPrice: null,
   },
 ];
+
+export const catalogById = Object.fromEntries(
+  productGrid.map((product) => [product.id, product]),
+) as Record<string, CatalogProduct>;
 
 export const brandPillars = [
   {

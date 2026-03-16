@@ -2,18 +2,35 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { buildWhatsAppLink, contactEmail } from "@/data/site";
+import { CheckoutProButton } from "@/components/checkout-pro-button";
 import { useCart } from "@/components/cart-provider";
+import { buildWhatsAppLink, contactEmail, formatCurrency } from "@/data/site";
 
 export function CartPageContent() {
   const { items, itemCount, clearCart, removeItem, updateQuantity } = useCart();
   const [notes, setNotes] = useState("");
 
+  const hasUnpricedItems = items.some((item) => item.unitPrice === null);
+  const subtotal = items.reduce((total, item) => {
+    if (item.unitPrice === null) {
+      return total;
+    }
+
+    return total + item.unitPrice * item.quantity;
+  }, 0);
+
   const whatsappHref = useMemo(() => {
     const lines = [
       "Ola! Vim pelo site da Mari Sport e quero fechar este pedido:",
       "",
-      ...items.map((item) => `- ${item.quantity}x ${item.name}`),
+      ...items.map((item) => {
+        const lineTotal =
+          item.unitPrice === null
+            ? "preco a configurar"
+            : formatCurrency(item.unitPrice * item.quantity);
+
+        return `- ${item.quantity}x ${item.name} (${lineTotal})`;
+      }),
     ];
 
     if (notes.trim()) {
@@ -22,8 +39,12 @@ export function CartPageContent() {
 
     lines.push("", `Total de itens: ${itemCount}`);
 
+    if (!hasUnpricedItems) {
+      lines.push(`Subtotal: ${formatCurrency(subtotal)}`);
+    }
+
     return buildWhatsAppLink(lines.join("\n"));
-  }, [itemCount, items, notes]);
+  }, [hasUnpricedItems, itemCount, items, notes, subtotal]);
 
   if (items.length === 0) {
     return (
@@ -83,6 +104,11 @@ export function CartPageContent() {
               </div>
 
               <div className="mt-5 flex flex-wrap items-center gap-3">
+                <span className="rounded-full bg-slate-100 px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-700">
+                  {item.unitPrice === null
+                    ? "Preco pendente"
+                    : formatCurrency(item.unitPrice)}
+                </span>
                 <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
                   Quantidade
                 </span>
@@ -125,6 +151,14 @@ export function CartPageContent() {
             </p>
             <p className="mt-2 text-4xl font-black">{itemCount}</p>
           </div>
+          <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-white/6 p-5">
+            <p className="text-sm uppercase tracking-[0.16em] text-slate-300">
+              Subtotal
+            </p>
+            <p className="mt-2 text-3xl font-black">
+              {hasUnpricedItems ? "A configurar" : formatCurrency(subtotal)}
+            </p>
+          </div>
 
           <label className="mt-6 block">
             <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-300">
@@ -140,6 +174,7 @@ export function CartPageContent() {
           </label>
 
           <div className="mt-6 flex flex-col gap-3">
+            <CheckoutProButton items={items} disabled={hasUnpricedItems} />
             <Link
               href={whatsappHref}
               target="_blank"
@@ -163,6 +198,13 @@ export function CartPageContent() {
             </button>
           </div>
 
+          {hasUnpricedItems ? (
+            <p className="mt-5 text-sm leading-7 text-[#ffd3c5]">
+              Para ativar o Checkout Pro, preencha os precos dos produtos em
+              `src/data/site.ts` e configure a credencial
+              `MERCADO_PAGO_ACCESS_TOKEN` na Vercel.
+            </p>
+          ) : null}
           <p className="mt-5 text-sm leading-7 text-slate-300">
             Sem cadastro por enquanto: o carrinho fica salvo neste navegador e o
             fechamento segue direto com a equipe da Mari Sport.

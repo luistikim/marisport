@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { SectionHero } from "@/components/section-hero";
-import { productGrid, whatsappLink } from "@/data/site";
+import { formatCurrency, productGrid, whatsappLink } from "@/data/site";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -71,6 +71,11 @@ export default function ProdutosPage() {
               <div className="p-6">
                 <p className="text-sm leading-7 text-slate-700">
                   {product.description}
+                </p>
+                <p className="mt-4 text-sm font-bold uppercase tracking-[0.16em] text-slate-500">
+                  {product.unitPrice === null
+                    ? "Preco em configuracao"
+                    : formatCurrency(product.unitPrice)}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
                   <AddToCartButton product={product} />

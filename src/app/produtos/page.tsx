@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { SectionHero } from "@/components/section-hero";
@@ -58,25 +59,74 @@ export default function ProdutosPage() {
               key={product.name}
               className="overflow-hidden rounded-[2rem] border border-line bg-surface shadow-[0_16px_40px_rgba(19,38,59,0.08)]"
             >
-              <div className="flex h-52 items-end bg-[linear-gradient(135deg,#13263b_0%,#244b67_45%,#ff5f2e_100%)] p-6 text-white">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-200">
-                    {product.badge}
-                  </p>
-                  <h2 className="mt-3 text-3xl font-black uppercase leading-tight">
-                    {index + 1}. {product.name}
-                  </h2>
+              {product.imageSrc ? (
+                <div className="relative aspect-[4/5] overflow-hidden bg-[#d8d6d1]">
+                  <Image
+                    src={product.imageSrc}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent p-6 text-white">
+                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-200">
+                      {product.badge}
+                    </p>
+                    <h2 className="mt-3 text-3xl font-black uppercase leading-tight">
+                      {index + 1}. {product.name}
+                    </h2>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="flex h-52 items-end bg-[linear-gradient(135deg,#13263b_0%,#244b67_45%,#ff5f2e_100%)] p-6 text-white">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-200">
+                      {product.badge}
+                    </p>
+                    <h2 className="mt-3 text-3xl font-black uppercase leading-tight">
+                      {index + 1}. {product.name}
+                    </h2>
+                  </div>
+                </div>
+              )}
               <div className="p-6">
+                {product.category ? (
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">
+                    {product.category}
+                  </p>
+                ) : null}
                 <p className="text-sm leading-7 text-slate-700">
                   {product.description}
                 </p>
-                <p className="mt-4 text-sm font-bold uppercase tracking-[0.16em] text-slate-500">
-                  {product.unitPrice === null
-                    ? "Preco em configuracao"
-                    : formatCurrency(product.unitPrice)}
-                </p>
+                <div className="mt-4 flex flex-wrap items-end gap-3">
+                  <p className="text-xl font-black uppercase text-surface-strong">
+                    {product.unitPrice === null
+                      ? "Preco em configuracao"
+                      : formatCurrency(product.unitPrice)}
+                  </p>
+                  {product.originalPrice ? (
+                    <p className="text-sm font-bold uppercase tracking-[0.12em] text-slate-400 line-through">
+                      {formatCurrency(product.originalPrice)}
+                    </p>
+                  ) : null}
+                </div>
+                {product.availability?.length ? (
+                  <div className="mt-4 rounded-[1.4rem] border border-slate-200 bg-slate-50 p-4">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+                      Tamanhos e cores
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {product.availability.map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
                 <div className="mt-5 flex flex-wrap gap-3">
                   <AddToCartButton product={product} />
                   <Link

@@ -4,6 +4,10 @@ export type CatalogProduct = {
   badge: string;
   description: string;
   unitPrice: number | null;
+  originalPrice?: number | null;
+  imageSrc?: string;
+  category?: string;
+  availability?: string[];
 };
 
 const whatsappMessage =
@@ -40,11 +44,11 @@ export const navLinks = [
 
 export const featuredProducts = [
   {
-    name: "Legging Motion Fit",
-    category: "Academia",
+    name: "Conjunto top cropped",
+    category: "Catalogo real",
     description:
-      "Compressao equilibrada, cintura alta e tecido respiravel para treinos intensos.",
-    palette: "from-[#1f3044] via-[#27476a] to-[#3f77a8]",
+      "Top cropped com legging de cintura alta em promocao e com grade de cores por tamanho.",
+    palette: "from-[#7d4c4a] via-[#b66f66] to-[#e3b19a]",
   },
   {
     name: "Top Sprint Pulse",
@@ -64,44 +68,53 @@ export const featuredProducts = [
 
 export const productGrid: CatalogProduct[] = [
   {
-    id: "legging-motion-fit",
-    name: "Legging Motion Fit",
-    badge: "Mais vendida",
-    description: "Modelagem firme, cintura alta e conforto para treino diario.",
-    unitPrice: null,
+    id: "conjunto-top-cropped",
+    name: "Conjunto top cropped",
+    badge: "Promocao",
+    description:
+      "Conjunto fitness com top cropped e legging de cintura alta, ideal para treino com visual elegante e acabamento premium.",
+    unitPrice: 169.9,
+    originalPrice: 189.9,
+    imageSrc: "/WhatsApp Image 2026-03-15 at 21.01.09.jpeg",
+    category: "Feminino",
+    availability: [
+      "P: azul marinho e terracota",
+      "M: rose gold e preto",
+      "G: preto",
+    ],
   },
   {
     id: "top-sprint-pulse",
     name: "Top Sprint Pulse",
-    badge: "Novo",
+    badge: "Em breve",
     description: "Sustentacao e liberdade de movimento para academia e corrida.",
     unitPrice: null,
   },
   {
     id: "short-energy-move",
     name: "Short Energy Move",
-    badge: "Corrida",
+    badge: "Em breve",
     description: "Leve, fresco e com caimento pensado para mobilidade total.",
     unitPrice: null,
   },
   {
     id: "camiseta-dry-active",
     name: "Camiseta Dry Active",
-    badge: "Essencial",
+    badge: "Em breve",
     description: "Tecido tecnologico de secagem rapida para alto desempenho.",
     unitPrice: null,
   },
   {
     id: "jaqueta-urban-run",
     name: "Jaqueta Urban Run",
-    badge: "Premium",
+    badge: "Em breve",
     description: "Visual contemporaneo para compor treino, rua e viagem.",
     unitPrice: null,
   },
   {
     id: "conjunto-power-set",
     name: "Conjunto Power Set",
-    badge: "Academia",
+    badge: "Em breve",
     description: "Look coordenado para quem gosta de estilo forte no treino.",
     unitPrice: null,
   },

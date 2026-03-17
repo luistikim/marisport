@@ -40,13 +40,13 @@ export default function Home() {
                 href="/produtos"
                 className="rounded-full bg-accent px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-surface-strong shadow-[0_18px_40px_rgba(135,255,0,0.3)] transition-transform hover:-translate-y-0.5"
               >
-                Ver produtos
+                Ver catalogo
               </Link>
               <Link
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-line bg-white px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-surface-strong transition-colors hover:bg-slate-50 sm:border-white/14 sm:bg-white/8 sm:text-white sm:hover:bg-white/14"
+                className="hidden rounded-full border border-line bg-white px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-surface-strong transition-colors hover:bg-slate-50 sm:inline-flex sm:border-white/14 sm:bg-white/8 sm:text-white sm:hover:bg-white/14"
               >
                 Comprar no WhatsApp
               </Link>
@@ -169,7 +169,52 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-10 sm:px-8 lg:px-12">
+      <section className="px-5 pb-10 sm:hidden">
+        <div className="mx-auto max-w-6xl">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">
+              Fotos das roupas
+            </p>
+            <h2 className="mt-2 text-2xl font-black uppercase leading-tight text-surface-strong">
+              Veja as pecas com mais destaque visual.
+            </h2>
+          </div>
+
+          <div className="mt-5 grid gap-4">
+            {productFlatlays.map((item) => (
+              <article
+                key={item.src}
+                className="overflow-hidden rounded-[1.8rem] border border-line bg-white shadow-[0_16px_36px_rgba(19,38,59,0.08)]"
+              >
+                <div className="relative aspect-[4/5] bg-[#f5f2ec]">
+                  <Image
+                    src={item.src}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                    sizes="100vw"
+                  />
+                </div>
+                <div className="p-5 text-surface-strong">
+                  <div className="flex flex-wrap gap-2">
+                    <span className="rounded-full bg-accent px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-surface-strong">
+                      {item.color}
+                    </span>
+                    <span className="rounded-full border border-slate-200 bg-[#f8fbfb] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-700">
+                      {item.type}
+                    </span>
+                  </div>
+                  <h3 className="mt-4 text-2xl font-black uppercase leading-tight">
+                    {item.title}
+                  </h3>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="hidden px-5 py-10 sm:px-8 lg:px-12 md:block">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -228,7 +273,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-10 sm:px-8 lg:px-12">
+      <section className="hidden px-5 py-10 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -323,7 +368,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-10 sm:px-8 lg:px-12">
+      <section className="hidden px-5 py-10 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -418,7 +463,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="masculino" className="px-5 py-10 sm:px-8 lg:px-12">
+      <section id="masculino" className="hidden px-5 py-10 sm:px-8 lg:px-12">
         <div className="mx-auto space-y-6 max-w-6xl">
           <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
             <div className="rounded-[2rem] bg-[#263537] p-8 text-white shadow-[0_18px_60px_rgba(19,38,59,0.22)]">
@@ -513,7 +558,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 pb-14 pt-6 sm:px-8 lg:px-12">
+      <section className="hidden px-5 pb-14 pt-6 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl rounded-[2rem] bg-[linear-gradient(135deg,#d8ff9e_0%,#87ff00_48%,#5fe000_100%)] p-8 text-surface-strong shadow-[0_20px_60px_rgba(135,255,0,0.24)]">
           <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div>

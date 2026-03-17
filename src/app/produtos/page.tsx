@@ -78,7 +78,7 @@ export default function ProdutosPage() {
           <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_8px_24px_rgba(38,53,55,0.04)]">
             Grade por produto
           </span>
-          <span className="rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_12px_26px_rgba(135,255,0,0.22)]">
+          <span className="rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-white shadow-[0_12px_26px_rgba(125,187,56,0.18)]">
             Compra por WhatsApp
           </span>
         </div>
@@ -112,7 +112,7 @@ export default function ProdutosPage() {
                   </div>
                 </div>
               ) : (
-                <div className="flex h-56 items-end bg-[linear-gradient(135deg,#f3f8f8_0%,#e4eeee_48%,#d8ff9e_100%)] p-6 text-surface-strong">
+                <div className="flex h-56 items-end bg-[linear-gradient(135deg,#f5f9f3_0%,#edf4ea_52%,#d6e8be_100%)] p-6 text-surface-strong">
                   <h2 className="text-3xl font-black uppercase leading-tight">
                     {product.name}
                   </h2>

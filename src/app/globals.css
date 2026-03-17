@@ -5,8 +5,8 @@
   --foreground: #eef5f6;
   --surface: #58727b;
   --surface-strong: #263537;
-  --accent: #87ff00;
-  --accent-soft: #d8ff9e;
+  --accent: #7dbb38;
+  --accent-soft: #d6e8be;
   --line: rgba(238, 245, 246, 0.14);
 }
 
@@ -42,7 +42,7 @@ main {
 }
 
 body::selection {
-  background: rgba(135, 255, 0, 0.35);
+  background: rgba(125, 187, 56, 0.28);
 }
 
 a {
@@ -59,7 +59,7 @@ a {
 
 .brand-wave {
   background:
-    radial-gradient(circle at top left, rgba(135, 255, 0, 0.18), transparent 28%),
+    radial-gradient(circle at top left, rgba(125, 187, 56, 0.14), transparent 28%),
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 30%),
     linear-gradient(180deg, rgba(79, 107, 116, 0.98), rgba(67, 91, 99, 0.98));
 }
@@ -89,13 +89,14 @@ a {
     --background: #edf4f4;
     --foreground: #263537;
     --surface: #ffffff;
-    --accent: #89fc00;
+    --accent: #7dbb38;
+    --accent-soft: #dbe9cb;
     --line: rgba(38, 53, 55, 0.08);
   }
 
   .brand-wave {
     background:
-      radial-gradient(circle at top left, rgba(135, 255, 0, 0.12), transparent 28%),
+      radial-gradient(circle at top left, rgba(125, 187, 56, 0.1), transparent 28%),
       radial-gradient(circle at top right, rgba(79, 107, 116, 0.12), transparent 30%),
       linear-gradient(180deg, #f5fbfb 0%, #edf4f4 62%, #e7f0f0 100%);
   }

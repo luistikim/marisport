@@ -1,31 +1,26 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { SectionHero } from "@/components/section-hero";
 import { formatCurrency, productGrid, whatsappLink } from "@/data/site";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Produtos",
   description:
-    "Conheca os produtos da Mari Sport para academia, corrida e rotina ativa, com conjuntos fitness, tops, leggings e looks esportivos.",
+    "Catalogo de produtos da Mari Sport com conjuntos fitness, tops, leggings e looks esportivos para academia e corrida.",
   keywords: [
-    "produtos Mari Sport",
+    "catalogo Mari Sport",
     "conjunto fitness",
     "legging feminina",
     "top esportivo",
     "roupa para academia",
     "roupa para corrida",
-    "short fitness feminino",
-    "bermuda masculina esportiva",
-    "roupa dry fit masculina",
-    "top fitness com sustentacao",
-    "legging para treino",
   ],
   openGraph: {
     title: "Produtos | Mari Sport",
     description:
-      "Explore a linha de roupas esportivas da Mari Sport para academia e corrida.",
+      "Veja o catalogo de roupas esportivas da Mari Sport para academia e corrida.",
     images: ["/logo-marisport.png"],
   },
 };
@@ -34,30 +29,31 @@ export default function ProdutosPage() {
   return (
     <main>
       <SectionHero
-        eyebrow="Produtos"
-        title="Coleções criadas para academia, corrida e rotina ativa."
-        description="A seleção da Mari Sport combina tecidos leves, caimento premium e visual marcante para acompanhar cada etapa do treino."
+        eyebrow="Catalogo"
+        title="Fotos reais, grade e compra rapida."
+        description="Veja os produtos da Mari Sport com foco em imagem, preco e disponibilidade."
       />
 
-      <section className="px-5 pb-8 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-white/10 bg-white/8 p-6 text-white shadow-[0_14px_40px_rgba(19,38,59,0.1)]">
-          <p className="text-base leading-8 text-slate-100">
-            A página de produtos da Mari Sport foi pensada para quem procura
-            roupa fitness feminina, roupa esportiva masculina, conjuntos para
-            academia, peças para corrida, legging fitness, top esportivo,
-            short fitness feminino, bermuda masculina e looks confortáveis para
-            a rotina ativa. Aqui você encontra uma visão geral das coleções com
-            foco em modelagem, estilo, funcionalidade e combinação de cores.
-          </p>
+      <section className="px-5 pb-6 sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-6xl flex-wrap gap-2">
+          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-white">
+            Feminino
+          </span>
+          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-white">
+            Catalogo real
+          </span>
+          <span className="rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong">
+            Compra por WhatsApp
+          </span>
         </div>
       </section>
 
       <section className="px-5 pb-14 sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {productGrid.map((product, index) => (
+        <div className="mx-auto grid max-w-6xl gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {productGrid.map((product) => (
             <article
-              key={product.name}
-              className="overflow-hidden rounded-[2rem] border border-line bg-surface shadow-[0_16px_40px_rgba(19,38,59,0.08)]"
+              key={product.id}
+              className="overflow-hidden rounded-[2rem] border border-line bg-[#eef3f3] shadow-[0_16px_40px_rgba(19,38,59,0.08)]"
             >
               {product.imageSrc ? (
                 <div className="relative aspect-[4/5] overflow-hidden bg-[#d8d6d1]">
@@ -73,74 +69,87 @@ export default function ProdutosPage() {
                     style={{
                       objectPosition: product.imagePosition ?? "center",
                     }}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                   />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent p-6 text-white">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-200">
+                  <div className="absolute left-4 top-4 rounded-full bg-[#263537]/80 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur">
                     {product.badge}
-                  </p>
-                  <h2 className="mt-3 text-3xl font-black uppercase leading-tight">
-                    {index + 1}. {product.name}
-                    </h2>
                   </div>
                 </div>
               ) : (
-                <div className="flex h-52 items-end bg-[linear-gradient(135deg,#13263b_0%,#244b67_45%,#ff5f2e_100%)] p-6 text-white">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-200">
-                      {product.badge}
-                    </p>
-                    <h2 className="mt-3 text-3xl font-black uppercase leading-tight">
-                      {index + 1}. {product.name}
-                    </h2>
-                  </div>
+                <div className="flex h-56 items-end bg-[linear-gradient(135deg,#13263b_0%,#244b67_45%,#ff5f2e_100%)] p-6 text-white">
+                  <h2 className="text-3xl font-black uppercase leading-tight">
+                    {product.name}
+                  </h2>
                 </div>
               )}
-              <div className="p-6">
-                {product.category ? (
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">
-                    {product.category}
-                  </p>
-                ) : null}
-                <p className="text-sm leading-7 text-slate-700">
-                  {product.description}
-                </p>
-                <div className="mt-4 flex flex-wrap items-end gap-3">
-                  <p className="text-xl font-black uppercase text-surface-strong">
-                    {product.unitPrice === null
-                      ? "Preço em configuração"
-                      : formatCurrency(product.unitPrice)}
-                  </p>
-                  {product.originalPrice ? (
-                    <p className="text-sm font-bold uppercase tracking-[0.12em] text-slate-400 line-through">
-                      {formatCurrency(product.originalPrice)}
+
+              <div className="space-y-4 p-5 sm:p-6">
+                <div className="space-y-2">
+                  {product.category ? (
+                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#4f6b74]">
+                      {product.category}
                     </p>
                   ) : null}
+                  <h2 className="text-2xl font-black uppercase leading-tight text-surface-strong">
+                    {product.name}
+                  </h2>
+                  <p className="hidden text-sm leading-7 text-slate-700 md:block">
+                    {product.description}
+                  </p>
                 </div>
+
+                <div className="rounded-[1.4rem] bg-white p-4 shadow-[0_10px_30px_rgba(19,38,59,0.06)]">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
+                    Valor
+                  </p>
+                  <div className="mt-2 flex flex-wrap items-end gap-3">
+                    <p className="text-2xl font-black uppercase text-surface-strong">
+                      {product.unitPrice === null
+                        ? "Preco em configuracao"
+                        : formatCurrency(product.unitPrice)}
+                    </p>
+                    {product.originalPrice ? (
+                      <p className="text-sm font-bold uppercase tracking-[0.12em] text-slate-400 line-through">
+                        {formatCurrency(product.originalPrice)}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+
                 {product.availability?.length ? (
-                  <div className="mt-4 rounded-[1.4rem] border border-slate-200 bg-slate-50 p-4">
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+                  <div className="rounded-[1.4rem] border border-slate-200 bg-white p-4">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
                       Tamanhos e cores
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {product.availability.map((item) => (
                         <span
                           key={item}
-                          className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700"
+                          className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700"
                         >
                           {item}
                         </span>
                       ))}
                     </div>
                   </div>
-                ) : null}
-                <div className="mt-5 flex flex-wrap gap-3">
+                ) : (
+                  <div className="rounded-[1.4rem] border border-dashed border-slate-300 bg-white p-4">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+                      Em atualizacao
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Mais detalhes, fotos e grade serao adicionados em breve.
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex flex-col gap-3">
                   <AddToCartButton product={product} />
                   <Link
                     href={whatsappLink}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex rounded-full bg-surface-strong px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white"
+                    className="inline-flex justify-center rounded-full bg-surface-strong px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white"
                   >
                     Solicitar no WhatsApp
                   </Link>
@@ -148,29 +157,6 @@ export default function ProdutosPage() {
               </div>
             </article>
           ))}
-        </div>
-      </section>
-
-      <section className="px-5 pb-14 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-white/10 bg-[#263537] p-8 text-white shadow-[0_18px_50px_rgba(19,38,59,0.14)]">
-          <h2 className="text-2xl font-black uppercase">
-            O que você encontra nas coleções da Mari Sport
-          </h2>
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            <p className="text-sm leading-7 text-slate-200">
-              Conjuntos fitness com tops, leggings, shorts e peças para treino
-              que valorizam o corpo e acompanham a rotina de academia e
-              funcional.
-            </p>
-            <p className="text-sm leading-7 text-slate-200">
-              Looks esportivos para corrida com tecidos leves, tops de alta
-              sustentação, shorts confortáveis e liberdade total de movimento.
-            </p>
-            <p className="text-sm leading-7 text-slate-200">
-              Linha masculina com shorts, camisetas dry fit e bermudas
-              performance para quem busca roupa esportiva funcional e moderna.
-            </p>
-          </div>
         </div>
       </section>
     </main>

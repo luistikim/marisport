@@ -6,12 +6,14 @@ export type CatalogProduct = {
   unitPrice: number | null;
   originalPrice?: number | null;
   imageSrc?: string;
+  imageFit?: "cover" | "contain";
+  imagePosition?: string;
   category?: string;
   availability?: string[];
 };
 
 const whatsappMessage =
-  "Ola! Vim pelo site e quero conhecer os produtos da Mari Sport.";
+  "Olá! Vim pelo site e quero conhecer os produtos da Mari Sport.";
 
 export const whatsappPhone = "5562984592770";
 
@@ -45,9 +47,9 @@ export const navLinks = [
 export const featuredProducts = [
   {
     name: "Conjunto top cropped",
-    category: "Catalogo real",
+    category: "Catálogo real",
     description:
-      "Top cropped com legging de cintura alta em promocao e com grade de cores por tamanho.",
+      "Top cropped com legging de cintura alta em promoção e com grade de cores por tamanho.",
     palette: "from-[#7d4c4a] via-[#b66f66] to-[#e3b19a]",
   },
   {
@@ -70,16 +72,18 @@ export const productGrid: CatalogProduct[] = [
   {
     id: "conjunto-top-cropped",
     name: "Conjunto top cropped",
-    badge: "Promocao",
+    badge: "Promoção",
     description:
       "Conjunto fitness com top cropped e legging de cintura alta, ideal para treino com visual elegante e acabamento premium.",
     unitPrice: 169.9,
     originalPrice: 189.9,
     imageSrc: "/WhatsApp Image 2026-03-15 at 21.01.09.jpeg",
+    imageFit: "contain",
+    imagePosition: "center",
     category: "Feminino",
     availability: [
       "P: azul marinho e terracota",
-      "M: rose gold e preto",
+      "M: rosé gold e preto",
       "G: preto",
     ],
   },

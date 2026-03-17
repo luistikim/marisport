@@ -35,19 +35,19 @@ export default function ProdutosPage() {
     <main>
       <SectionHero
         eyebrow="Produtos"
-        title="Colecoes criadas para academia, corrida e rotina ativa."
-        description="A selecao da Mari Sport combina tecidos leves, caimento premium e visual marcante para acompanhar cada etapa do treino."
+        title="Coleções criadas para academia, corrida e rotina ativa."
+        description="A seleção da Mari Sport combina tecidos leves, caimento premium e visual marcante para acompanhar cada etapa do treino."
       />
 
       <section className="px-5 pb-8 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-white/10 bg-white/8 p-6 text-white shadow-[0_14px_40px_rgba(19,38,59,0.1)]">
           <p className="text-base leading-8 text-slate-100">
-            A pagina de produtos da Mari Sport foi pensada para quem procura
+            A página de produtos da Mari Sport foi pensada para quem procura
             roupa fitness feminina, roupa esportiva masculina, conjuntos para
-            academia, pecas para corrida, legging fitness, top esportivo,
-            short fitness feminino, bermuda masculina e looks confortaveis para
-            a rotina ativa. Aqui voce encontra uma visao geral das colecoes com
-            foco em modelagem, estilo, funcionalidade e combinacao de cores.
+            academia, peças para corrida, legging fitness, top esportivo,
+            short fitness feminino, bermuda masculina e looks confortáveis para
+            a rotina ativa. Aqui você encontra uma visão geral das coleções com
+            foco em modelagem, estilo, funcionalidade e combinação de cores.
           </p>
         </div>
       </section>
@@ -65,15 +65,22 @@ export default function ProdutosPage() {
                     src={product.imageSrc}
                     alt={product.name}
                     fill
-                    className="object-cover"
+                    className={
+                      product.imageFit === "contain"
+                        ? "object-contain p-2"
+                        : "object-cover"
+                    }
+                    style={{
+                      objectPosition: product.imagePosition ?? "center",
+                    }}
                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                   />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent p-6 text-white">
-                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-200">
-                      {product.badge}
-                    </p>
-                    <h2 className="mt-3 text-3xl font-black uppercase leading-tight">
-                      {index + 1}. {product.name}
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-200">
+                    {product.badge}
+                  </p>
+                  <h2 className="mt-3 text-3xl font-black uppercase leading-tight">
+                    {index + 1}. {product.name}
                     </h2>
                   </div>
                 </div>
@@ -101,7 +108,7 @@ export default function ProdutosPage() {
                 <div className="mt-4 flex flex-wrap items-end gap-3">
                   <p className="text-xl font-black uppercase text-surface-strong">
                     {product.unitPrice === null
-                      ? "Preco em configuracao"
+                      ? "Preço em configuração"
                       : formatCurrency(product.unitPrice)}
                   </p>
                   {product.originalPrice ? (
@@ -147,17 +154,17 @@ export default function ProdutosPage() {
       <section className="px-5 pb-14 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-white/10 bg-[#263537] p-8 text-white shadow-[0_18px_50px_rgba(19,38,59,0.14)]">
           <h2 className="text-2xl font-black uppercase">
-            O que voce encontra nas colecoes da Mari Sport
+            O que você encontra nas coleções da Mari Sport
           </h2>
           <div className="mt-4 grid gap-4 lg:grid-cols-3">
             <p className="text-sm leading-7 text-slate-200">
-              Conjuntos fitness com tops, leggings, shorts e pecas para treino
+              Conjuntos fitness com tops, leggings, shorts e peças para treino
               que valorizam o corpo e acompanham a rotina de academia e
               funcional.
             </p>
             <p className="text-sm leading-7 text-slate-200">
               Looks esportivos para corrida com tecidos leves, tops de alta
-              sustentacao, shorts confortaveis e liberdade total de movimento.
+              sustentação, shorts confortáveis e liberdade total de movimento.
             </p>
             <p className="text-sm leading-7 text-slate-200">
               Linha masculina com shorts, camisetas dry fit e bermudas

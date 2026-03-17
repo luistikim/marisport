@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CartLink } from "@/components/cart-link";
+import { PromoPopup } from "@/components/promo-popup";
 import {
   contactEmail,
   contactPhone,
@@ -17,6 +18,8 @@ type SiteShellProps = {
 export function SiteShell({ children }: SiteShellProps) {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <PromoPopup />
+
       <header className="sticky top-0 z-40 border-b border-line bg-white/88 backdrop-blur-xl md:border-white/10 md:bg-[#2d3f43]/82">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
           <Link href="/" className="flex items-center gap-3">

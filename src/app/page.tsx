@@ -17,10 +17,10 @@ export default function Home() {
                 Catalogo Mari Sport
               </span>
               <h1 className="text-balance max-w-3xl text-4xl font-black uppercase leading-none text-surface-strong sm:text-6xl sm:text-white lg:text-7xl">
-                Veja as roupas, escolha a peca e compre rapido.
+                Compre pelo catalogo da Mari Sport.
               </h1>
-              <p className="max-w-xl text-sm font-semibold uppercase tracking-[0.14em] text-slate-600 sm:text-base sm:font-medium sm:uppercase sm:tracking-[0.12em] sm:text-slate-100">
-                Fotos reais, catalogo simples e atendimento direto no WhatsApp.
+              <p className="max-w-xl text-sm font-semibold uppercase tracking-[0.14em] text-slate-600 sm:text-base sm:font-medium sm:tracking-[0.12em] sm:text-slate-100">
+                Veja as pecas, abra o WhatsApp e feche seu pedido.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
@@ -41,7 +41,7 @@ export default function Home() {
             </div>
 
             <div className="overflow-hidden rounded-[2rem] border border-line bg-white p-4 shadow-[0_20px_50px_rgba(19,38,59,0.08)] sm:border-white/10 sm:bg-white/8 sm:p-5 sm:shadow-[0_18px_50px_rgba(19,38,59,0.12)]">
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 grid-cols-2">
                 {productGrid.slice(0, 4).map((item) => (
                   <div
                     key={item.id}
@@ -95,7 +95,7 @@ export default function Home() {
                 Catalogo
               </p>
               <h2 className="mt-2 text-2xl font-black uppercase leading-tight text-surface-strong sm:mt-3 sm:text-4xl sm:text-white">
-                Escolha uma peca e siga para compra.
+                Escolha uma peca e compre.
               </h2>
             </div>
             <Link
@@ -106,14 +106,14 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {productGrid.map((product) => (
+          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+            {productGrid.slice(0, 4).map((product) => (
               <article
                 key={product.id}
-                className="overflow-hidden rounded-[1.8rem] border border-slate-200 bg-white shadow-[0_16px_36px_rgba(19,38,59,0.08)]"
+                className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_18px_42px_rgba(19,38,59,0.08)]"
               >
                 {product.imageSrc ? (
-                  <div className="relative aspect-[4/5] bg-[#f5f2ec]">
+                  <div className="relative aspect-[4/5] bg-[#f5f2ec] lg:aspect-[5/6]">
                     <Image
                       src={product.imageSrc}
                       alt={product.name}
@@ -155,7 +155,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
                     <Link
                       href="/produtos"
                       className="text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
@@ -185,12 +185,12 @@ export default function Home() {
               Fotos das roupas
             </p>
             <h2 className="mt-2 text-2xl font-black uppercase leading-tight text-surface-strong sm:mt-3 sm:text-4xl sm:text-white">
-              Veja as pecas com mais destaque visual.
+              Mais fotos para facilitar a escolha.
             </h2>
           </div>
 
-          <div className="mt-5 grid gap-4 md:grid-cols-3">
-            {productFlatlays.map((item) => (
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
+            {productFlatlays.slice(0, 2).map((item) => (
               <article
                 key={item.src}
                 className="overflow-hidden rounded-[1.8rem] border border-line bg-white shadow-[0_16px_36px_rgba(19,38,59,0.08)] sm:rounded-[2rem] sm:border-white/10 sm:bg-[#edf3f4] sm:shadow-[0_18px_50px_rgba(19,38,59,0.12)]"

@@ -10,7 +10,7 @@ export function CartLink() {
     <Link
       href="/carrinho"
       aria-label={`Abrir carrinho com ${itemCount} itens`}
-      className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/8 text-white transition-transform hover:-translate-y-0.5 hover:text-accent"
+      className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-transform hover:-translate-y-0.5 hover:text-accent md:border-white/10 md:bg-white/8 md:text-white"
     >
       <svg
         aria-hidden="true"

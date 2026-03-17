@@ -264,7 +264,7 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-[0.24em] text-accent">
                 Looks em movimento
               </p>
-              <h2 className="mt-3 text-3xl font-black uppercase text-white sm:text-4xl">
+              <h2 className="mt-3 text-3xl font-black uppercase text-surface-strong sm:text-4xl sm:text-white">
                 A marca funciona melhor quando aparece em uso real.
               </h2>
             </div>
@@ -278,7 +278,7 @@ export default function Home() {
             {editorialHighlights.map((item) => (
               <article
                 key={item.title}
-                className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 shadow-[0_18px_50px_rgba(19,38,59,0.14)]"
+                className="overflow-hidden rounded-[2rem] border border-line bg-white shadow-[0_18px_50px_rgba(19,38,59,0.08)] sm:border-white/10 sm:bg-white/8 sm:shadow-[0_18px_50px_rgba(19,38,59,0.14)]"
               >
                 <div className="relative aspect-[4/5]">
                   <Image
@@ -289,9 +289,9 @@ export default function Home() {
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </div>
-                <div className="p-6 text-white">
+                <div className="p-6 text-surface-strong sm:text-white">
                   <h3 className="text-2xl font-black uppercase">{item.title}</h3>
-                  <p className="mt-3 hidden text-sm leading-7 text-slate-200 md:block">
+                  <p className="mt-3 hidden text-sm leading-7 text-slate-600 md:block sm:text-slate-200">
                     {item.description}
                   </p>
                 </div>
@@ -359,7 +359,7 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-[0.24em] text-accent">
                 Clientes e looks reais
               </p>
-              <h2 className="mt-3 text-3xl font-black uppercase text-white sm:text-4xl">
+              <h2 className="mt-3 text-3xl font-black uppercase text-surface-strong sm:text-4xl sm:text-white">
                 Carrossel com pecas separadas por cor e tipo.
               </h2>
             </div>
@@ -486,7 +486,7 @@ export default function Home() {
             {mensLooks.map((look) => (
               <article
                 key={look.src}
-                className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 shadow-[0_18px_50px_rgba(19,38,59,0.12)]"
+                className="overflow-hidden rounded-[2rem] border border-line bg-white shadow-[0_18px_50px_rgba(19,38,59,0.08)] sm:border-white/10 sm:bg-white/8 sm:shadow-[0_18px_50px_rgba(19,38,59,0.12)]"
               >
                 <div className="relative aspect-[4/5]">
                   <Image
@@ -497,11 +497,11 @@ export default function Home() {
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </div>
-                <div className="p-5 text-white">
+                <div className="p-5 text-surface-strong sm:text-white">
                   <h3 className="text-xl font-black uppercase leading-tight">
                     {look.title}
                   </h3>
-                  <p className="mt-3 hidden text-sm leading-7 text-slate-200 md:block">
+                  <p className="mt-3 hidden text-sm leading-7 text-slate-600 md:block sm:text-slate-200">
                     {look.description}
                   </p>
                 </div>

@@ -23,13 +23,13 @@ export default function Home() {
       <section className="brand-wave px-5 pb-12 pt-10 sm:px-8 lg:px-12 lg:pb-16">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="space-y-5 sm:space-y-6">
-            <span className="inline-flex rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-accent">
+            <span className="inline-flex rounded-full border border-line bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-accent sm:border-white/12 sm:bg-white/8">
               Performance wear
             </span>
-            <h1 className="text-balance max-w-3xl text-4xl font-black uppercase leading-none text-white sm:text-6xl lg:text-7xl">
+            <h1 className="text-balance max-w-3xl text-4xl font-black uppercase leading-none text-surface-strong sm:text-6xl sm:text-white lg:text-7xl">
               Roupa esportiva com energia para academia e corrida.
             </h1>
-            <p className="max-w-xl text-sm font-semibold uppercase tracking-[0.14em] text-slate-100 sm:hidden">
+            <p className="max-w-xl text-sm font-semibold uppercase tracking-[0.14em] text-slate-600 sm:hidden">
               Catálogo, fotos reais e compra rápida no WhatsApp.
             </p>
             <p className="hidden max-w-xl text-base leading-8 text-slate-100 sm:text-lg lg:block">
@@ -51,7 +51,7 @@ export default function Home() {
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-white/14 bg-white/8 px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-white/14"
+                className="rounded-full border border-line bg-white px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-surface-strong transition-colors hover:bg-slate-50 sm:border-white/14 sm:bg-white/8 sm:text-white sm:hover:bg-white/14"
               >
                 Comprar no WhatsApp
               </Link>
@@ -108,6 +108,68 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 pb-8 sm:hidden">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex items-end justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">
+                Catalogo em foco
+              </p>
+              <h2 className="mt-2 text-2xl font-black uppercase leading-tight text-surface-strong">
+                Produtos destacados logo na primeira dobra.
+              </h2>
+            </div>
+            <Link
+              href="/produtos"
+              className="text-xs font-bold uppercase tracking-[0.18em] text-surface-strong"
+            >
+              Ver tudo
+            </Link>
+          </div>
+
+          <div className="mt-5 grid gap-4">
+            {featuredProducts.map((product) => (
+              <article
+                key={product.name}
+                className="overflow-hidden rounded-[1.8rem] border border-line bg-white shadow-[0_14px_32px_rgba(38,53,55,0.08)]"
+              >
+                <div className="relative overflow-hidden p-5 text-surface-strong">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${product.palette} opacity-15`} />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(135,255,0,0.14),transparent_32%)]" />
+                  <div className="relative">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#4f6b74]">
+                      {product.category}
+                    </p>
+                    <h3 className="mt-3 text-2xl font-black uppercase leading-tight">
+                      {product.name}
+                    </h3>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">
+                      {product.description}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4">
+                  <Link
+                    href="/produtos"
+                    className="text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                  >
+                    Ver catalogo
+                  </Link>
+                  <Link
+                    href={whatsappLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                  >
+                    Pedir
+                  </Link>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>

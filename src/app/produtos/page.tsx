@@ -36,11 +36,11 @@ export default function ProdutosPage() {
 
       <section className="px-5 pb-6 sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-6xl flex-wrap gap-2">
-          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-white">
+          <span className="rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_8px_24px_rgba(38,53,55,0.06)] sm:bg-white/10 sm:text-white sm:shadow-none">
             Feminino
           </span>
-          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-white">
-            Catalogo real
+          <span className="rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_8px_24px_rgba(38,53,55,0.06)] sm:bg-white/10 sm:text-white sm:shadow-none">
+            Fotos reais
           </span>
           <span className="rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong">
             Compra por WhatsApp
@@ -53,10 +53,10 @@ export default function ProdutosPage() {
           {productGrid.map((product) => (
             <article
               key={product.id}
-              className="overflow-hidden rounded-[2rem] border border-line bg-[#eef3f3] shadow-[0_16px_40px_rgba(19,38,59,0.08)]"
+              className="overflow-hidden rounded-[2rem] border border-line bg-white shadow-[0_16px_40px_rgba(19,38,59,0.08)] sm:bg-[#eef3f3]"
             >
               {product.imageSrc ? (
-                <div className="relative aspect-[4/5] overflow-hidden bg-[#d8d6d1]">
+                <div className="relative aspect-[4/5] overflow-hidden bg-[#f5f2ec] sm:bg-[#d8d6d1]">
                   <Image
                     src={product.imageSrc}
                     alt={product.name}
@@ -71,12 +71,12 @@ export default function ProdutosPage() {
                     }}
                     sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                   />
-                  <div className="absolute left-4 top-4 rounded-full bg-[#263537]/80 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur">
+                  <div className="absolute left-4 top-4 rounded-full bg-white/88 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-surface-strong backdrop-blur sm:bg-[#263537]/80 sm:text-white">
                     {product.badge}
                   </div>
                 </div>
               ) : (
-                <div className="flex h-56 items-end bg-[linear-gradient(135deg,#13263b_0%,#244b67_45%,#ff5f2e_100%)] p-6 text-white">
+                <div className="flex h-56 items-end bg-[linear-gradient(135deg,#f3f8f8_0%,#e4eeee_48%,#d8ff9e_100%)] p-6 text-surface-strong sm:bg-[linear-gradient(135deg,#13263b_0%,#244b67_45%,#ff5f2e_100%)] sm:text-white">
                   <h2 className="text-3xl font-black uppercase leading-tight">
                     {product.name}
                   </h2>
@@ -98,7 +98,7 @@ export default function ProdutosPage() {
                   </p>
                 </div>
 
-                <div className="rounded-[1.4rem] bg-white p-4 shadow-[0_10px_30px_rgba(19,38,59,0.06)]">
+                <div className="rounded-[1.4rem] bg-[#f8fbfb] p-4 shadow-[0_10px_30px_rgba(19,38,59,0.04)] sm:bg-white sm:shadow-[0_10px_30px_rgba(19,38,59,0.06)]">
                   <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
                     Valor
                   </p>
@@ -117,7 +117,7 @@ export default function ProdutosPage() {
                 </div>
 
                 {product.availability?.length ? (
-                  <div className="rounded-[1.4rem] border border-slate-200 bg-white p-4">
+                  <div className="rounded-[1.4rem] border border-slate-200 bg-[#f8fbfb] p-4 sm:bg-white">
                     <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
                       Tamanhos e cores
                     </p>
@@ -133,7 +133,7 @@ export default function ProdutosPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="rounded-[1.4rem] border border-dashed border-slate-300 bg-white p-4">
+                  <div className="rounded-[1.4rem] border border-dashed border-slate-300 bg-[#f8fbfb] p-4 sm:bg-white">
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
                       Em atualizacao
                     </p>

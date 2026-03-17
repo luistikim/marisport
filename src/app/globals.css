@@ -83,3 +83,35 @@ a {
 .text-balance {
   text-wrap: balance;
 }
+
+@media (max-width: 767px) {
+  :root {
+    --background: #edf4f4;
+    --foreground: #263537;
+    --surface: #ffffff;
+    --line: rgba(38, 53, 55, 0.08);
+  }
+
+  .brand-wave {
+    background:
+      radial-gradient(circle at top left, rgba(135, 255, 0, 0.12), transparent 28%),
+      radial-gradient(circle at top right, rgba(79, 107, 116, 0.12), transparent 30%),
+      linear-gradient(180deg, #f5fbfb 0%, #edf4f4 62%, #e7f0f0 100%);
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(rgba(38, 53, 55, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(38, 53, 55, 0.05) 1px, transparent 1px);
+  }
+
+  .glass-surface {
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  .brand-outline {
+    box-shadow:
+      0 0 0 1px rgba(38, 53, 55, 0.08),
+      0 18px 40px rgba(38, 53, 55, 0.08);
+  }
+}

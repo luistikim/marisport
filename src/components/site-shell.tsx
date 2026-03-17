@@ -17,10 +17,10 @@ type SiteShellProps = {
 export function SiteShell({ children }: SiteShellProps) {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#2d3f43]/82 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-line bg-white/88 backdrop-blur-xl md:border-white/10 md:bg-[#2d3f43]/82">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
           <Link href="/" className="flex items-center gap-3">
-            <div className="brand-outline rounded-[1.35rem] bg-white/6 px-3 py-2">
+            <div className="brand-outline rounded-[1.35rem] bg-white px-3 py-2 md:bg-white/6">
               <Image
                 src="/logo-marisport.png"
                 alt="Logo Mari Sport"
@@ -51,7 +51,7 @@ export function SiteShell({ children }: SiteShellProps) {
               target="_blank"
               rel="noreferrer"
               aria-label="Abrir Instagram da Mari Sport"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/8 text-white transition-transform hover:-translate-y-0.5 hover:text-accent"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-transform hover:-translate-y-0.5 hover:text-accent md:border-white/10 md:bg-white/8 md:text-white"
             >
               <InstagramIcon />
             </Link>
@@ -60,7 +60,7 @@ export function SiteShell({ children }: SiteShellProps) {
               target="_blank"
               rel="noreferrer"
               aria-label="Abrir WhatsApp da Mari Sport"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/8 text-white transition-transform hover:-translate-y-0.5 hover:text-accent"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-transform hover:-translate-y-0.5 hover:text-accent md:border-white/10 md:bg-white/8 md:text-white"
             >
               <WhatsAppIcon />
             </Link>
@@ -70,10 +70,10 @@ export function SiteShell({ children }: SiteShellProps) {
 
       {children}
 
-      <footer className="border-t border-white/10 bg-[#263537] px-5 py-10 text-white sm:px-8 lg:px-12">
+      <footer className="border-t border-line bg-[#f3f8f8] px-5 py-10 text-surface-strong sm:px-8 lg:bg-[#263537] lg:text-white lg:px-12">
         <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-[1.4fr_0.8fr_1fr]">
           <div>
-            <div className="brand-outline inline-flex rounded-[1.35rem] bg-white/6 px-3 py-2">
+            <div className="brand-outline inline-flex rounded-[1.35rem] bg-white px-3 py-2 lg:bg-white/6">
               <Image
                 src="/logo-marisport.png"
                 alt="Logo Mari Sport"
@@ -82,16 +82,16 @@ export function SiteShell({ children }: SiteShellProps) {
                 className="h-auto w-[132px] object-contain"
               />
             </div>
-            <p className="mt-3 max-w-md text-sm leading-7 text-slate-300">
+            <p className="mt-3 max-w-md text-sm leading-7 text-slate-600 lg:text-slate-300">
               Roupas esportivas para academia e corrida com visual marcante,
               conforto e energia para a rotina de quem vive em movimento.
             </p>
           </div>
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-white">
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-surface-strong lg:text-white">
               Navegacao
             </p>
-            <div className="mt-4 flex flex-col gap-3 text-sm text-slate-300">
+            <div className="mt-4 flex flex-col gap-3 text-sm text-slate-600 lg:text-slate-300">
               {navLinks.map((item) => (
                 <Link key={item.href} href={item.href} className="hover:text-accent">
                   {item.label}
@@ -100,10 +100,10 @@ export function SiteShell({ children }: SiteShellProps) {
             </div>
           </div>
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-white">
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-surface-strong lg:text-white">
               Contato
             </p>
-            <div className="mt-4 space-y-3 text-sm text-slate-300">
+            <div className="mt-4 space-y-3 text-sm text-slate-600 lg:text-slate-300">
               <p>{contactEmail}</p>
               <p>{contactPhone}</p>
               <p>Atendimento online para todo o Brasil</p>
@@ -113,7 +113,7 @@ export function SiteShell({ children }: SiteShellProps) {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Abrir Instagram da Mari Sport"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/8 text-white transition-colors hover:text-accent"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-colors hover:text-accent lg:border-white/10 lg:bg-white/8 lg:text-white"
                 >
                   <InstagramIcon />
                 </Link>
@@ -122,7 +122,7 @@ export function SiteShell({ children }: SiteShellProps) {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Abrir WhatsApp da Mari Sport"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/8 text-white transition-colors hover:text-accent"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-colors hover:text-accent lg:border-white/10 lg:bg-white/8 lg:text-white"
                 >
                   <WhatsAppIcon />
                 </Link>
@@ -131,7 +131,7 @@ export function SiteShell({ children }: SiteShellProps) {
           </div>
         </div>
         <div className="mx-auto mt-10 max-w-6xl">
-          <p className="text-right text-[10px] uppercase tracking-[0.18em] text-white/20">
+          <p className="text-right text-[10px] uppercase tracking-[0.18em] text-slate-400 lg:text-white/20">
             Feito por Luis Paulo Silva
           </p>
         </div>

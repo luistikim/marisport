@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import type { CartItem } from "@/components/cart-provider";
 import { catalogById } from "@/data/site";
+import { calculateSubtotal, saveOrder, type OrderRecord } from "@/lib/orders";
 
 type CheckoutRequestItem = {
   id: string;
@@ -58,17 +60,23 @@ export async function POST(request: Request) {
         );
       }
 
-      return {
-        id: product.id,
-        title: product.name,
-        quantity: entry.quantity,
-        currency_id: "BRL",
-        unit_price: product.unitPrice,
-        description: product.description,
-      };
+      return { ...product, quantity: entry.quantity } as CartItem;
     });
 
     const baseUrl = getBaseUrl(request);
+    const orderId = crypto.randomUUID();
+    const externalReference = `marisport-order-${orderId}`;
+    const order: OrderRecord = {
+      id: orderId,
+      externalReference,
+      status: "created",
+      items,
+      subtotal: calculateSubtotal(items),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    await saveOrder(order);
 
     const mercadoPagoResponse = await fetch(
       "https://api.mercadopago.com/checkout/preferences",
@@ -79,14 +87,22 @@ export async function POST(request: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          items,
+          items: items.map((item) => ({
+            id: item.id,
+            title: item.name,
+            quantity: item.quantity,
+            currency_id: "BRL",
+            unit_price: item.unitPrice,
+            description: item.description,
+          })),
           back_urls: {
-            success: `${baseUrl}/checkout/sucesso`,
-            pending: `${baseUrl}/checkout/pendente`,
-            failure: `${baseUrl}/checkout/falha`,
+            success: `${baseUrl}/checkout/sucesso?order_id=${orderId}`,
+            pending: `${baseUrl}/checkout/pendente?order_id=${orderId}`,
+            failure: `${baseUrl}/checkout/falha?order_id=${orderId}`,
           },
           auto_return: "approved",
-          external_reference: `marisport-${Date.now()}`,
+          external_reference: externalReference,
+          notification_url: `${baseUrl}/api/mercado-pago/webhook`,
         }),
       },
     );
@@ -113,6 +129,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({
+      orderId,
       initPoint: data.init_point ?? data.sandbox_init_point,
     });
   } catch (error) {

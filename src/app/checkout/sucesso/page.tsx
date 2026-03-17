@@ -1,5 +1,6 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import { CheckoutStatus } from "@/components/checkout-status";
+import { CheckoutStatusTracker } from "@/components/checkout-status-tracker";
 import { SectionHero } from "@/components/section-hero";
 
 export const metadata: Metadata = {
@@ -13,13 +14,11 @@ export default function CheckoutSucessoPage() {
       <SectionHero
         eyebrow="Checkout Pro"
         title="Pagamento aprovado."
-        description="Seu pedido voltou do Mercado Pago com confirmacao de pagamento."
+        description="Seu pedido voltou do Mercado Pago e agora estamos consultando a confirmação real do pagamento."
       />
-      <CheckoutStatus
-        eyebrow="Sucesso"
-        title="Pedido recebido com pagamento confirmado."
-        description="Agora a Mari Sport pode seguir com a separacao do pedido. Se quiser alinhar tamanho, cor ou entrega, voce ainda pode continuar o atendimento pelo WhatsApp ou pela pagina de contato."
-      />
+      <Suspense fallback={null}>
+        <CheckoutStatusTracker fallbackStatus="approved" />
+      </Suspense>
     </main>
   );
 }

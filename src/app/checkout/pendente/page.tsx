@@ -1,5 +1,6 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import { CheckoutStatus } from "@/components/checkout-status";
+import { CheckoutStatusTracker } from "@/components/checkout-status-tracker";
 import { SectionHero } from "@/components/section-hero";
 
 export const metadata: Metadata = {
@@ -13,13 +14,11 @@ export default function CheckoutPendentePage() {
       <SectionHero
         eyebrow="Checkout Pro"
         title="Pagamento pendente."
-        description="O Mercado Pago ainda esta processando ou aguardando a confirmacao do pagamento."
+        description="O Mercado Pago ainda está processando ou aguardando a confirmação do pagamento."
       />
-      <CheckoutStatus
-        eyebrow="Pendente"
-        title="Seu pedido foi recebido, mas o pagamento ainda nao foi concluido."
-        description="Isso pode acontecer em Pix aguardando pagamento, boleto ou analise do meio de pagamento. Se precisar, voce pode voltar ao carrinho ou falar com a Mari Sport para confirmar os proximos passos."
-      />
+      <Suspense fallback={null}>
+        <CheckoutStatusTracker fallbackStatus="pending" />
+      </Suspense>
     </main>
   );
 }

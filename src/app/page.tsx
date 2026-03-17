@@ -22,14 +22,17 @@ export default function Home() {
     <main>
       <section className="brand-wave px-5 pb-12 pt-10 sm:px-8 lg:px-12 lg:pb-16">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             <span className="inline-flex rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-accent">
               Performance wear
             </span>
-            <h1 className="text-balance max-w-3xl text-5xl font-black uppercase leading-none text-white sm:text-6xl lg:text-7xl">
+            <h1 className="text-balance max-w-3xl text-4xl font-black uppercase leading-none text-white sm:text-6xl lg:text-7xl">
               Roupa esportiva com energia para academia e corrida.
             </h1>
-            <p className="max-w-xl text-base leading-8 text-slate-100 sm:text-lg">
+            <p className="max-w-xl text-sm font-semibold uppercase tracking-[0.14em] text-slate-100 sm:hidden">
+              Catálogo, fotos reais e compra rápida no WhatsApp.
+            </p>
+            <p className="hidden max-w-xl text-base leading-8 text-slate-100 sm:text-lg lg:block">
               A Mari Sport e uma marca de roupa esportiva criada para quem busca
               looks para academia, corrida e rotina ativa com mais conforto,
               estilo e presenca. Nossos conjuntos fitness, tops, leggings,
@@ -55,7 +58,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative hidden lg:block">
             <div className="absolute -left-4 top-10 h-24 w-24 rounded-full bg-accent/20 blur-2xl" />
             <div className="absolute -right-2 bottom-10 h-32 w-32 rounded-full bg-white/12 blur-3xl" />
             <div className="sport-card brand-outline relative overflow-hidden rounded-[2rem] p-5 text-white">
@@ -109,7 +112,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-10 sm:px-8 lg:px-12">
+      <section className="hidden px-5 py-10 sm:px-8 lg:px-12 md:block">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-4 md:grid-cols-3">
             {brandChannels.map((channel) => (
@@ -146,7 +149,7 @@ export default function Home() {
             </div>
             <Link
               href="/produtos"
-              className="text-sm font-bold uppercase tracking-[0.16em] text-accent"
+              className="hidden text-sm font-bold uppercase tracking-[0.16em] text-accent sm:block"
             >
               Ver catalogo completo
             </Link>
@@ -172,10 +175,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <p className="text-sm leading-7 text-slate-100">
+                  <p className="hidden text-sm leading-7 text-slate-100 md:block">
                     {product.description}
                   </p>
-                  <div className="mt-5 flex items-center justify-end">
+                  <div className="mt-3 flex items-center justify-end md:mt-5">
                     <Link
                       href={whatsappLink}
                       target="_blank"
@@ -203,7 +206,7 @@ export default function Home() {
                 A marca funciona melhor quando aparece em uso real.
               </h2>
             </div>
-            <p className="max-w-md text-sm leading-7 text-slate-200">
+            <p className="hidden max-w-md text-sm leading-7 text-slate-200 lg:block">
               O feed mostra corrida, treino, rua e presenca visual. Trouxe isso
               para a Home para deixar o site mais vivo e mais proximo da marca.
             </p>
@@ -226,7 +229,7 @@ export default function Home() {
                 </div>
                 <div className="p-6 text-white">
                   <h3 className="text-2xl font-black uppercase">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-200">
+                  <p className="mt-3 hidden text-sm leading-7 text-slate-200 md:block">
                     {item.description}
                   </p>
                 </div>
@@ -236,7 +239,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-10 sm:px-8 lg:px-12">
+      <section className="hidden px-5 py-10 sm:px-8 lg:px-12 md:block">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -298,7 +301,7 @@ export default function Home() {
                 Carrossel com pecas separadas por cor e tipo.
               </h2>
             </div>
-            <p className="max-w-md text-sm leading-7 text-slate-200">
+            <p className="hidden max-w-md text-sm leading-7 text-slate-200 lg:block">
               Deslize para ver combinacoes usadas por clientes e entender como
               cada conjunto aparece na pratica.
             </p>
@@ -306,7 +309,7 @@ export default function Home() {
 
           <LookbookGallery collections={outfitCollections} />
 
-          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          <div className="mt-6 hidden gap-4 lg:grid-cols-2 lg:grid">
             <div className="rounded-[1.8rem] border border-white/10 bg-white/8 p-6">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
                 Separado por cor
@@ -361,7 +364,7 @@ export default function Home() {
               <h2 className="mt-4 text-4xl font-black uppercase leading-tight">
                 A Mari Sport tambem veste o movimento masculino.
               </h2>
-              <p className="mt-5 text-base leading-8 text-slate-300">
+              <p className="mt-5 hidden text-base leading-8 text-slate-300 lg:block">
                 Corrida, treino e rotina ativa com pecas funcionais, leves e com
                 identidade esportiva alinhada ao restante da marca.
               </p>
@@ -375,7 +378,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 shadow-[0_18px_50px_rgba(19,38,59,0.14)]">
+            <div className="hidden overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 shadow-[0_18px_50px_rgba(19,38,59,0.14)] lg:block">
               <div className="grid gap-0 md:grid-cols-[0.72fr_1fr]">
                 <div className="relative min-h-[320px] bg-black">
                   <video
@@ -436,7 +439,7 @@ export default function Home() {
                   <h3 className="text-xl font-black uppercase leading-tight">
                     {look.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-200">
+                  <p className="mt-3 hidden text-sm leading-7 text-slate-200 md:block">
                     {look.description}
                   </p>
                 </div>
@@ -446,7 +449,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-10 sm:px-8 lg:px-12">
+      <section className="hidden px-5 py-10 sm:px-8 lg:px-12 lg:block">
         <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-[2rem] bg-surface-strong p-8 text-white shadow-[0_18px_60px_rgba(19,38,59,0.2)]">
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent-soft">
@@ -486,7 +489,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-8 sm:px-8 lg:px-12">
+      <section className="hidden px-5 py-8 sm:px-8 lg:px-12 lg:block">
         <div className="mx-auto max-w-6xl rounded-[2rem] border border-white/10 bg-white/8 p-8 text-white shadow-[0_18px_50px_rgba(19,38,59,0.12)]">
           <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent">
             Moda fitness com identidade
@@ -523,7 +526,7 @@ export default function Home() {
                 Fale com a Mari Sport e monte seu pedido pelo WhatsApp.
               </h2>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="hidden gap-3 sm:grid-cols-2 lg:grid">
               {productGrid.slice(0, 4).map((item) => (
                 <div key={item.name} className="rounded-[1.4rem] bg-white/70 p-4">
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">
@@ -539,7 +542,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 pb-16 sm:px-8 lg:px-12">
+      <section className="hidden px-5 pb-16 sm:px-8 lg:px-12 lg:block">
         <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-[2rem] border border-white/10 bg-[#263537] p-8 text-white shadow-[0_18px_60px_rgba(19,38,59,0.18)]">
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent">
@@ -573,7 +576,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 pb-16 sm:px-8 lg:px-12">
+      <section className="hidden px-5 pb-16 sm:px-8 lg:px-12 lg:block">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>

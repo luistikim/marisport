@@ -39,8 +39,8 @@ export const instagramLink =
 export const navLinks = [
   { href: "/", label: "Home" },
   { href: "/produtos", label: "Produtos" },
+  { href: "/quem-somos", label: "Quem Somos" },
   { href: "/carrinho", label: "Carrinho" },
-  { href: "/sobre", label: "Sobre" },
   { href: "/contato", label: "Contato" },
 ];
 
@@ -140,6 +140,21 @@ export const brandPillars = [
   {
     title: "Marca para crescer",
     text: "A base da comunicacao foi pensada para vendas, colecoes, campanhas e expansao digital.",
+  },
+];
+
+export const brandStoryMoments = [
+  {
+    title: "Identidade forte",
+    text: "A Mari Sport nasceu para unir moda esportiva, confianca e atitude em uma linguagem visual clara, contemporanea e facil de reconhecer.",
+  },
+  {
+    title: "Uso real",
+    text: "A marca mostra as pecas em treino, corrida, rotina e comunidade para aproximar o catalogo da experiencia real de quem compra.",
+  },
+  {
+    title: "Atendimento humano",
+    text: "O relacionamento acontece de forma direta pelo WhatsApp e Instagram, facilitando a escolha, a duvida sobre tamanhos e o fechamento do pedido.",
   },
 ];
 

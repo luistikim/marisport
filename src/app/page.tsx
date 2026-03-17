@@ -2,13 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { LookbookGallery } from "@/components/lookbook-gallery";
 import {
-  brandPillars,
-  brandChannels,
-  communityMoments,
-  contactPhone,
   editorialHighlights,
   featuredProducts,
-  instagramLink,
   mensLooks,
   outfitGroups,
   outfitCollections,
@@ -174,32 +169,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="hidden px-5 py-10 sm:px-8 lg:px-12 md:block">
+      <section className="px-5 py-10 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl">
-          <div className="grid gap-4 md:grid-cols-3">
-            {brandChannels.map((channel) => (
-              <article
-                key={channel.title}
-                className="rounded-[1.8rem] border border-white/10 bg-white/8 p-6 text-white shadow-[0_16px_40px_rgba(19,38,59,0.12)]"
-              >
-                <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent">
-                  {channel.title}
-                </p>
-                <p className="mt-4 text-sm leading-7 text-slate-100">
-                  {channel.text}
-                </p>
-                <Link
-                  href={channel.href}
-                  target={channel.href.startsWith("http") ? "_blank" : undefined}
-                  rel={channel.href.startsWith("http") ? "noreferrer" : undefined}
-                  className="mt-5 inline-flex rounded-full border border-white/14 bg-white/8 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-white/14"
-                >
-                  {channel.cta}
-                </Link>
-              </article>
-            ))}
-          </div>
-
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.24em] text-accent">
@@ -371,6 +342,37 @@ export default function Home() {
 
           <LookbookGallery collections={outfitCollections} />
 
+          <div className="mt-8 rounded-[2rem] border border-line bg-white/90 p-6 text-surface-strong shadow-[0_18px_50px_rgba(19,38,59,0.08)] sm:bg-white/8 sm:text-white sm:border-white/10 sm:p-8">
+            <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                  Quem Somos
+                </p>
+                <h2 className="mt-3 text-3xl font-black uppercase leading-tight">
+                  Conheca a historia, a proposta e a forma como a Mari Sport se apresenta.
+                </h2>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-slate-200">
+                  Centralizamos o conteudo institucional em uma pagina propria
+                  para deixar a home mais focada em catalogo, looks e compra.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/quem-somos"
+                  className="rounded-full bg-surface-strong px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-white"
+                >
+                  Abrir Quem Somos
+                </Link>
+                <Link
+                  href="/produtos"
+                  className="rounded-full border border-slate-300 bg-white px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-surface-strong sm:border-white/14 sm:bg-white/8 sm:text-white"
+                >
+                  Ver catalogo
+                </Link>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-6 hidden gap-4 lg:grid-cols-2 lg:grid">
             <div className="rounded-[1.8rem] border border-white/10 bg-white/8 p-6">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
@@ -511,72 +513,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="hidden px-5 py-10 sm:px-8 lg:px-12 lg:block">
-        <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[2rem] bg-surface-strong p-8 text-white shadow-[0_18px_60px_rgba(19,38,59,0.2)]">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent-soft">
-              Sobre a marca
-            </p>
-            <h2 className="mt-4 text-4xl font-black uppercase leading-tight">
-              A Mari Sport veste a forca do movimento.
-            </h2>
-            <p className="mt-5 text-base leading-8 text-slate-300">
-              Nascemos para entregar moda esportiva feminina com visual forte,
-              conforto real e acabamento pensado para rotina de treino, corrida
-              e bem-estar.
-            </p>
-            <Link
-              href="/sobre"
-              className="mt-6 inline-flex rounded-full bg-white px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-surface-strong"
-            >
-              Conhecer a marca
-            </Link>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {brandPillars.map((pillar) => (
-              <article
-                key={pillar.title}
-                className="rounded-[1.75rem] border border-white/10 bg-white/8 p-6 shadow-[0_14px_30px_rgba(19,38,59,0.06)]"
-              >
-                <p className="text-sm font-bold uppercase tracking-[0.18em] text-accent">
-                  {pillar.title}
-                </p>
-                <p className="mt-4 text-sm leading-7 text-slate-100">
-                  {pillar.text}
-                </p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="hidden px-5 py-8 sm:px-8 lg:px-12 lg:block">
-        <div className="mx-auto max-w-6xl rounded-[2rem] border border-white/10 bg-white/8 p-8 text-white shadow-[0_18px_50px_rgba(19,38,59,0.12)]">
-          <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent">
-            Moda fitness com identidade
-          </p>
-          <div className="mt-4 grid gap-5 lg:grid-cols-2">
-              <p className="text-base leading-8 text-slate-100">
-                Quem procura roupa esportiva feminina para academia, conjuntos
-                fitness para treino, tops esportivos, leggings com boa modelagem,
-                short fitness feminino e roupas para corrida encontra na Mari
-                Sport uma proposta focada em versatilidade e impacto visual. A
-                marca trabalha colecoes com combinacoes de cor, looks reais e
-                pecas pensadas para uso diario.
-              </p>
-              <p className="text-base leading-8 text-slate-100">
-                Alem da linha feminina, a Mari Sport tambem apresenta roupa
-                esportiva masculina com shorts, camisetas dry fit e bermudas
-                performance para corrida e treino. O objetivo do site e mostrar
-                produtos, inspirar composicoes e facilitar o contato direto para
-                atendimento, catalogo e compra pelo WhatsApp no numero
-                {` ${contactPhone}`}.
-              </p>
-          </div>
-        </div>
-      </section>
-
       <section className="px-5 pb-14 pt-6 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl rounded-[2rem] bg-[linear-gradient(135deg,#d8ff9e_0%,#87ff00_48%,#5fe000_100%)] p-8 text-surface-strong shadow-[0_20px_60px_rgba(135,255,0,0.24)]">
           <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
@@ -604,83 +540,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="hidden px-5 pb-16 sm:px-8 lg:px-12 lg:block">
-        <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[2rem] border border-white/10 bg-[#263537] p-8 text-white shadow-[0_18px_60px_rgba(19,38,59,0.18)]">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent">
-              Instagram oficial
-            </p>
-            <h2 className="mt-4 text-3xl font-black uppercase leading-tight sm:text-4xl">
-              Acompanhe a Mari Sport de perto no Instagram.
-            </h2>
-            <p className="mt-4 max-w-lg text-base leading-8 text-slate-300">
-              Use o perfil para ver novidades, looks, lancamentos e a energia
-              visual da marca em tempo real.
-            </p>
-          </div>
-          <div className="rounded-[2rem] border border-white/10 bg-white/8 p-8 text-white shadow-[0_18px_60px_rgba(19,38,59,0.12)]">
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-slate-200">
-              @mari_sportfit
-            </p>
-            <p className="mt-4 text-lg leading-8 text-slate-100">
-              Siga, interaja e use o Instagram como ponto rapido para conhecer a
-              identidade da marca e entrar em contato.
-            </p>
-            <Link
-              href={instagramLink}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-flex rounded-full border border-white/14 bg-white/8 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-white/14"
-            >
-              Abrir Instagram
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="hidden px-5 pb-16 sm:px-8 lg:px-12 lg:block">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.24em] text-accent">
-                Comunidade e eventos
-              </p>
-              <h2 className="mt-3 text-3xl font-black uppercase text-white sm:text-4xl">
-                A Mari Sport tambem se apresenta como experiencia.
-              </h2>
-            </div>
-            <p className="max-w-md text-sm leading-7 text-slate-200">
-              O Instagram deixa claro que a marca nao vive so de produto: ela
-              tambem aparece em encontros, auloes, treinos e relacionamento.
-            </p>
-          </div>
-
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {communityMoments.map((item) => (
-              <article
-                key={item.title}
-                className="overflow-hidden rounded-[2rem] border border-white/10 bg-[#263537] shadow-[0_18px_50px_rgba(19,38,59,0.16)]"
-              >
-                <div className="relative aspect-[4/5]">
-                  <Image
-                    src={item.src}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <div className="p-6 text-white">
-                  <h3 className="text-2xl font-black uppercase">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-200">
-                    {item.description}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
     </main>
   );
 }

@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AddToCartButton } from "@/components/add-to-cart-button";
-import { SectionHero } from "@/components/section-hero";
 import { formatCurrency, productGrid, whatsappLink } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -27,22 +26,59 @@ export const metadata: Metadata = {
 
 export default function ProdutosPage() {
   return (
-    <main>
-      <SectionHero
-        eyebrow="Catalogo"
-        title="Fotos reais, grade e compra rapida."
-        description="Veja os produtos da Mari Sport com foco em imagem, preco e disponibilidade."
-      />
+    <main className="bg-[linear-gradient(180deg,#f7fbfb_0%,#eef5f5_40%,#edf4f4_100%)] text-surface-strong">
+      <section className="px-5 pb-8 pt-10 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-6xl rounded-[2rem] border border-line bg-white/88 p-6 shadow-[0_20px_60px_rgba(16,32,51,0.08)] sm:p-8">
+          <p className="text-sm font-bold uppercase tracking-[0.24em] text-accent">
+            Catalogo
+          </p>
+          <div className="mt-4 grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+            <div>
+              <h1 className="max-w-3xl text-3xl font-black uppercase leading-none text-surface-strong sm:text-5xl">
+                Fotos reais, grade e compra rapida com cara de vitrine.
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-700 sm:text-base">
+                Organizamos a pagina de produtos como um catalogo visual: foco
+                nas imagens, leitura mais limpa e informacoes importantes logo
+                abaixo de cada peca.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-[1.4rem] border border-slate-200 bg-[#f7fbfb] p-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                  Catalogo
+                </p>
+                <p className="mt-2 text-lg font-black uppercase">{productGrid.length} itens</p>
+              </div>
+              <div className="rounded-[1.4rem] border border-slate-200 bg-[#f7fbfb] p-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                  Formato
+                </p>
+                <p className="mt-2 text-lg font-black uppercase">Fotos reais</p>
+              </div>
+              <div className="rounded-[1.4rem] border border-slate-200 bg-[#f7fbfb] p-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                  Compra
+                </p>
+                <p className="mt-2 text-lg font-black uppercase">WhatsApp</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="px-5 pb-6 sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-6xl flex-wrap gap-2">
-          <span className="rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_8px_24px_rgba(38,53,55,0.06)] sm:bg-white/10 sm:text-white sm:shadow-none">
+          <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_8px_24px_rgba(38,53,55,0.04)]">
             Feminino
           </span>
-          <span className="rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_8px_24px_rgba(38,53,55,0.06)] sm:bg-white/10 sm:text-white sm:shadow-none">
+          <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_8px_24px_rgba(38,53,55,0.04)]">
             Fotos reais
           </span>
-          <span className="rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong">
+          <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_8px_24px_rgba(38,53,55,0.04)]">
+            Grade por produto
+          </span>
+          <span className="rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong shadow-[0_12px_26px_rgba(135,255,0,0.22)]">
             Compra por WhatsApp
           </span>
         </div>
@@ -53,10 +89,10 @@ export default function ProdutosPage() {
           {productGrid.map((product) => (
             <article
               key={product.id}
-              className="overflow-hidden rounded-[2rem] border border-line bg-white shadow-[0_16px_40px_rgba(19,38,59,0.08)] sm:bg-[#eef3f3]"
+              className="overflow-hidden rounded-[2rem] border border-slate-200/90 bg-white shadow-[0_16px_40px_rgba(19,38,59,0.08)]"
             >
               {product.imageSrc ? (
-                <div className="relative aspect-[4/5] overflow-hidden bg-[#f5f2ec] sm:bg-[#d8d6d1]">
+                <div className="relative aspect-[4/5] overflow-hidden bg-[#f5f2ec]">
                   <Image
                     src={product.imageSrc}
                     alt={product.name}
@@ -71,12 +107,12 @@ export default function ProdutosPage() {
                     }}
                     sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                   />
-                  <div className="absolute left-4 top-4 rounded-full bg-white/88 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-surface-strong backdrop-blur sm:bg-[#263537]/80 sm:text-white">
+                  <div className="absolute left-4 top-4 rounded-full border border-white/70 bg-white/88 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-surface-strong backdrop-blur">
                     {product.badge}
                   </div>
                 </div>
               ) : (
-                <div className="flex h-56 items-end bg-[linear-gradient(135deg,#f3f8f8_0%,#e4eeee_48%,#d8ff9e_100%)] p-6 text-surface-strong sm:bg-[linear-gradient(135deg,#13263b_0%,#244b67_45%,#ff5f2e_100%)] sm:text-white">
+                <div className="flex h-56 items-end bg-[linear-gradient(135deg,#f3f8f8_0%,#e4eeee_48%,#d8ff9e_100%)] p-6 text-surface-strong">
                   <h2 className="text-3xl font-black uppercase leading-tight">
                     {product.name}
                   </h2>
@@ -93,12 +129,12 @@ export default function ProdutosPage() {
                   <h2 className="text-2xl font-black uppercase leading-tight text-surface-strong">
                     {product.name}
                   </h2>
-                  <p className="hidden text-sm leading-7 text-slate-700 md:block">
+                  <p className="text-sm leading-7 text-slate-700">
                     {product.description}
                   </p>
                 </div>
 
-                <div className="rounded-[1.4rem] bg-[#f8fbfb] p-4 shadow-[0_10px_30px_rgba(19,38,59,0.04)] sm:bg-white sm:shadow-[0_10px_30px_rgba(19,38,59,0.06)]">
+                <div className="rounded-[1.4rem] border border-slate-200 bg-[#f8fbfb] p-4 shadow-[0_10px_30px_rgba(19,38,59,0.04)]">
                   <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
                     Valor
                   </p>
@@ -117,7 +153,7 @@ export default function ProdutosPage() {
                 </div>
 
                 {product.availability?.length ? (
-                  <div className="rounded-[1.4rem] border border-slate-200 bg-[#f8fbfb] p-4 sm:bg-white">
+                  <div className="rounded-[1.4rem] border border-slate-200 bg-[#f8fbfb] p-4">
                     <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
                       Tamanhos e cores
                     </p>
@@ -133,7 +169,7 @@ export default function ProdutosPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="rounded-[1.4rem] border border-dashed border-slate-300 bg-[#f8fbfb] p-4 sm:bg-white">
+                  <div className="rounded-[1.4rem] border border-dashed border-slate-300 bg-[#f8fbfb] p-4">
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
                       Em atualizacao
                     </p>

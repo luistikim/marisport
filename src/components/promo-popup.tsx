@@ -53,8 +53,8 @@ export function PromoPopup() {
 
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/55 p-4">
-      <div className="relative w-full max-w-[34rem] overflow-hidden rounded-[2rem] border border-[#5f7b7e] bg-[linear-gradient(180deg,#5f7b7e_0%,#4f6b74_52%,#3e555a_100%)] p-6 text-white shadow-[0_28px_90px_rgba(0,0,0,0.28)] sm:p-8">
-        <div className="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,#263537_0%,#4f6b74_40%,#7dbb38_100%)]" />
+      <div className="relative w-full max-w-[34rem] overflow-hidden rounded-[2rem] border border-[#6f8a8d] bg-[linear-gradient(180deg,#58727b_0%,#4f6b74_52%,#435b63_100%)] p-6 text-white shadow-[0_28px_90px_rgba(0,0,0,0.28)] sm:p-8">
+        <div className="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,#58727b_0%,#4f6b74_45%,#7dbb38_100%)]" />
         <button
           type="button"
           aria-label="Fechar pop-up"
@@ -74,7 +74,7 @@ export function PromoPopup() {
         </div>
 
         {isSubmitted ? (
-          <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/10 p-5 text-center backdrop-blur">
+          <div className="mt-6 rounded-[1.5rem] border border-[#89a1a3]/50 bg-[#f4f8f7]/10 p-5 text-center backdrop-blur">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">
               Cupom liberado
             </p>
@@ -100,7 +100,7 @@ export function PromoPopup() {
               onChange={(event) => setName(event.target.value)}
               placeholder="Nome"
               required
-              className="w-full rounded-none border border-[#cfdad7] bg-white px-4 py-4 text-lg text-surface-strong outline-none transition-colors placeholder:text-slate-400 focus:border-accent"
+              className="w-full rounded-none border border-[#d9e5e1] bg-[#fbfdfc] px-4 py-4 text-lg text-surface-strong outline-none transition-colors placeholder:text-slate-400 focus:border-accent"
             />
             <input
               type="email"
@@ -108,7 +108,7 @@ export function PromoPopup() {
               onChange={(event) => setEmail(event.target.value)}
               placeholder="E-mail"
               required
-              className="w-full rounded-none border border-[#cfdad7] bg-white px-4 py-4 text-lg text-surface-strong outline-none transition-colors placeholder:text-slate-400 focus:border-accent"
+              className="w-full rounded-none border border-[#d9e5e1] bg-[#fbfdfc] px-4 py-4 text-lg text-surface-strong outline-none transition-colors placeholder:text-slate-400 focus:border-accent"
             />
             <input
               type="tel"
@@ -116,10 +116,10 @@ export function PromoPopup() {
               onChange={(event) => setPhone(event.target.value)}
               placeholder="Celular com DDD"
               required
-              className="w-full rounded-none border border-[#cfdad7] bg-white px-4 py-4 text-lg text-surface-strong outline-none transition-colors placeholder:text-slate-400 focus:border-accent"
+              className="w-full rounded-none border border-[#d9e5e1] bg-[#fbfdfc] px-4 py-4 text-lg text-surface-strong outline-none transition-colors placeholder:text-slate-400 focus:border-accent"
             />
 
-            <label className="flex items-start gap-3 rounded-[1rem] bg-white/10 px-4 py-3 text-left text-xs leading-5 text-slate-100">
+            <label className="flex items-start gap-3 rounded-[1rem] bg-[#5f7b7e]/70 px-4 py-3 text-left text-xs leading-5 text-slate-100">
               <input
                 type="checkbox"
                 checked={accepted}

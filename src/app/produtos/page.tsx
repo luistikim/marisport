@@ -44,19 +44,19 @@ export default function ProdutosPage() {
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-[1.4rem] border border-slate-200 bg-[#f7fbfb] p-4">
+              <div className="rounded-[1.4rem] border border-[#dbe7d2] bg-[#f5f9f3] p-4">
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
                   Catalogo
                 </p>
                 <p className="mt-2 text-lg font-black uppercase">{productGrid.length} itens</p>
               </div>
-              <div className="rounded-[1.4rem] border border-slate-200 bg-[#f7fbfb] p-4">
+              <div className="rounded-[1.4rem] border border-[#dbe7d2] bg-[#f5f9f3] p-4">
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
                   Formato
                 </p>
                 <p className="mt-2 text-lg font-black uppercase">Fotos reais</p>
               </div>
-              <div className="rounded-[1.4rem] border border-slate-200 bg-[#f7fbfb] p-4">
+              <div className="rounded-[1.4rem] border border-[#dbe7d2] bg-[#f5f9f3] p-4">
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
                   Compra
                 </p>
@@ -134,7 +134,7 @@ export default function ProdutosPage() {
                   </p>
                 </div>
 
-                <div className="rounded-[1.4rem] border border-slate-200 bg-[#f8fbfb] p-4 shadow-[0_10px_30px_rgba(19,38,59,0.04)]">
+                <div className="rounded-[1.4rem] border border-[#dbe7d2] bg-[#f5f9f3] p-4 shadow-[0_10px_30px_rgba(19,38,59,0.04)]">
                   <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
                     Valor
                   </p>
@@ -153,7 +153,7 @@ export default function ProdutosPage() {
                 </div>
 
                 {product.availability?.length ? (
-                  <div className="rounded-[1.4rem] border border-slate-200 bg-[#f8fbfb] p-4">
+                  <div className="rounded-[1.4rem] border border-[#dbe7d2] bg-[#f5f9f3] p-4">
                     <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
                       Tamanhos e cores
                     </p>
@@ -161,7 +161,7 @@ export default function ProdutosPage() {
                       {product.availability.map((item) => (
                         <span
                           key={item}
-                          className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700"
+                          className="rounded-full border border-[#dbe7d2] bg-white px-3 py-2 text-xs font-semibold text-slate-700"
                         >
                           {item}
                         </span>
@@ -169,7 +169,7 @@ export default function ProdutosPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="rounded-[1.4rem] border border-dashed border-slate-300 bg-[#f8fbfb] p-4">
+                  <div className="rounded-[1.4rem] border border-dashed border-[#cdddbf] bg-[#f5f9f3] p-4">
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
                       Em atualizacao
                     </p>

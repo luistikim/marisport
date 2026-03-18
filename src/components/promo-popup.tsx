@@ -65,13 +65,10 @@ export function PromoPopup() {
         </button>
 
         <div className="pr-10 text-center">
-          <p className="text-5xl font-black uppercase leading-none text-white sm:text-6xl">
-            25% OFF
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-accent-soft">
+            Cupom exclusivo
           </p>
-          <p className="mt-3 text-base font-semibold text-accent-soft">
-            *acima de R$799
-          </p>
-          <p className="mt-2 text-sm leading-6 text-slate-200">
+          <p className="mt-4 text-sm leading-6 text-slate-200">
             O cupom sera revelado assim que voce preencher os dados abaixo.
           </p>
         </div>

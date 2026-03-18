@@ -1,256 +1,123 @@
 import Image from "next/image";
-import Link from "next/link";
-import {
-  productFlatlays,
-  productGrid,
-  whatsappLink,
-} from "@/data/site";
+import { AddToCartButton } from "@/components/add-to-cart-button";
+import { formatCurrency, productGrid } from "@/data/site";
 
 export default function Home() {
   return (
-    <main>
-      <section className="brand-wave px-5 pb-10 pt-10 sm:px-8 lg:px-12 lg:pb-14">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <div className="space-y-5 sm:space-y-6">
-              <span className="inline-flex rounded-full border border-line bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-accent sm:border-white/12 sm:bg-white/8">
-                Catalogo Mari Sport
-              </span>
-              <h1 className="text-balance max-w-3xl text-4xl font-black uppercase leading-none text-surface-strong sm:text-6xl sm:text-white lg:text-7xl">
-                Compre pelo catalogo da Mari Sport.
-              </h1>
-              <p className="max-w-xl text-sm font-semibold uppercase tracking-[0.14em] text-slate-600 sm:text-base sm:font-medium sm:tracking-[0.12em] sm:text-slate-100">
-                Veja as pecas, abra o WhatsApp e feche seu pedido.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/produtos"
-                  className="rounded-full bg-accent px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white shadow-[0_16px_34px_rgba(125,187,56,0.22)] transition-transform hover:-translate-y-0.5"
-                >
-                  Ver catalogo
-                </Link>
-                <Link
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-line bg-white px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-surface-strong transition-colors hover:bg-slate-50 sm:border-white/14 sm:bg-white/8 sm:text-white sm:hover:bg-white/14"
-                >
-                  Comprar no WhatsApp
-                </Link>
-              </div>
-            </div>
-
-            <div className="overflow-hidden rounded-[2rem] border border-line bg-white p-4 shadow-[0_20px_50px_rgba(19,38,59,0.08)] sm:border-white/10 sm:bg-white/8 sm:p-5 sm:shadow-[0_18px_50px_rgba(19,38,59,0.12)]">
-              <div className="grid gap-4 grid-cols-2">
-                {productGrid.slice(0, 4).map((item) => (
-                  <div
-                    key={item.id}
-                    className="overflow-hidden rounded-[1.5rem] bg-[#f6fbfb] sm:bg-white/8"
-                  >
-                    {item.imageSrc ? (
-                      <div className="relative aspect-[4/5] bg-[#f5f2ec]">
-                        <Image
-                          src={item.imageSrc}
-                          alt={item.name}
-                          fill
-                          className={
-                            item.imageFit === "contain"
-                              ? "object-contain p-2"
-                              : "object-cover"
-                          }
-                          style={{
-                            objectPosition: item.imagePosition ?? "center",
-                          }}
-                          sizes="(max-width: 768px) 50vw, 25vw"
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex aspect-[4/5] items-end bg-[linear-gradient(135deg,#f5f9f3_0%,#edf4ea_52%,#d6e8be_100%)] p-4 text-surface-strong">
-                        <p className="text-xl font-black uppercase leading-tight">
-                          {item.name}
-                        </p>
-                      </div>
-                    )}
-                    <div className="p-4 text-surface-strong sm:text-white">
-                      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#4f6b74] sm:text-accent">
-                        {item.badge}
-                      </p>
-                      <p className="mt-2 text-sm font-black uppercase leading-5">
-                        {item.name}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+    <main className="bg-[linear-gradient(180deg,#f8fbf7_0%,#f1f7ef_42%,#edf4ec_100%)] text-surface-strong">
+      <section className="brand-wave px-5 pb-8 pt-10 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-6xl rounded-[2rem] border border-[#dbe7d2] bg-[#fbfdf9] p-6 shadow-[0_20px_60px_rgba(16,32,51,0.06)] sm:p-8">
+          <p className="text-sm font-bold uppercase tracking-[0.24em] text-accent">
+            Catalogo
+          </p>
+          <h1 className="mt-4 max-w-4xl text-3xl font-black uppercase leading-none text-surface-strong sm:text-5xl">
+            Escolha sua peca e adicione ao carrinho.
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-[#526765] sm:text-base">
+            Fotos reais, visual limpo e compra direta em uma unica tela.
+          </p>
         </div>
       </section>
 
-      <section className="px-5 pb-10 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent sm:text-sm sm:tracking-[0.24em]">
-                Catalogo
-              </p>
-              <h2 className="mt-2 text-2xl font-black uppercase leading-tight text-surface-strong sm:mt-3 sm:text-4xl sm:text-white">
-                Escolha uma peca e compre.
-              </h2>
-            </div>
-            <Link
-              href="/produtos"
-              className="text-xs font-bold uppercase tracking-[0.18em] text-surface-strong sm:text-sm sm:text-accent"
+      <section className="px-5 pb-14 sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-6xl gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {productGrid.map((product) => (
+            <article
+              key={product.id}
+              className="overflow-hidden rounded-[2rem] border border-[#dbe7d2] bg-[#fffefc] shadow-[0_16px_40px_rgba(19,38,59,0.06)]"
             >
-              Ver tudo
-            </Link>
-          </div>
+              {product.imageSrc ? (
+                <div className="relative aspect-[4/5] overflow-hidden bg-[#f5f2ec]">
+                  <Image
+                    src={product.imageSrc}
+                    alt={product.name}
+                    fill
+                    className={
+                      product.imageFit === "contain"
+                        ? "object-contain p-2"
+                        : "object-cover"
+                    }
+                    style={{
+                      objectPosition: product.imagePosition ?? "center",
+                    }}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  />
+                  <div className="absolute left-4 top-4 rounded-full border border-white/70 bg-white/88 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-surface-strong backdrop-blur">
+                    {product.badge}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex h-72 items-end bg-[linear-gradient(135deg,#f5f9f3_0%,#edf4ea_52%,#d6e8be_100%)] p-6 text-surface-strong">
+                  <h2 className="text-3xl font-black uppercase leading-tight">
+                    {product.name}
+                  </h2>
+                </div>
+              )}
 
-          <div className="mt-5 grid gap-5 lg:grid-cols-2">
-            {productGrid.slice(0, 4).map((product) => (
-              <article
-                key={product.id}
-                className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_18px_42px_rgba(19,38,59,0.08)]"
-              >
-                {product.imageSrc ? (
-                  <div className="relative aspect-[4/5] bg-[#f5f2ec] lg:aspect-[5/6]">
-                    <Image
-                      src={product.imageSrc}
-                      alt={product.name}
-                      fill
-                      className={
-                        product.imageFit === "contain"
-                          ? "object-contain p-2"
-                          : "object-cover"
-                      }
-                      style={{
-                        objectPosition: product.imagePosition ?? "center",
-                      }}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                    />
-                    <div className="absolute left-4 top-4 rounded-full border border-white/70 bg-white/88 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-surface-strong backdrop-blur">
-                      {product.badge}
+              <div className="space-y-4 p-5 sm:p-6">
+                <div className="space-y-2">
+                  {product.category ? (
+                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#4f6b74]">
+                      {product.category}
+                    </p>
+                  ) : null}
+                  <h2 className="text-2xl font-black uppercase leading-tight text-surface-strong">
+                    {product.name}
+                  </h2>
+                  <p className="text-sm leading-7 text-[#526765]">
+                    {product.description}
+                  </p>
+                </div>
+
+                <div className="rounded-[1.4rem] border border-[#dbe7d2] bg-[#f5f9f3] p-4 shadow-[0_10px_30px_rgba(19,38,59,0.04)]">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#6f8373]">
+                    Valor
+                  </p>
+                  <div className="mt-2 flex flex-wrap items-end gap-3">
+                    <p className="text-2xl font-black uppercase text-surface-strong">
+                      {product.unitPrice === null
+                        ? "Preco em configuracao"
+                        : formatCurrency(product.unitPrice)}
+                    </p>
+                    {product.originalPrice ? (
+                      <p className="text-sm font-bold uppercase tracking-[0.12em] text-[#93a094] line-through">
+                        {formatCurrency(product.originalPrice)}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+
+                {product.availability?.length ? (
+                  <div className="rounded-[1.4rem] border border-[#dbe7d2] bg-[#f5f9f3] p-4">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#6f8373]">
+                      Tamanhos e cores
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {product.availability.map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-full border border-[#dbe7d2] bg-[#fffefc] px-3 py-2 text-xs font-semibold text-[#526765]"
+                        >
+                          {item}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 ) : (
-                  <div className="flex aspect-[4/5] items-end bg-[linear-gradient(135deg,#f5f9f3_0%,#edf4ea_52%,#d6e8be_100%)] p-5 text-surface-strong">
-                    <p className="text-2xl font-black uppercase leading-tight">
-                      {product.name}
+                  <div className="rounded-[1.4rem] border border-dashed border-[#cdddbf] bg-[#f5f9f3] p-4">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#6f8373]">
+                      Em atualizacao
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-[#5f726f]">
+                      Mais detalhes, fotos e grade serao adicionados em breve.
                     </p>
                   </div>
                 )}
 
-                <div className="space-y-4 p-5">
-                  <div className="space-y-2">
-                    {product.category ? (
-                      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#4f6b74]">
-                        {product.category}
-                      </p>
-                    ) : null}
-                    <h3 className="text-2xl font-black uppercase leading-tight text-surface-strong">
-                      {product.name}
-                    </h3>
-                    <p className="text-sm leading-6 text-slate-700">
-                      {product.description}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
-                    <Link
-                      href="/produtos"
-                      className="text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
-                    >
-                      Ver detalhes
-                    </Link>
-                    <Link
-                      href={whatsappLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-white"
-                    >
-                      Comprar
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-5 pb-10 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent sm:text-sm sm:tracking-[0.24em]">
-              Fotos das roupas
-            </p>
-            <h2 className="mt-2 text-2xl font-black uppercase leading-tight text-surface-strong sm:mt-3 sm:text-4xl sm:text-white">
-              Mais fotos para facilitar a escolha.
-            </h2>
-          </div>
-
-          <div className="mt-5 grid gap-5 md:grid-cols-2">
-            {productFlatlays.slice(0, 2).map((item) => (
-              <article
-                key={item.src}
-                className="overflow-hidden rounded-[1.8rem] border border-line bg-white shadow-[0_16px_36px_rgba(19,38,59,0.08)] sm:rounded-[2rem] sm:border-white/10 sm:bg-[#edf3f4] sm:shadow-[0_18px_50px_rgba(19,38,59,0.12)]"
-              >
-                <div className="relative aspect-[4/5] bg-[#f5f2ec]">
-                  <Image
-                    src={item.src}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <div className="p-5 text-surface-strong sm:p-6">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full bg-accent-soft px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-surface-strong">
-                      {item.color}
-                    </span>
-                    <span className="rounded-full border border-slate-200 bg-[#f8fbfb] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-700 sm:border-slate-300 sm:bg-white">
-                      {item.type}
-                    </span>
-                  </div>
-                  <h3 className="mt-4 text-2xl font-black uppercase leading-tight">
-                    {item.title}
-                  </h3>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-5 pb-14 pt-2 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl rounded-[2rem] bg-[linear-gradient(135deg,#f5f9f3_0%,#edf4ea_50%,#d6e8be_100%)] p-8 text-surface-strong shadow-[0_20px_60px_rgba(125,187,56,0.12)]">
-          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.22em]">
-                Comprar rapido
-              </p>
-              <h2 className="mt-3 text-3xl font-black uppercase leading-tight sm:text-4xl">
-                Gostou de alguma peca? Chame no WhatsApp e feche seu pedido.
-              </h2>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
-              <Link
-                href="/produtos"
-                className="rounded-full bg-surface-strong px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-white"
-              >
-                Abrir catalogo
-              </Link>
-              <Link
-                href={whatsappLink}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full border border-surface-strong/12 bg-white px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-surface-strong"
-              >
-                Comprar no WhatsApp
-              </Link>
-            </div>
-          </div>
+                <AddToCartButton product={product} />
+              </div>
+            </article>
+          ))}
         </div>
       </section>
     </main>

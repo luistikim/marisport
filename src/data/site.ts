@@ -38,7 +38,6 @@ export const instagramLink =
 
 export const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/produtos", label: "Produtos" },
   { href: "/quem-somos", label: "Quem Somos" },
   { href: "/carrinho", label: "Carrinho" },
   { href: "/contato", label: "Contato" },

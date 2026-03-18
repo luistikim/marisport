@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { buildWhatsAppLink } from "@/data/site";
 
 const STORAGE_KEY = "marisport-promo-popup-dismissed";
 const couponCode = "VIP25";
@@ -36,15 +35,7 @@ export function PromoPopup() {
       return;
     }
 
-    const message =
-      `Olá! Vim pelo pop-up do site da Mari Sport.\n` +
-      `Nome: ${name}\n` +
-      `E-mail: ${email}\n` +
-      `WhatsApp: ${phone}\n` +
-      `Quero receber meu cupom ${couponCode} e entrar no Grupo VIP.`;
-
     setIsSubmitted(true);
-    window.open(buildWhatsAppLink(message), "_blank", "noopener,noreferrer");
   }
 
   if (!isOpen) {
@@ -61,7 +52,7 @@ export function PromoPopup() {
           onClick={handleClose}
           className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full text-2xl text-white/70 transition-colors hover:text-white"
         >
-          ×
+          x
         </button>
 
         <div className="pr-10 text-center">
@@ -82,7 +73,7 @@ export function PromoPopup() {
               {couponCode}
             </p>
             <p className="mt-3 text-sm leading-6 text-slate-200">
-              Abrimos o WhatsApp com seus dados para continuar o atendimento.
+              Seu cupom foi liberado. Use o icone flutuante para falar com a Mari Sport.
             </p>
             <button
               type="button"

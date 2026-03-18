@@ -58,15 +58,6 @@ export function SiteShell({ children }: SiteShellProps) {
             >
               <InstagramIcon />
             </Link>
-            <Link
-              href={whatsappLink}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Abrir WhatsApp da Mari Sport"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-transform hover:-translate-y-0.5 hover:text-accent md:border-white/10 md:bg-white/8 md:text-white"
-            >
-              <WhatsAppIcon />
-            </Link>
           </div>
         </div>
       </header>
@@ -119,15 +110,6 @@ export function SiteShell({ children }: SiteShellProps) {
                   className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-colors hover:text-accent lg:border-white/10 lg:bg-white/8 lg:text-white"
                 >
                   <InstagramIcon />
-                </Link>
-                <Link
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Abrir WhatsApp da Mari Sport"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-colors hover:text-accent lg:border-white/10 lg:bg-white/8 lg:text-white"
-                >
-                  <WhatsAppIcon />
                 </Link>
               </div>
             </div>

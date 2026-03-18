@@ -22,7 +22,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
     <button
       type="button"
       onClick={handleClick}
-      className="rounded-full border border-slate-300/60 bg-white px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong transition-colors hover:border-accent hover:text-accent"
+      className="rounded-full border border-[#dbe7d2] bg-[#fbfdf9] px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong transition-colors hover:border-accent hover:text-accent"
     >
       {wasAdded ? "Adicionado" : "Adicionar ao carrinho"}
     </button>

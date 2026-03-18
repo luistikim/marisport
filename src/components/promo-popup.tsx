@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { buildWhatsAppLink } from "@/data/site";
 
 const STORAGE_KEY = "marisport-promo-popup-dismissed";
 const couponCode = "VIP25";
@@ -31,11 +32,20 @@ export function PromoPopup() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!accepted) {
+    if (!name.trim() || !email.trim() || !phone.trim() || !accepted) {
       return;
     }
 
+    const message =
+      `Olá! Vim pelo pop-up do site da Mari Sport.\n` +
+      `Nome: ${name}\n` +
+      `E-mail: ${email}\n` +
+      `WhatsApp: ${phone}\n` +
+      `Aceito receber contato e entrar no Grupo VIP.\n` +
+      `Quero receber meu cupom ${couponCode}.`;
+
     setIsSubmitted(true);
+    window.open(buildWhatsAppLink(message), "_blank", "noopener,noreferrer");
   }
 
   if (!isOpen) {
@@ -126,7 +136,8 @@ export function PromoPopup() {
 
             <button
               type="submit"
-              className="w-full bg-[linear-gradient(90deg,#263537_0%,#4f6b74_50%,#7dbb38_100%)] px-5 py-4 text-base font-bold text-white transition-opacity hover:opacity-95"
+              disabled={!name.trim() || !email.trim() || !phone.trim() || !accepted}
+              className="w-full bg-[linear-gradient(90deg,#263537_0%,#4f6b74_50%,#7dbb38_100%)] px-5 py-4 text-base font-bold text-white transition-opacity enabled:hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-55"
             >
               Revelar o cupom!
             </button>

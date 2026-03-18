@@ -37,12 +37,12 @@ export function PromoPopup() {
     }
 
     const message =
-      `Olá! Vim pelo pop-up do site da Mari Sport.\n` +
-      `Nome: ${name}\n` +
+      `Olá, Mari Sport! Acabei de preencher o pop-up do site e quero receber meu cupom exclusivo.\n\n` +
+      `Meu nome é ${name}.\n` +
       `E-mail: ${email}\n` +
-      `WhatsApp: ${phone}\n` +
-      `Aceito receber contato e entrar no Grupo VIP.\n` +
-      `Quero receber meu cupom ${couponCode}.`;
+      `WhatsApp: ${phone}\n\n` +
+      `Já autorizei o contato e a entrada no Grupo VIP.\n` +
+      `Podem me enviar o cupom ${couponCode} e me mostrar as peças em destaque?`;
 
     setIsSubmitted(true);
     window.open(buildWhatsAppLink(message), "_blank", "noopener,noreferrer");

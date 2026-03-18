@@ -53,38 +53,38 @@ export function PromoPopup() {
 
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/55 p-4">
-      <div className="relative w-full max-w-[34rem] overflow-hidden rounded-[2rem] border border-[#d2e0da] bg-[linear-gradient(180deg,#f8fbfb_0%,#eef5f4_56%,#e3ece7_100%)] p-6 shadow-[0_28px_90px_rgba(0,0,0,0.28)] sm:p-8">
+      <div className="relative w-full max-w-[34rem] overflow-hidden rounded-[2rem] border border-[#5f7b7e] bg-[linear-gradient(180deg,#5f7b7e_0%,#4f6b74_52%,#3e555a_100%)] p-6 text-white shadow-[0_28px_90px_rgba(0,0,0,0.28)] sm:p-8">
         <div className="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,#263537_0%,#4f6b74_40%,#7dbb38_100%)]" />
         <button
           type="button"
           aria-label="Fechar pop-up"
           onClick={handleClose}
-          className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full text-2xl text-surface-strong/70 transition-colors hover:text-surface-strong"
+          className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full text-2xl text-white/70 transition-colors hover:text-white"
         >
           ×
         </button>
 
         <div className="pr-10 text-center">
-          <p className="text-5xl font-black uppercase leading-none text-surface-strong sm:text-6xl">
+          <p className="text-5xl font-black uppercase leading-none text-white sm:text-6xl">
             25% OFF
           </p>
-          <p className="mt-3 text-base font-semibold text-[#4f6b74]">
+          <p className="mt-3 text-base font-semibold text-accent-soft">
             *acima de R$799
           </p>
-          <p className="mt-2 text-sm leading-6 text-surface-strong/80">
+          <p className="mt-2 text-sm leading-6 text-slate-200">
             O cupom sera revelado assim que voce preencher os dados abaixo.
           </p>
         </div>
 
         {isSubmitted ? (
-          <div className="mt-6 rounded-[1.5rem] border border-[#d2e0da] bg-white/85 p-5 text-center">
+          <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/10 p-5 text-center backdrop-blur">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">
               Cupom liberado
             </p>
-            <p className="mt-3 text-4xl font-black uppercase text-surface-strong">
+            <p className="mt-3 text-4xl font-black uppercase text-white">
               {couponCode}
             </p>
-            <p className="mt-3 text-sm leading-6 text-surface-strong/80">
+            <p className="mt-3 text-sm leading-6 text-slate-200">
               Abrimos o WhatsApp com seus dados para continuar o atendimento.
             </p>
             <button
@@ -122,7 +122,7 @@ export function PromoPopup() {
               className="w-full rounded-none border border-[#cfdad7] bg-white px-4 py-4 text-lg text-surface-strong outline-none transition-colors placeholder:text-slate-400 focus:border-accent"
             />
 
-            <label className="flex items-start gap-3 rounded-[1rem] bg-[#f3f8f7] px-4 py-3 text-left text-xs leading-5 text-surface-strong/85">
+            <label className="flex items-start gap-3 rounded-[1rem] bg-white/10 px-4 py-3 text-left text-xs leading-5 text-slate-100">
               <input
                 type="checkbox"
                 checked={accepted}

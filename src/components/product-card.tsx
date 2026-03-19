@@ -20,11 +20,7 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
   return (
     <article className="group overflow-hidden rounded-[2rem] border border-[#d8e4db] bg-white shadow-[0_16px_40px_rgba(19,38,59,0.08)] transition-transform duration-300 hover:-translate-y-1">
       {product.imageSrc ? (
-        <Link
-          href={detailHref}
-          className="relative block aspect-[4/5] overflow-hidden bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf6_48%,#e6efe2_100%)]"
-          aria-label={`Ver detalhes de ${product.name}`}
-        >
+        <div className="relative aspect-[4/5] overflow-hidden bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf6_48%,#e6efe2_100%)]">
           <Image
             src={product.imageSrc}
             alt={product.name}
@@ -37,7 +33,7 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
             style={{ objectPosition: product.imagePosition ?? "center" }}
             sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
           />
-        </Link>
+        </div>
       ) : (
         <div className="flex aspect-[4/5] items-end bg-[linear-gradient(135deg,#203a43_0%,#395a60_52%,#8da8ab_100%)] p-6 text-white">
           <h3 className="max-w-[14ch] text-3xl font-black uppercase leading-tight">

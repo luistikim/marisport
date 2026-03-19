@@ -100,21 +100,22 @@ export function HomeHero({
             </p>
           </article>
 
-          <article className="overflow-hidden rounded-[2rem] border border-[#d9e5dc] bg-white shadow-[0_16px_36px_rgba(19,38,59,0.08)]">
-            <div className="relative aspect-[16/10] bg-[linear-gradient(135deg,#e8f0e4_0%,#f7faf7_48%,#dfead8_100%)]">
+          <article className="overflow-hidden rounded-[2rem] border border-[#d9e5dc] bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf7_48%,#e2eddb_100%)] shadow-[0_16px_36px_rgba(19,38,59,0.08)]">
+            <div className="relative flex min-h-[22rem] items-center justify-center p-8 sm:p-10">
               <Image
                 src="/logo-marisport.png"
                 alt="Mari Sport"
-                fill
-                className="object-contain p-10"
-                sizes="(max-width: 768px) 100vw, 40vw"
+                width={320}
+                height={160}
+                className="h-auto w-[70%] max-w-[18rem] object-contain"
+                priority
               />
             </div>
-            <div className="p-5">
+            <div className="px-5 pb-6 text-center">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#6a8271]">
                 {conversionEyebrow}
               </p>
-              <p className="mt-2 text-sm leading-7 text-[#536566]">
+              <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-[#536566]">
                 {conversionDescription}
               </p>
             </div>

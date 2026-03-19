@@ -160,7 +160,7 @@ export function ProductImageCarousel({
                   key={`${image.src}-${index}`}
                   type="button"
                   onClick={() => openLightbox(index)}
-                  className="relative min-w-0 flex-[0_0_100%] overflow-hidden bg-[#f4fbef] outline-none"
+                  className="relative min-w-0 flex-[0_0_100%] cursor-zoom-in overflow-hidden bg-[#f4fbef] outline-none"
                   aria-label={`Abrir imagem ${index + 1} de ${safeImages.length} em tela cheia`}
                 >
                   <div className="relative aspect-[4/5] sm:aspect-[16/10]">
@@ -206,8 +206,8 @@ export function ProductImageCarousel({
               <button
                 key={`${image.src}-thumb-${index}`}
                 type="button"
-                onClick={() => carouselApi?.scrollTo(index)}
-                className={`relative h-20 w-16 shrink-0 overflow-hidden rounded-2xl border transition ${
+                onClick={() => openLightbox(index)}
+                className={`relative h-20 w-16 shrink-0 cursor-zoom-in overflow-hidden rounded-2xl border transition ${
                   index === selectedIndex
                     ? "border-accent shadow-[0_0_0_2px_rgba(125,187,56,0.24)]"
                     : "border-[#d8e4db] opacity-75 hover:opacity-100"

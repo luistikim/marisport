@@ -7,9 +7,9 @@ import { buildWhatsAppLink, formatCurrency } from "@/data/product";
 import { getCatalogProductById, getCatalogProducts, getContactContent, getSiteSettings } from "@/lib/content";
 
 type ProductDetailPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 export async function generateStaticParams() {
@@ -23,8 +23,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: ProductDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
   const [product, site] = await Promise.all([
-    getCatalogProductById(params.slug),
+    getCatalogProductById(slug),
     getSiteSettings(),
   ]);
 
@@ -39,7 +40,7 @@ export async function generateMetadata({
     title: `${product.name} | ${site.siteName}`,
     description: product.fullDescription || product.description || site.siteDescription,
     alternates: {
-      canonical: `/produtos/${params.slug}`,
+      canonical: `/produtos/${slug}`,
     },
     openGraph: {
       title: `${product.name} | ${site.siteName}`,
@@ -52,8 +53,9 @@ export async function generateMetadata({
 export default async function ProductDetailPage({
   params,
 }: ProductDetailPageProps) {
+  const { slug } = await params;
   const [product, contact] = await Promise.all([
-    getCatalogProductById(params.slug),
+    getCatalogProductById(slug),
     getContactContent(),
   ]);
 

@@ -4,8 +4,9 @@ import { sanityDataset, sanityProjectId } from "./src/sanity/lib/env";
 import { schemaTypes } from "./src/sanity/schemaTypes";
 
 export default defineConfig({
-  name: "marisport-studio",
+  name: "default",
   title: "Mari Sport Studio",
+  basePath: "/studio",
   projectId: sanityProjectId || "missing-project-id",
   dataset: sanityDataset || "production",
   plugins: [structureTool()],

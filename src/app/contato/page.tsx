@@ -5,27 +5,21 @@ import {
   contactEmail,
   contactPhone,
   instagramLink,
+  siteDescription,
+  siteName,
   whatsappLink,
 } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Contato",
   description:
-    "Entre em contato com a Mari Sport pelo WhatsApp, Instagram ou email para conhecer colecoes, tirar duvidas e solicitar atendimento.",
-  keywords: [
-    "contato Mari Sport",
-    "WhatsApp Mari Sport",
-    "Instagram Mari Sport",
-    "atendimento roupa fitness",
-    "comprar roupa esportiva",
-    "contato conjunto fitness",
-    "contato legging fitness",
-    "comprar bermuda masculina esportiva",
-  ],
+    "Fale com a Mari Sport pelo WhatsApp, Instagram ou e-mail para conhecer o catalogo e tirar duvidas sobre pedidos.",
+  alternates: {
+    canonical: "/contato",
+  },
   openGraph: {
-    title: "Contato | Mari Sport",
-    description:
-      "Fale com a Mari Sport e receba atendimento para produtos, colecoes e pedidos.",
+    title: `Contato | ${siteName}`,
+    description: siteDescription,
     images: ["/logo-marisport.png"],
   },
 };
@@ -35,116 +29,108 @@ export default function ContatoPage() {
     <main>
       <SectionHero
         eyebrow="Contato"
-        title="Atendimento simples, rapido e direto com a Mari Sport."
-        description="Entre em contato para conhecer colecoes, tirar duvidas, solicitar catalogo e iniciar seu pedido pelo WhatsApp."
+        title="Atendimento rapido, humano e pronto para tirar suas duvidas."
+        description="Fale com a Mari Sport para consultar produtos, tamanhos, cores, disponibilidade e orientacao de compra."
       />
 
       <section className="px-5 pb-8 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-white/10 bg-white/8 p-6 text-white shadow-[0_14px_40px_rgba(19,38,59,0.1)]">
-          <p className="text-base leading-8 text-slate-100">
-            Se voce procura contato com loja de roupa fitness, atendimento para
-            comprar conjunto esportivo, tirar duvidas sobre tamanhos ou conhecer
-            a linha masculina da Mari Sport, esta pagina reune os canais mais
-            rapidos para falar com a marca.
+        <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-[#d9e5dc] bg-white p-6 shadow-[0_16px_36px_rgba(19,38,59,0.06)]">
+          <p className="text-sm leading-7 text-[#55686b]">
+            Se voce procura atendimento para moda fitness masculina e feminina,
+            aqui estao os canais oficiais da marca. O objetivo e responder de
+            forma rapida e facilitar sua compra.
           </p>
         </div>
       </section>
 
       <section className="px-5 pb-14 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-          <article className="rounded-[2rem] bg-surface p-8 shadow-[0_18px_50px_rgba(19,38,59,0.08)]">
+          <article className="rounded-[2rem] bg-white p-7 shadow-[0_16px_40px_rgba(19,38,59,0.06)] sm:p-8">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              Canais
+              Canais oficiais
             </p>
-            <div className="mt-6 space-y-5 text-slate-700">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+            <div className="mt-6 grid gap-5">
+              <div className="rounded-[1.4rem] border border-[#d9e5dc] bg-[#f8fbf8] p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#506859]">
                   WhatsApp
                 </p>
-                <p className="mt-2 text-lg font-semibold">{contactPhone}</p>
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                  E-mail
-                </p>
-                <p className="mt-2 text-lg font-semibold">{contactEmail}</p>
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                  Instagram
-                </p>
-                <p className="mt-2 text-lg font-semibold">@mari_sportfit</p>
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                  Atendimento
-                </p>
-                <p className="mt-2 text-lg font-semibold">Seg a Sab, das 9h as 18h</p>
-              </div>
-              <div className="flex flex-wrap gap-3 pt-2">
-                <Link
-                  href={instagramLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex rounded-full border border-slate-300/30 bg-white px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
-                >
-                  Abrir Instagram
-                </Link>
+                <p className="mt-2 text-lg font-semibold text-surface-strong">{contactPhone}</p>
                 <Link
                   href={whatsappLink}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex rounded-full bg-accent px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                  className="mt-4 inline-flex rounded-full bg-surface-strong px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white"
                 >
                   Abrir WhatsApp
+                </Link>
+              </div>
+
+              <div className="rounded-[1.4rem] border border-[#d9e5dc] bg-[#f8fbf8] p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#506859]">
+                  E-mail
+                </p>
+                <p className="mt-2 text-lg font-semibold text-surface-strong">{contactEmail}</p>
+                <Link
+                  href={`mailto:${contactEmail}`}
+                  className="mt-4 inline-flex rounded-full border border-[#d9e5dc] bg-white px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                >
+                  Enviar e-mail
+                </Link>
+              </div>
+
+              <div className="rounded-[1.4rem] border border-[#d9e5dc] bg-[#f8fbf8] p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#506859]">
+                  Instagram
+                </p>
+                <p className="mt-2 text-lg font-semibold text-surface-strong">@mari_sportfit</p>
+                <Link
+                  href={instagramLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex rounded-full border border-[#d9e5dc] bg-white px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                >
+                  Abrir Instagram
                 </Link>
               </div>
             </div>
           </article>
 
-          <article className="rounded-[2rem] bg-[linear-gradient(145deg,#13263b_0%,#1f4764_50%,#295b7d_100%)] p-8 text-white shadow-[0_18px_60px_rgba(19,38,59,0.22)]">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-orange-200">
-              Fale agora
+          <article className="rounded-[2rem] bg-[linear-gradient(145deg,#132022_0%,#203235_52%,#395a60_100%)] p-7 text-white shadow-[0_20px_60px_rgba(19,32,34,0.18)] sm:p-8">
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent-soft">
+              Atendimento
             </p>
-            <h2 className="mt-4 text-4xl font-black uppercase leading-tight">
-              Receba atendimento personalizado para suas compras.
+            <h2 className="mt-4 text-3xl font-black uppercase leading-tight">
+              Receba orientacao personalizada para sua compra.
             </h2>
-            <p className="mt-5 max-w-lg text-base leading-8 text-slate-200">
-              O WhatsApp e o canal principal da Mari Sport para apresentar
-              produtos, enviar fotos, tirar duvidas e fechar pedidos com
-              rapidez.
+            <p className="mt-5 max-w-lg text-sm leading-7 text-slate-200">
+              A Mari Sport usa o WhatsApp como canal principal para enviar fotos,
+              explicar tamanhos e indicar a melhor opcao para o seu estilo.
             </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-[1.4rem] border border-white/10 bg-white/8 p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-soft">
+                  Atendimento
+                </p>
+                <p className="mt-2 text-sm leading-7 text-slate-200">Seg a sab, das 9h as 18h</p>
+              </div>
+              <div className="rounded-[1.4rem] border border-white/10 bg-white/8 p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-soft">
+                  Alcance
+                </p>
+                <p className="mt-2 text-sm leading-7 text-slate-200">
+                  Atendimento online para todo o Brasil
+                </p>
+              </div>
+            </div>
             <Link
               href={whatsappLink}
               target="_blank"
               rel="noreferrer"
-              className="mt-8 inline-flex rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white shadow-[0_18px_40px_rgba(255,95,46,0.28)]"
+              className="mt-8 inline-flex rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-surface-strong"
             >
-              Abrir WhatsApp
+              Falar agora
             </Link>
           </article>
-        </div>
-      </section>
-
-      <section className="px-5 pb-14 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl rounded-[1.8rem] bg-[#263537] p-8 text-white shadow-[0_18px_50px_rgba(19,38,59,0.14)]">
-          <h2 className="text-2xl font-black uppercase">
-            Atendimento para produtos, colecoes e pedidos
-          </h2>
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            <p className="text-sm leading-7 text-slate-200">
-              Fale com a Mari Sport para conhecer roupa esportiva feminina para
-              academia, corrida e rotina ativa com mais detalhes.
-            </p>
-            <p className="text-sm leading-7 text-slate-200">
-              Solicite fotos, videos, informacoes sobre conjuntos fitness, tops,
-              leggings, shorts e pecas masculinas diretamente pelo WhatsApp.
-            </p>
-            <p className="text-sm leading-7 text-slate-200">
-              Use tambem o Instagram para acompanhar lancamentos, novidades e o
-              visual real das colecoes em clientes e modelos.
-            </p>
-          </div>
         </div>
       </section>
     </main>

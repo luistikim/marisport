@@ -6,8 +6,12 @@ import { PromoPopup } from "@/components/promo-popup";
 import {
   contactEmail,
   contactPhone,
+  footerColumns,
   instagramLink,
   navLinks,
+  siteDescription,
+  siteName,
+  trustSignals,
   whatsappLink,
 } from "@/data/site";
 
@@ -20,104 +24,158 @@ export function SiteShell({ children }: SiteShellProps) {
     <div className="min-h-screen bg-background text-foreground">
       <PromoPopup />
 
-      <header className="sticky top-0 z-40 border-b border-line bg-white/88 backdrop-blur-xl md:border-white/10 md:bg-[#2d3f43]/82">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="brand-outline rounded-[1.35rem] bg-white px-3 py-2 md:bg-white/6">
-              <Image
-                src="/logo-marisport.png"
-                alt="Logo Mari Sport"
-                width={170}
-                height={50}
-                className="h-auto w-[122px] object-contain sm:w-[150px]"
-                priority
-              />
-            </div>
-          </Link>
+      <header className="sticky top-0 z-40 border-b border-line bg-white/88 backdrop-blur-xl">
+        <div className="mx-auto max-w-6xl px-5 py-4 sm:px-8 lg:px-12">
+          <div className="flex items-center justify-between gap-4">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="brand-outline rounded-[1.3rem] bg-surface px-3 py-2">
+                <Image
+                  src="/logo-marisport.png"
+                  alt="Logo Mari Sport"
+                  width={180}
+                  height={56}
+                  className="h-auto w-[122px] object-contain sm:w-[150px]"
+                  priority
+                />
+              </div>
+            </Link>
 
-          <nav className="hidden items-center gap-6 md:flex">
+            <nav className="hidden items-center gap-5 lg:flex" aria-label="Navegacao principal">
+              {navLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-sm font-semibold text-slate-700 hover:text-surface-strong"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-2">
+              <CartLink />
+              <Link
+                href={whatsappLink}
+                target="_blank"
+                rel="noreferrer"
+                className="hidden rounded-full bg-surface-strong px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white hover:bg-[#203235] sm:inline-flex"
+              >
+                WhatsApp
+              </Link>
+              <Link
+                href={instagramLink}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Abrir Instagram da Mari Sport"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong hover:-translate-y-0.5 hover:text-accent"
+              >
+                <InstagramIcon />
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-4 flex gap-2 overflow-x-auto pb-1 lg:hidden" aria-label="Links rapidos">
             {navLinks.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-semibold text-slate-200 transition-colors hover:text-accent"
+                className="whitespace-nowrap rounded-full border border-line bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-700"
               >
                 {item.label}
               </Link>
             ))}
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <CartLink />
-            <Link
-              href={instagramLink}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Abrir Instagram da Mari Sport"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-transform hover:-translate-y-0.5 hover:text-accent md:border-white/10 md:bg-white/8 md:text-white"
-            >
-              <InstagramIcon />
-            </Link>
           </div>
         </div>
       </header>
 
       {children}
 
-      <footer className="border-t border-line bg-[#f3f8f8] px-5 py-10 text-surface-strong sm:px-8 lg:bg-[#263537] lg:text-white lg:px-12">
-        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-[1.4fr_0.8fr_1fr]">
+      <footer className="border-t border-line bg-[#111b1d] px-5 py-10 text-white sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
           <div>
-            <div className="brand-outline inline-flex rounded-[1.35rem] bg-white px-3 py-2 lg:bg-white/6">
+            <div className="brand-outline inline-flex rounded-[1.35rem] bg-white px-3 py-2">
               <Image
                 src="/logo-marisport.png"
                 alt="Logo Mari Sport"
-                width={170}
-                height={50}
+                width={180}
+                height={56}
                 className="h-auto w-[132px] object-contain"
               />
             </div>
-            <p className="mt-3 max-w-md text-sm leading-7 text-slate-600 lg:text-slate-300">
-              Roupas esportivas para academia e corrida com visual marcante,
-              conforto e energia para a rotina de quem vive em movimento.
+            <p className="mt-4 max-w-md text-sm leading-7 text-slate-300">
+              {siteName} entrega moda fitness masculina e feminina com visual
+              moderno, conforto e atendimento direto para quem quer comprar com
+              mais seguranca.
+            </p>
+            <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-accent-soft">
+              {siteDescription}
             </p>
           </div>
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-surface-strong lg:text-white">
-              Navegacao
-            </p>
-            <div className="mt-4 flex flex-col gap-3 text-sm text-slate-600 lg:text-slate-300">
-              {navLinks.map((item) => (
-                <Link key={item.href} href={item.href} className="hover:text-accent">
-                  {item.label}
-                </Link>
-              ))}
+
+          {footerColumns.map((column) => (
+            <div key={column.title}>
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-white">
+                {column.title}
+              </p>
+              <div className="mt-4 flex flex-col gap-3 text-sm text-slate-300">
+                {column.links.map((item) => (
+                  <Link key={item.href} href={item.href} className="hover:text-accent-soft">
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
+
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-surface-strong lg:text-white">
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Contato
             </p>
-            <div className="mt-4 space-y-3 text-sm text-slate-600 lg:text-slate-300">
+            <div className="mt-4 space-y-3 text-sm text-slate-300">
               <p>{contactEmail}</p>
               <p>{contactPhone}</p>
               <p>Atendimento online para todo o Brasil</p>
-              <div className="flex items-center gap-3 pt-2">
+              <Link
+                href={`mailto:${contactEmail}`}
+                className="inline-flex text-accent-soft hover:text-white"
+              >
+                Enviar e-mail
+              </Link>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full bg-accent px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                >
+                  WhatsApp
+                </Link>
                 <Link
                   href={instagramLink}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label="Abrir Instagram da Mari Sport"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-surface-strong transition-colors hover:text-accent lg:border-white/10 lg:bg-white/8 lg:text-white"
+                  className="rounded-full border border-white/12 bg-white/6 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white"
                 >
-                  <InstagramIcon />
+                  Instagram
                 </Link>
               </div>
             </div>
           </div>
         </div>
-        <div className="mx-auto mt-10 max-w-6xl">
-          <p className="text-right text-[10px] uppercase tracking-[0.18em] text-slate-400 lg:text-white/20">
-            Feito por Luis Paulo Silva
+
+        <div className="mx-auto mt-10 flex max-w-6xl flex-col gap-4 border-t border-white/10 pt-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap gap-2">
+            {trustSignals.map((item) => (
+              <span
+                key={item}
+                className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+          <p className="uppercase tracking-[0.18em]">
+            {`Copyright ${new Date().getFullYear()} Mari Sport. Todos os direitos reservados.`}
           </p>
         </div>
       </footer>
@@ -127,7 +185,7 @@ export function SiteShell({ children }: SiteShellProps) {
         target="_blank"
         rel="noreferrer"
         aria-label="Falar com a Mari Sport no WhatsApp"
-        className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] text-xl font-black text-white shadow-[0_16px_40px_rgba(37,211,102,0.4)] transition-transform hover:scale-105"
+        className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] text-xl font-black text-white shadow-[0_16px_40px_rgba(37,211,102,0.4)] hover:scale-105"
       >
         <WhatsAppIcon />
       </Link>

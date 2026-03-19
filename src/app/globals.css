@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #4f6b74;
-  --foreground: #eef5f6;
-  --surface: #58727b;
-  --surface-strong: #263537;
+  --background: #eef2ef;
+  --foreground: #172427;
+  --surface: #ffffff;
+  --surface-strong: #132022;
   --accent: #7dbb38;
   --accent-soft: #d6e8be;
-  --line: rgba(238, 245, 246, 0.14);
+  --line: rgba(23, 36, 39, 0.1);
 }
 
 @theme inline {
@@ -18,8 +18,8 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-line: var(--line);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 * {
@@ -31,17 +31,19 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), sans-serif;
   min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(125, 187, 56, 0.08), transparent 28%),
+    linear-gradient(180deg, #f7faf7 0%, #eef2ef 45%, #e9efea 100%);
+  color: var(--foreground);
+  font-family: var(--font-sans);
 }
 
 main {
   display: block;
 }
 
-body::selection {
+::selection {
   background: rgba(125, 187, 56, 0.28);
 }
 
@@ -50,70 +52,86 @@ a {
   text-decoration: none;
 }
 
+button,
+a {
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
 .hero-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
   background-size: 34px 34px;
 }
 
 .brand-wave {
   background:
     radial-gradient(circle at top left, rgba(125, 187, 56, 0.14), transparent 28%),
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 30%),
-    linear-gradient(180deg, rgba(79, 107, 116, 0.98), rgba(67, 91, 99, 0.98));
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.16), transparent 30%),
+    linear-gradient(180deg, rgba(19, 32, 34, 0.98), rgba(38, 53, 55, 0.98));
 }
 
 .sport-card {
   background:
-    linear-gradient(160deg, rgba(38, 53, 55, 0.98), rgba(55, 73, 76, 0.95));
+    linear-gradient(160deg, rgba(19, 32, 34, 0.98), rgba(38, 53, 55, 0.95));
 }
 
 .glass-surface {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(14px);
 }
 
 .brand-outline {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 24px 60px rgba(13, 20, 21, 0.18);
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 24px 60px rgba(13, 20, 21, 0.14);
 }
 
 .text-balance {
   text-wrap: balance;
 }
 
+.section-shell {
+  border: 1px solid rgba(23, 36, 39, 0.08);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 16px 40px rgba(19, 38, 59, 0.06);
+}
+
 @media (max-width: 767px) {
   :root {
-    --background: #edf4f4;
-    --foreground: #263537;
+    --background: #eef2ef;
+    --foreground: #172427;
     --surface: #ffffff;
     --accent: #7dbb38;
     --accent-soft: #dbe9cb;
-    --line: rgba(38, 53, 55, 0.08);
+    --line: rgba(23, 36, 39, 0.08);
   }
 
   .brand-wave {
     background:
-      radial-gradient(circle at top left, rgba(125, 187, 56, 0.1), transparent 28%),
-      radial-gradient(circle at top right, rgba(79, 107, 116, 0.12), transparent 30%),
-      linear-gradient(180deg, #f5fbfb 0%, #edf4f4 62%, #e7f0f0 100%);
+      radial-gradient(circle at top left, rgba(125, 187, 56, 0.12), transparent 28%),
+      radial-gradient(circle at top right, rgba(19, 32, 34, 0.14), transparent 30%),
+      linear-gradient(180deg, #f7faf7 0%, #eef2ef 62%, #e7eeea 100%);
   }
 
   .hero-grid {
     background-image:
-      linear-gradient(rgba(38, 53, 55, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(38, 53, 55, 0.05) 1px, transparent 1px);
+      linear-gradient(rgba(23, 36, 39, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(23, 36, 39, 0.05) 1px, transparent 1px);
   }
 
   .glass-surface {
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.74);
   }
 
   .brand-outline {
     box-shadow:
-      0 0 0 1px rgba(38, 53, 55, 0.08),
-      0 18px 40px rgba(38, 53, 55, 0.08);
+      0 0 0 1px rgba(23, 36, 39, 0.08),
+      0 18px 40px rgba(23, 36, 39, 0.08);
   }
 }

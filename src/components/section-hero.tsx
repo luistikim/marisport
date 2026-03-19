@@ -10,17 +10,30 @@ export function SectionHero({
   description,
 }: SectionHeroProps) {
   return (
-    <section className="brand-wave px-5 pb-8 pt-10 sm:px-8 lg:px-12">
-      <div className="mx-auto max-w-6xl rounded-[2rem] border border-line bg-white/92 p-6 shadow-[0_20px_60px_rgba(16,32,51,0.06)] backdrop-blur sm:border-white/40 sm:bg-white/65 sm:p-8">
-        <p className="text-sm font-bold uppercase tracking-[0.24em] text-accent">
-          {eyebrow}
-        </p>
-        <h1 className="mt-4 max-w-3xl text-3xl font-black uppercase leading-none text-surface-strong sm:text-5xl">
+    <section className="brand-wave px-5 pb-8 pt-8 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.25rem] border border-line bg-white/90 p-6 shadow-[0_22px_60px_rgba(16,32,51,0.08)] backdrop-blur-sm sm:p-8 lg:p-10">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-accent px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-surface-strong">
+            {eyebrow}
+          </span>
+        </div>
+        <h1 className="mt-4 max-w-4xl text-3xl font-black uppercase leading-[0.92] text-surface-strong sm:text-5xl">
           {title}
         </h1>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-700 sm:mt-5 sm:text-lg">
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-[#56686c] sm:text-lg">
           {description}
         </p>
+        <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#58727b]">
+          <span className="rounded-full border border-[#d8e4db] bg-[#f7faf7] px-3 py-2">
+            Moda fitness premium
+          </span>
+          <span className="rounded-full border border-[#d8e4db] bg-[#f7faf7] px-3 py-2">
+            Web e mobile
+          </span>
+          <span className="rounded-full border border-[#d8e4db] bg-[#f7faf7] px-3 py-2">
+            Atendimento online
+          </span>
+        </div>
       </div>
     </section>
   );

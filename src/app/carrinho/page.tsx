@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import { CartPageContent } from "@/components/cart-page-content";
 import { SectionHero } from "@/components/section-hero";
+import { siteDescription, siteName } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Carrinho",
   description:
-    "Revise os produtos escolhidos na Mari Sport e envie seu pedido sem precisar criar conta.",
+    "Revise os produtos escolhidos na Mari Sport e envie seu pedido sem criar conta.",
+  alternates: {
+    canonical: "/carrinho",
+  },
+  openGraph: {
+    title: `Carrinho | ${siteName}`,
+    description: siteDescription,
+    images: ["/logo-marisport.png"],
+  },
 };
 
 export default function CarrinhoPage() {

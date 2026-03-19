@@ -6,27 +6,23 @@ import {
   brandChannels,
   brandPillars,
   brandStoryMoments,
-  communityMoments,
+  coupleStory,
   instagramLink,
+  siteDescription,
+  siteName,
   whatsappLink,
 } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Quem Somos",
   description:
-    "Conheca a essencia da Mari Sport, a proposta da marca e o jeito como transformamos catalogo, comunidade e atendimento em uma experiencia mais proxima.",
-  keywords: [
-    "quem somos Mari Sport",
-    "sobre Mari Sport",
-    "marca de moda fitness",
-    "roupa esportiva com identidade",
-    "moda esportiva feminina",
-    "moda esportiva masculina",
-  ],
+    "Conheca a historia, a identidade e a proposta da Mari Sport como marca de moda fitness com foco em confianca e estilo.",
+  alternates: {
+    canonical: "/quem-somos",
+  },
   openGraph: {
-    title: "Quem Somos | Mari Sport",
-    description:
-      "Veja a historia, a identidade e a proposta da Mari Sport.",
+    title: `Quem Somos | ${siteName}`,
+    description: siteDescription,
     images: ["/logo-marisport.png"],
   },
 };
@@ -37,36 +33,45 @@ export default function QuemSomosPage() {
       <SectionHero
         eyebrow="Quem Somos"
         title="Uma marca criada para vestir o movimento com identidade."
-        description="A Mari Sport aproxima catalogo, comunidade e atendimento em uma proposta de moda esportiva feita para treino, corrida e rotina ativa."
+        description="A Mari Sport organiza catalogo, comunidade e atendimento em uma proposta de moda fitness feita para treino, corrida e rotina ativa."
       />
 
       <section className="px-5 pb-8 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1fr_0.95fr]">
-          <article className="rounded-[2rem] bg-surface-strong p-8 text-white shadow-[0_18px_60px_rgba(19,38,59,0.2)]">
+          <article className="rounded-[2rem] bg-[linear-gradient(145deg,#132022_0%,#203235_50%,#395a60_100%)] p-7 text-white shadow-[0_20px_60px_rgba(19,32,34,0.18)] sm:p-8">
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent-soft">
               Nossa essencia
             </p>
-            <h1 className="mt-4 text-4xl font-black uppercase leading-tight">
+            <h1 className="mt-4 text-4xl font-black uppercase leading-tight text-balance">
               Moda esportiva com presenca visual, funcionalidade e atitude.
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-300">
-              A Mari Sport nasceu para mostrar que roupa de treino pode entregar
-              conforto, seguranca e estilo ao mesmo tempo. Por isso, a marca
-              construiu uma comunicacao que valoriza pecas reais, fotos de uso,
-              atendimento direto e uma identidade visual forte.
+            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-200">
+              A Mari Sport foi pensada para mostrar que roupa de treino pode
+              entregar conforto, seguranca e estilo ao mesmo tempo. A marca
+              valoriza pecas reais, fotos de uso e atendimento direto.
             </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              {coupleStory.map((item) => (
+                <div key={item.title} className="rounded-[1.2rem] border border-white/10 bg-white/8 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-soft">
+                    {item.title}
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-slate-200">{item.text}</p>
+                </div>
+              ))}
+            </div>
           </article>
 
           <div className="grid gap-4">
             {brandStoryMoments.map((item) => (
               <article
                 key={item.title}
-                className="rounded-[1.75rem] border border-line bg-white/85 p-6 shadow-[0_14px_30px_rgba(19,38,59,0.06)]"
+                className="rounded-[1.75rem] border border-[#d9e5dc] bg-white p-6 shadow-[0_14px_30px_rgba(19,38,59,0.06)]"
               >
                 <p className="text-sm font-bold uppercase tracking-[0.18em] text-accent">
                   {item.title}
                 </p>
-                <p className="mt-4 text-sm leading-7 text-slate-700">
+                <p className="mt-4 text-sm leading-7 text-[#56686c]">
                   {item.text}
                 </p>
               </article>
@@ -82,11 +87,11 @@ export default function QuemSomosPage() {
               <p className="text-sm font-bold uppercase tracking-[0.24em] text-accent">
                 Como a marca se apresenta
               </p>
-              <h2 className="mt-3 text-3xl font-black uppercase text-surface-strong sm:text-4xl sm:text-white">
+              <h2 className="mt-3 text-3xl font-black uppercase text-surface-strong sm:text-4xl">
                 Catalogo, comunidade e atendimento fazem parte da mesma experiencia.
               </h2>
             </div>
-            <p className="max-w-md text-sm leading-7 text-slate-600 sm:text-slate-200">
+            <p className="max-w-md text-sm leading-7 text-[#56686c]">
               Reunimos aqui a parte institucional da marca para deixar a home
               mais focada em produto e compra.
             </p>
@@ -96,19 +101,19 @@ export default function QuemSomosPage() {
             {brandChannels.map((channel) => (
               <article
                 key={channel.title}
-                className="rounded-[1.8rem] border border-line bg-white p-6 text-surface-strong shadow-[0_16px_40px_rgba(19,38,59,0.08)] sm:border-white/10 sm:bg-white/8 sm:text-white sm:shadow-[0_16px_40px_rgba(19,38,59,0.12)]"
+                className="rounded-[1.8rem] border border-[#d9e5dc] bg-white p-6 shadow-[0_16px_40px_rgba(19,38,59,0.06)]"
               >
                 <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent">
                   {channel.title}
                 </p>
-                <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-slate-100">
+                <p className="mt-4 text-sm leading-7 text-[#56686c]">
                   {channel.text}
                 </p>
                 <Link
                   href={channel.href}
                   target={channel.href.startsWith("http") ? "_blank" : undefined}
                   rel={channel.href.startsWith("http") ? "noreferrer" : undefined}
-                  className="mt-5 inline-flex rounded-full border border-line bg-[#f6fbfb] px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong transition-colors hover:bg-white sm:border-white/14 sm:bg-white/8 sm:text-white sm:hover:bg-white/14"
+                  className="mt-5 inline-flex rounded-full border border-[#d9e5dc] bg-[#f8fbf8] px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
                 >
                   {channel.cta}
                 </Link>
@@ -120,7 +125,7 @@ export default function QuemSomosPage() {
 
       <section className="px-5 pb-12 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-          <article className="rounded-[2rem] bg-[#f5fbfb] p-8 text-surface-strong shadow-[0_18px_50px_rgba(19,38,59,0.08)]">
+          <article className="rounded-[2rem] bg-white p-7 text-surface-strong shadow-[0_16px_40px_rgba(19,38,59,0.06)] sm:p-8">
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent">
               Base da marca
             </p>
@@ -131,12 +136,12 @@ export default function QuemSomosPage() {
               {brandPillars.map((pillar) => (
                 <div
                   key={pillar.title}
-                  className="rounded-[1.4rem] border border-slate-200 bg-white p-5"
+                  className="rounded-[1.4rem] border border-[#d9e5dc] bg-[#f8fbf8] p-5"
                 >
-                  <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#4f6b74]">
+                  <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#4f6a56]">
                     {pillar.title}
                   </p>
-                  <p className="mt-3 text-sm leading-7 text-slate-700">
+                  <p className="mt-3 text-sm leading-7 text-[#56686c]">
                     {pillar.text}
                   </p>
                 </div>
@@ -144,19 +149,19 @@ export default function QuemSomosPage() {
             </div>
           </article>
 
-          <article className="rounded-[2rem] bg-[#263537] p-8 text-white shadow-[0_18px_50px_rgba(19,38,59,0.16)]">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent">
+          <article className="rounded-[2rem] bg-[#132022] p-7 text-white shadow-[0_16px_40px_rgba(19,38,59,0.12)] sm:p-8">
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent-soft">
               Comunidade e imagem
             </p>
             <h2 className="mt-4 text-3xl font-black uppercase leading-tight sm:text-4xl">
               A marca ganha forca quando aparece em uso real.
             </h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
-              {communityMoments.map((item) => (
-                <div key={item.title} className="overflow-hidden rounded-[1.5rem] bg-white/8">
+              {brandStoryMoments.map((item, index) => (
+                <div key={`${item.title}-${index}`} className="overflow-hidden rounded-[1.5rem] bg-white/8">
                   <div className="relative aspect-[4/5]">
                     <Image
-                      src={item.src}
+                      src={index === 0 ? "/perfil.jpeg" : "/WhatsApp Image 2026-03-15 at 21.01.08.jpeg"}
                       alt={item.title}
                       fill
                       className="object-cover"
@@ -168,7 +173,7 @@ export default function QuemSomosPage() {
                       {item.title}
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-200">
-                      {item.description}
+                      {item.text}
                     </p>
                   </div>
                 </div>
@@ -179,7 +184,7 @@ export default function QuemSomosPage() {
       </section>
 
       <section className="px-5 pb-14 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl rounded-[2rem] bg-[linear-gradient(135deg,#d8ff9e_0%,#87ff00_48%,#5fe000_100%)] p-8 text-surface-strong shadow-[0_20px_60px_rgba(135,255,0,0.24)]">
+        <div className="mx-auto max-w-6xl rounded-[2rem] bg-[linear-gradient(135deg,#d8ff9e_0%,#97ee4a_48%,#64d21c_100%)] p-8 text-surface-strong shadow-[0_20px_60px_rgba(125,187,56,0.18)]">
           <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.22em]">

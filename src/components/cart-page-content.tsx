@@ -26,7 +26,7 @@ export function CartPageContent() {
       ...items.map((item) => {
         const lineTotal =
           item.unitPrice === null
-            ? "preco a configurar"
+            ? "consulte disponibilidade"
             : formatCurrency(item.unitPrice * item.quantity);
 
         return `- ${item.quantity}x ${item.name} (${lineTotal})`;
@@ -104,9 +104,9 @@ export function CartPageContent() {
               </div>
 
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                <span className="rounded-full bg-slate-100 px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-700">
+                  <span className="rounded-full bg-slate-100 px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-700">
                   {item.unitPrice === null
-                    ? "Preco pendente"
+                    ? "Consulte disponibilidade"
                     : formatCurrency(item.unitPrice)}
                 </span>
                 <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">

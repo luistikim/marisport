@@ -2,29 +2,38 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
 import { SectionHero } from "@/components/section-hero";
+import { buildWhatsAppLink } from "@/data/product";
 import {
-  buildWhatsAppLink,
-} from "@/data/product";
-import { getAboutContent, getCatalogContent, getContactContent, getSiteContent } from "@/lib/content";
+  getAboutContent,
+  getCatalogContent,
+  getContactContent,
+  getSiteSettings,
+} from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "Produtos",
-  description:
-    "Catalogo Mari Sport com moda fitness masculina e feminina para academia, corrida e rotina ativa.",
-  alternates: {
-    canonical: "/produtos",
-  },
-  openGraph: {
-    title: `Produtos | ${getSiteContent().siteName}`,
-    description: getSiteContent().siteDescription,
-    images: ["/logo-marisport.png"],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteName, siteDescription } = await getSiteSettings();
 
-export default function ProdutosPage() {
-  const { sections } = getCatalogContent();
-  const { trustSignals } = getAboutContent();
-  const contact = getContactContent();
+  return {
+    title: "Produtos",
+    description:
+      "Catalogo Mari Sport com moda fitness masculina e feminina para academia, corrida e rotina ativa.",
+    alternates: {
+      canonical: "/produtos",
+    },
+    openGraph: {
+      title: `Produtos | ${siteName}`,
+      description: siteDescription,
+      images: ["/logo-marisport.png"],
+    },
+  };
+}
+
+export default async function ProdutosPage() {
+  const [{ sections }, { trustSignals }, contact] = await Promise.all([
+    getCatalogContent(),
+    getAboutContent(),
+    getContactContent(),
+  ]);
   const whatsappLink = buildWhatsAppLink(
     contact.whatsappPhone,
     "Ola! Quero consultar o catalogo da Mari Sport.",

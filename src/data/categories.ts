@@ -1,10 +1,11 @@
 import { productGrid } from "@/data/product";
+import type { CatalogProduct } from "@/data/product";
 
 export type CatalogSection = {
   id: "feminino" | "masculino";
   title: string;
   description: string;
-  products: typeof productGrid;
+  products: CatalogProduct[];
 };
 
 export const categoryData = {
@@ -32,4 +33,3 @@ export const catalogSections: CatalogSection[] = [
     products: productGrid.filter((product) => product.category === "Masculino"),
   },
 ];
-

@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
-import { getSiteContent } from "@/lib/content";
+import { getSiteSettings } from "@/lib/content";
 
 const routes = ["", "/produtos", "/quem-somos", "/contato", "/carrinho"];
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const { siteUrl } = getSiteContent();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const { siteUrl } = await getSiteSettings();
   const updatedAt = new Date();
 
   return routes.map((route) => ({

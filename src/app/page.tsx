@@ -1,5 +1,10 @@
 import { buildWhatsAppLink } from "@/data/product";
-import { getAboutContent, getContactContent, getHomeContent } from "@/lib/content";
+import {
+  getAboutContent,
+  getContactContent,
+  getFeaturedProducts,
+  getHomeContent,
+} from "@/lib/content";
 import { AboutBrandSection } from "@/components/home/about-brand-section";
 import { BenefitsSection } from "@/components/home/benefits-section";
 import { CategorySection } from "@/components/home/category-section";
@@ -9,11 +14,14 @@ import { HomeHero } from "@/components/home/home-hero";
 import { ProductGridSection } from "@/components/home/product-grid-section";
 import { TrustSection } from "@/components/home/trust-section";
 
-const home = getHomeContent();
-const about = getAboutContent();
-const contact = getContactContent();
+export default async function Home() {
+  const [home, about, contact, featuredProducts] = await Promise.all([
+    getHomeContent(),
+    getAboutContent(),
+    getContactContent(),
+    getFeaturedProducts(),
+  ]);
 
-export default function Home() {
   const whatsappLink = buildWhatsAppLink(
     contact.whatsappPhone,
     contact.whatsappMessage,
@@ -53,7 +61,7 @@ export default function Home() {
         eyebrow={home.featuredProducts.eyebrow}
         title={home.featuredProducts.title}
         description={home.featuredProducts.description}
-        products={home.featuredProducts.products}
+        products={featuredProducts}
       />
 
       <AboutBrandSection

@@ -3,26 +3,21 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { CartLink } from "@/components/cart-link";
 import { PromoPopup } from "@/components/promo-popup";
-import {
-  contactEmail,
-  contactPhone,
-  footerColumns,
-  instagramLink,
-  navLinks,
-  siteDescription,
-  siteName,
-  trustSignals,
-  whatsappLink,
-} from "@/data/site";
+import { footerColumns, navLinks, trustSignals } from "@/data/site";
+import { buildWhatsAppLink } from "@/data/product";
+import { getContactContent, getSiteSettings } from "@/lib/content";
 
 type SiteShellProps = {
   children: ReactNode;
 };
 
-export function SiteShell({ children }: SiteShellProps) {
+export default async function SiteShell({ children }: SiteShellProps) {
+  const [contact, site] = await Promise.all([getContactContent(), getSiteSettings()]);
+  const whatsappLink = buildWhatsAppLink(contact.whatsappPhone, contact.whatsappMessage);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <PromoPopup />
+      <PromoPopup whatsappPhone={contact.whatsappPhone} />
 
       <header className="sticky top-0 z-40 border-b border-line bg-white/88 backdrop-blur-xl">
         <div className="mx-auto max-w-6xl px-5 py-4 sm:px-8 lg:px-12">
@@ -63,7 +58,7 @@ export function SiteShell({ children }: SiteShellProps) {
                 WhatsApp
               </Link>
               <Link
-                href={instagramLink}
+                href={contact.instagramUrl}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Abrir Instagram da Mari Sport"
@@ -103,12 +98,12 @@ export function SiteShell({ children }: SiteShellProps) {
               />
             </div>
             <p className="mt-4 max-w-md text-sm leading-7 text-slate-300">
-              {siteName} entrega moda fitness masculina e feminina com visual
+              {site.siteName} entrega moda fitness masculina e feminina com visual
               moderno, conforto e atendimento direto para quem quer comprar com
               mais seguranca.
             </p>
             <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-accent-soft">
-              {siteDescription}
+              {site.siteDescription}
             </p>
           </div>
 
@@ -132,11 +127,11 @@ export function SiteShell({ children }: SiteShellProps) {
               Contato
             </p>
             <div className="mt-4 space-y-3 text-sm text-slate-300">
-              <p>{contactEmail}</p>
-              <p>{contactPhone}</p>
+              <p>{contact.contactEmail}</p>
+              <p>{contact.contactPhone}</p>
               <p>Atendimento online para todo o Brasil</p>
               <Link
-                href={`mailto:${contactEmail}`}
+                href={`mailto:${contact.contactEmail}`}
                 className="inline-flex text-accent-soft hover:text-white"
               >
                 Enviar e-mail
@@ -151,7 +146,7 @@ export function SiteShell({ children }: SiteShellProps) {
                   WhatsApp
                 </Link>
                 <Link
-                  href={instagramLink}
+                  href={contact.instagramUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="rounded-full border border-white/12 bg-white/6 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white"

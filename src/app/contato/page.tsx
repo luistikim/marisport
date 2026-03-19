@@ -2,24 +2,28 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHero } from "@/components/section-hero";
 import { buildWhatsAppLink } from "@/data/product";
-import { getContactContent, getSiteContent } from "@/lib/content";
+import { getContactContent, getSiteSettings } from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "Contato",
-  description:
-    "Fale com a Mari Sport pelo WhatsApp, Instagram ou e-mail para conhecer o catalogo e tirar duvidas sobre pedidos.",
-  alternates: {
-    canonical: "/contato",
-  },
-  openGraph: {
-    title: `Contato | ${getSiteContent().siteName}`,
-    description: getSiteContent().siteDescription,
-    images: ["/logo-marisport.png"],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteName, siteDescription } = await getSiteSettings();
 
-export default function ContatoPage() {
-  const contact = getContactContent();
+  return {
+    title: "Contato",
+    description:
+      "Fale com a Mari Sport pelo WhatsApp, Instagram ou e-mail para conhecer o catalogo e tirar duvidas sobre pedidos.",
+    alternates: {
+      canonical: "/contato",
+    },
+    openGraph: {
+      title: `Contato | ${siteName}`,
+      description: siteDescription,
+      images: ["/logo-marisport.png"],
+    },
+  };
+}
+
+export default async function ContatoPage() {
+  const contact = await getContactContent();
   const whatsappLink = buildWhatsAppLink(contact.whatsappPhone, contact.whatsappMessage);
 
   return (

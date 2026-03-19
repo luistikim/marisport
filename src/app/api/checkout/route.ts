@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { CartItem } from "@/components/cart-provider";
-import { catalogById } from "@/data/site";
 import { calculateSubtotal, saveOrder, type OrderRecord } from "@/lib/orders";
+import { getCatalogProductById } from "@/lib/content";
 
 type CheckoutRequestItem = {
   id: string;
@@ -43,8 +43,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const items = body.items.map((entry) => {
-      const product = catalogById[entry.id];
+    const items: CartItem[] = [];
+
+    for (const entry of body.items) {
+      const product = await getCatalogProductById(entry.id);
 
       if (!product) {
         throw new Error("Produto invalido no carrinho.");
@@ -60,8 +62,8 @@ export async function POST(request: Request) {
         );
       }
 
-      return { ...product, quantity: entry.quantity } as CartItem;
-    });
+      items.push({ ...product, quantity: entry.quantity } as CartItem);
+    }
 
     const baseUrl = getBaseUrl(request);
     const orderId = crypto.randomUUID();

@@ -1,3 +1,5 @@
+import { contactData } from "@/data/contact";
+
 export type CatalogProduct = {
   id: string;
   name: string;
@@ -11,6 +13,7 @@ export type CatalogProduct = {
   category?: "Feminino" | "Masculino";
   availability?: string[];
   statusLabel?: string;
+  featured?: boolean;
 };
 
 export const productGrid: CatalogProduct[] = [
@@ -135,4 +138,3 @@ export function buildProductInquiryMessage(product: CatalogProduct) {
 export function buildProductInquiryLink(product: CatalogProduct) {
   return buildWhatsAppLink(buildProductInquiryMessage(product));
 }
-import { contactData } from "@/data/contact";

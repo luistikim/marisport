@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { buildWhatsAppLink } from "@/data/site";
+import { buildWhatsAppLink } from "@/data/product";
 
 const STORAGE_KEY = "marisport-promo-popup-dismissed";
 const couponCode = "VIP25";
 
-export function PromoPopup() {
+type PromoPopupProps = {
+  whatsappPhone: string;
+};
+
+export function PromoPopup({ whatsappPhone }: PromoPopupProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -44,7 +48,11 @@ export function PromoPopup() {
       `Podem me enviar o cupom ${couponCode} e me mostrar as peças em destaque?`;
 
     handleClose();
-    window.open(buildWhatsAppLink(message), "_blank", "noopener,noreferrer");
+    window.open(
+      buildWhatsAppLink(whatsappPhone, message),
+      "_blank",
+      "noopener,noreferrer",
+    );
   }
 
   if (!isOpen) {
@@ -125,3 +133,4 @@ export function PromoPopup() {
     </div>
   );
 }
+

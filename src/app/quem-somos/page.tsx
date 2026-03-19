@@ -3,25 +3,28 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { SectionHero } from "@/components/section-hero";
 import { buildWhatsAppLink } from "@/data/product";
-import { getAboutContent, getContactContent, getSiteContent } from "@/lib/content";
+import { getAboutContent, getContactContent, getSiteSettings } from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "Quem Somos",
-  description:
-    "Conheca a historia, a identidade e a proposta da Mari Sport como marca de moda fitness com foco em confianca e estilo.",
-  alternates: {
-    canonical: "/quem-somos",
-  },
-  openGraph: {
-    title: `Quem Somos | ${getSiteContent().siteName}`,
-    description: getSiteContent().siteDescription,
-    images: ["/logo-marisport.png"],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteName, siteDescription } = await getSiteSettings();
 
-export default function QuemSomosPage() {
-  const about = getAboutContent();
-  const contact = getContactContent();
+  return {
+    title: "Quem Somos",
+    description:
+      "Conheca a historia, a identidade e a proposta da Mari Sport como marca de moda fitness com foco em confianca e estilo.",
+    alternates: {
+      canonical: "/quem-somos",
+    },
+    openGraph: {
+      title: `Quem Somos | ${siteName}`,
+      description: siteDescription,
+      images: ["/logo-marisport.png"],
+    },
+  };
+}
+
+export default async function QuemSomosPage() {
+  const [about, contact] = await Promise.all([getAboutContent(), getContactContent()]);
   const whatsappLink = buildWhatsAppLink(contact.whatsappPhone, contact.whatsappMessage);
 
   return (

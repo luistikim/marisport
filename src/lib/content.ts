@@ -83,7 +83,7 @@ function mapSanityProduct(product: SanityProductDoc): CatalogProduct | null {
     galleryImages: galleryImages.length
       ? galleryImages.map((image) => ({
           src: image.imageUrl as string,
-          alt: image.alt || product.name,
+          alt: image.alt ?? product.name,
         }))
       : product.imageSrc
         ? [{ src: product.imageSrc, alt: product.name }]

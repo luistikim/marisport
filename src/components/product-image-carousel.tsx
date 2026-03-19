@@ -41,21 +41,23 @@ export function ProductImageCarousel({
   });
 
   useEffect(() => {
-    if (!carouselApi) {
+    const api = carouselApi as NonNullable<typeof carouselApi>;
+
+    if (!api) {
       return;
     }
 
     function onSelect() {
-      setSelectedIndex(carouselApi.selectedScrollSnap());
+      setSelectedIndex(api.selectedScrollSnap());
     }
 
     onSelect();
-    carouselApi.on("select", onSelect);
-    carouselApi.on("reInit", onSelect);
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
 
     return () => {
-      carouselApi.off("select", onSelect);
-      carouselApi.off("reInit", onSelect);
+      api.off("select", onSelect);
+      api.off("reInit", onSelect);
     };
   }, [carouselApi]);
 
@@ -68,20 +70,22 @@ export function ProductImageCarousel({
   }, [isLightboxOpen, lightboxApi, selectedIndex]);
 
   useEffect(() => {
-    if (!lightboxApi) {
+    const api = lightboxApi as NonNullable<typeof lightboxApi>;
+
+    if (!api) {
       return;
     }
 
     function onSelect() {
-      setSelectedIndex(lightboxApi.selectedScrollSnap());
+      setSelectedIndex(api.selectedScrollSnap());
     }
 
-    lightboxApi.on("select", onSelect);
-    lightboxApi.on("reInit", onSelect);
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
 
     return () => {
-      lightboxApi.off("select", onSelect);
-      lightboxApi.off("reInit", onSelect);
+      api.off("select", onSelect);
+      api.off("reInit", onSelect);
     };
   }, [lightboxApi]);
 

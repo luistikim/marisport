@@ -106,14 +106,6 @@ export function LookbookGallery({ collections }: LookbookGalleryProps) {
                 sizes="(max-width: 640px) 84vw, 340px"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-5">
-                <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full bg-accent px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-surface-strong">
-                    {look.color}
-                  </span>
-                  <span className="rounded-full border border-white/16 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white">
-                    {look.type}
-                  </span>
-                </div>
                 <h3 className="mt-3 text-2xl font-black uppercase text-white">
                   {look.title}
                 </h3>
@@ -152,14 +144,6 @@ export function LookbookGallery({ collections }: LookbookGalleryProps) {
                 </div>
 
                 <div className="text-white">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full bg-accent px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong">
-                      {activeGroup.color}
-                    </span>
-                    <span className="rounded-full border border-white/16 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-white">
-                      {activeGroup.type}
-                    </span>
-                  </div>
                   <h3 className="mt-4 text-3xl font-black uppercase">
                     {activeGroup.title}
                   </h3>

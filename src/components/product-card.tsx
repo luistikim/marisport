@@ -37,16 +37,6 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
             style={{ objectPosition: product.imagePosition ?? "center" }}
             sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
           />
-          <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-            <span className="rounded-full border border-white/70 bg-white/90 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-surface-strong backdrop-blur">
-              {product.badge}
-            </span>
-            {product.statusLabel ? (
-              <span className="rounded-full bg-surface-strong/90 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur">
-                {product.statusLabel}
-              </span>
-            ) : null}
-          </div>
         </Link>
       ) : (
         <div className="flex aspect-[4/5] items-end bg-[linear-gradient(135deg,#203a43_0%,#395a60_52%,#8da8ab_100%)] p-6 text-white">

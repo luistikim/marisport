@@ -46,7 +46,7 @@ export function SectionHero({
             {primaryAction ? (
               <Link
                 href={primaryAction.href}
-                className="inline-flex items-center justify-center rounded-full bg-surface-strong px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white"
+                className="inline-flex items-center justify-center rounded-full bg-[#dff1cf] px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6]"
               >
                 {primaryAction.label}
               </Link>
@@ -56,7 +56,7 @@ export function SectionHero({
                 href={secondaryAction.href}
                 target={secondaryAction.external ? "_blank" : undefined}
                 rel={secondaryAction.external ? "noreferrer" : undefined}
-                className="inline-flex items-center justify-center rounded-full border border-[#d8e4db] bg-[#f7faf7] px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                className="inline-flex items-center justify-center rounded-full border border-[#d8e4db] bg-white px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-[#f4fbef]"
               >
                 {secondaryAction.label}
               </Link>

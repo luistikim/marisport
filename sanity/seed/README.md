@@ -1,18 +1,39 @@
-# Seed inicial Mari Sport
+# Seed da Mari Sport
 
-Este arquivo `initial.ndjson` pode ser importado no Sanity para criar o conteúdo inicial do projeto.
+Este projeto inclui um seed TypeScript para popular o Sanity com os dados atuais do site.
 
-Opção 1: importar com a CLI do Sanity
+## Como rodar
 
 ```bash
-npx sanity dataset import sanity/seed/initial.ndjson production --replace
+npm run seed
 ```
 
-Opção 2: importar pelo painel do Sanity
-- Abra o Studio em `/studio`
-- Crie os documentos manualmente com base neste seed
+## Dependências
 
-Observações
-- Os documentos foram criados com os `_type` usados nos schemas atuais.
-- Os produtos já estão ligados às categorias por referência.
-- As imagens dos produtos podem ser adicionadas depois no Studio, sem afetar o site.
+- `@sanity/client` para escrita no Sanity
+- Node 24+ com suporte a `--experimental-strip-types`
+
+## Variáveis de ambiente
+
+Defina estas variáveis no `.env.local`:
+
+- `NEXT_PUBLIC_SANITY_PROJECT_ID`
+- `NEXT_PUBLIC_SANITY_DATASET`
+- `NEXT_PUBLIC_SANITY_API_VERSION`
+- `SANITY_WRITE_TOKEN`
+
+## O que o seed faz
+
+- Cria ou substitui os documentos de:
+  - home
+  - produtos
+  - categorias
+  - contato
+  - sobre a marca
+  - configuração do site
+- Reaproveita os IDs fixos para evitar duplicação
+- Faz upload das imagens locais encontradas em `public/`
+
+## Observação
+
+O seed foi feito para refletir o conteúdo atual do projeto. Se você alterar o conteúdo local depois, basta rodar `npm run seed` novamente para sincronizar o CMS.

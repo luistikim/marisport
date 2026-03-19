@@ -1,5 +1,5 @@
-import { productGrid } from "@/data/product";
-import type { CatalogProduct } from "@/data/product";
+import type { CatalogProduct } from "./product.ts";
+import { productGrid } from "./product.ts";
 
 export type CatalogSection = {
   id: "feminino" | "masculino";

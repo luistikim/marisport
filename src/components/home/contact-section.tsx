@@ -72,13 +72,13 @@ export function ContactSection({
               href={whatsappLink}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-surface-strong px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-white"
+              className="inline-flex items-center justify-center rounded-full bg-[#dff1cf] px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6]"
             >
               Falar no WhatsApp
             </Link>
             <Link
               href={emailLink}
-              className="inline-flex items-center justify-center rounded-full border border-surface-strong/20 bg-white/65 px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-surface-strong"
+              className="inline-flex items-center justify-center rounded-full border border-surface-strong/15 bg-white/90 px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-white"
             >
               Enviar e-mail
             </Link>

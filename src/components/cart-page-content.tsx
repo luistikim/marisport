@@ -97,7 +97,7 @@ export function CartPageContent() {
                 <button
                   type="button"
                   onClick={() => removeItem(item.id)}
-                  className="rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-700 transition-colors hover:border-[#ff5f2e] hover:text-[#ff5f2e]"
+                  className="rounded-full border border-[#d8e4db] bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong transition-colors hover:border-accent hover:text-accent"
                 >
                   Remover
                 </button>
@@ -116,7 +116,7 @@ export function CartPageContent() {
                   <button
                     type="button"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="px-4 py-2 text-lg font-bold text-slate-700"
+                    className="px-4 py-2 text-lg font-bold text-surface-strong"
                     aria-label={`Diminuir quantidade de ${item.name}`}
                   >
                     -
@@ -127,7 +127,7 @@ export function CartPageContent() {
                   <button
                     type="button"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="px-4 py-2 text-lg font-bold text-slate-700"
+                    className="px-4 py-2 text-lg font-bold text-surface-strong"
                     aria-label={`Aumentar quantidade de ${item.name}`}
                   >
                     +
@@ -138,21 +138,21 @@ export function CartPageContent() {
           ))}
         </div>
 
-        <aside className="rounded-[2rem] bg-[#263537] p-8 text-white shadow-[0_18px_60px_rgba(19,38,59,0.22)]">
+        <aside className="rounded-[2rem] bg-[linear-gradient(135deg,#d8ff9e_0%,#97ee4a_48%,#64d21c_100%)] p-8 text-surface-strong shadow-[0_18px_60px_rgba(125,187,56,0.14)]">
           <p className="text-sm font-bold uppercase tracking-[0.22em] text-accent">
             Resumo do pedido
           </p>
           <h2 className="mt-4 text-3xl font-black uppercase leading-tight">
             Revise os itens e envie para atendimento.
           </h2>
-          <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/6 p-5">
-            <p className="text-sm uppercase tracking-[0.16em] text-slate-300">
+          <div className="mt-6 rounded-[1.5rem] border border-white/45 bg-white/65 p-5">
+            <p className="text-sm uppercase tracking-[0.16em] text-[#506859]">
               Itens no carrinho
             </p>
             <p className="mt-2 text-4xl font-black">{itemCount}</p>
           </div>
-          <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-white/6 p-5">
-            <p className="text-sm uppercase tracking-[0.16em] text-slate-300">
+          <div className="mt-4 rounded-[1.5rem] border border-white/45 bg-white/65 p-5">
+            <p className="text-sm uppercase tracking-[0.16em] text-[#506859]">
               Subtotal
             </p>
             <p className="mt-2 text-3xl font-black">
@@ -169,7 +169,7 @@ export function CartPageContent() {
               onChange={(event) => setNotes(event.target.value)}
               rows={5}
               placeholder="Ex.: quero ver cores disponiveis, tamanhos M e G, ou combinar entrega."
-              className="mt-3 w-full rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-400"
+              className="mt-3 w-full rounded-[1.2rem] border border-white/45 bg-white/80 px-4 py-3 text-sm text-surface-strong outline-none placeholder:text-[#7a8b7f]"
             />
           </label>
 
@@ -179,20 +179,20 @@ export function CartPageContent() {
               href={whatsappHref}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex justify-center rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-surface-strong"
+              className="inline-flex justify-center rounded-full bg-[#dff1cf] px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#27402c] hover:bg-[#cee4b6]"
             >
               Enviar pedido no WhatsApp
             </Link>
             <Link
               href={`mailto:${contactEmail}?subject=Pedido%20Mari%20Sport`}
-              className="inline-flex justify-center rounded-full border border-white/16 bg-white/8 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white"
+              className="inline-flex justify-center rounded-full border border-white/30 bg-white/86 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-surface-strong hover:bg-white"
             >
               Enviar por e-mail
             </Link>
             <button
               type="button"
               onClick={clearCart}
-              className="inline-flex justify-center rounded-full border border-white/16 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-slate-200"
+              className="inline-flex justify-center rounded-full border border-white/30 bg-white/15 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-surface-strong hover:bg-white/30"
             >
               Limpar carrinho
             </button>

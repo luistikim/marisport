@@ -164,13 +164,13 @@ export function CheckoutStatusTracker({
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             href="/carrinho"
-            className="inline-flex rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-surface-strong"
+            className="inline-flex rounded-full bg-[#dff1cf] px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#27402c] hover:bg-[#cee4b6]"
           >
             Voltar ao carrinho
           </Link>
           <Link
             href="/contato"
-            className="inline-flex rounded-full border border-white/16 bg-white/8 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white"
+            className="inline-flex rounded-full border border-white/30 bg-white/86 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-surface-strong hover:bg-white"
           >
             Falar com a loja
           </Link>

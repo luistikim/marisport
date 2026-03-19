@@ -95,7 +95,7 @@ export function LookbookGallery({ collections }: LookbookGalleryProps) {
             key={look.id}
             type="button"
             onClick={() => openGroup(look)}
-            className="w-[84vw] shrink-0 snap-start overflow-hidden rounded-[2rem] border border-white/10 bg-[#263537] text-left shadow-[0_18px_50px_rgba(19,38,59,0.16)] transition-transform hover:-translate-y-1 sm:w-[340px]"
+            className="w-[84vw] shrink-0 snap-start overflow-hidden rounded-[2rem] border border-[#d8e4db] bg-white text-left shadow-[0_18px_50px_rgba(19,38,59,0.08)] transition-transform hover:-translate-y-1 sm:w-[340px]"
           >
             <div className="relative aspect-[4/5] overflow-hidden">
               <Image
@@ -133,7 +133,7 @@ export function LookbookGallery({ collections }: LookbookGalleryProps) {
             type="button"
             aria-label="Fechar galeria"
             onClick={() => setActiveGroup(null)}
-            className="fixed right-4 top-4 z-[80] rounded-full border border-white/14 bg-white/10 px-4 py-2 text-sm font-bold uppercase tracking-[0.14em] text-white"
+            className="fixed right-4 top-4 z-[80] rounded-full border border-white/30 bg-white/86 px-4 py-2 text-sm font-bold uppercase tracking-[0.14em] text-surface-strong hover:bg-white"
           >
             Fechar
           </button>
@@ -175,14 +175,14 @@ export function LookbookGallery({ collections }: LookbookGalleryProps) {
                     <button
                       type="button"
                       onClick={goPrev}
-                      className="rounded-full border border-white/14 bg-white/8 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-white"
+                      className="rounded-full border border-white/30 bg-white/86 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-surface-strong hover:bg-white"
                     >
                       Anterior
                     </button>
                     <button
                       type="button"
                       onClick={goNext}
-                      className="rounded-full bg-accent px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-surface-strong"
+                      className="rounded-full bg-[#dff1cf] px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[#27402c] hover:bg-[#cee4b6]"
                     >
                       Próxima
                     </button>

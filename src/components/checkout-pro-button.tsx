@@ -59,12 +59,12 @@ export function CheckoutProButton({
         type="button"
         onClick={handleCheckout}
         disabled={disabled || isLoading}
-        className="inline-flex justify-center rounded-full bg-[#009ee3] px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex justify-center rounded-full bg-[#dff1cf] px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#27402c] transition-opacity hover:bg-[#cee4b6] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLoading ? "Abrindo checkout..." : "Pagar com Mercado Pago"}
       </button>
       {errorMessage ? (
-        <p className="text-sm leading-6 text-[#ffd3c5]">{errorMessage}</p>
+        <p className="text-sm leading-6 text-[#8f5a45]">{errorMessage}</p>
       ) : null}
     </div>
   );

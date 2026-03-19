@@ -28,7 +28,7 @@ export function CategorySection({
           </div>
           <Link
             href="/produtos"
-            className="inline-flex rounded-full border border-[#d9e5dc] bg-white px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+            className="inline-flex rounded-full border border-[#d9e5dc] bg-white px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-[#f4fbef]"
           >
             {ctaLabel}
           </Link>
@@ -66,7 +66,7 @@ export function CategorySection({
                 </div>
                 <Link
                   href={`/produtos#${section.id}`}
-                  className="mt-6 inline-flex w-fit rounded-full bg-surface-strong px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white"
+                  className="mt-6 inline-flex w-fit rounded-full bg-[#dff1cf] px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6]"
                 >
                   Explorar {section.title.toLowerCase()}
                 </Link>
@@ -78,4 +78,3 @@ export function CategorySection({
     </section>
   );
 }
-

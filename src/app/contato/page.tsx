@@ -62,7 +62,7 @@ export default async function ContatoPage() {
                   href={whatsappLink}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 inline-flex rounded-full bg-surface-strong px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white"
+                  className="mt-4 inline-flex rounded-full bg-[#dff1cf] px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6]"
                 >
                   Abrir WhatsApp
                 </Link>
@@ -90,7 +90,7 @@ export default async function ContatoPage() {
                   href={contact.instagramUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 inline-flex rounded-full border border-[#d9e5dc] bg-white px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                  className="mt-4 inline-flex rounded-full border border-[#d9e5dc] bg-[#f7fbf7] px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-white"
                 >
                   Abrir Instagram
                 </Link>
@@ -129,7 +129,7 @@ export default async function ContatoPage() {
               href={whatsappLink}
               target="_blank"
               rel="noreferrer"
-              className="mt-8 inline-flex rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-surface-strong"
+              className="mt-8 inline-flex rounded-full bg-[#dff1cf] px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#27402c] hover:bg-[#cee4b6]"
             >
               Falar agora
             </Link>

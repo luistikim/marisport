@@ -114,7 +114,7 @@ export default async function QuemSomosPage() {
                   href={channel.href}
                   target={channel.href.startsWith("http") ? "_blank" : undefined}
                   rel={channel.href.startsWith("http") ? "noreferrer" : undefined}
-                  className="mt-5 inline-flex rounded-full border border-[#d9e5dc] bg-[#f8fbf8] px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                  className="mt-5 inline-flex rounded-full border border-[#d9e5dc] bg-[#f7fbf7] px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-white"
                 >
                   {channel.cta}
                 </Link>
@@ -200,7 +200,7 @@ export default async function QuemSomosPage() {
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full bg-surface-strong px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-white"
+                className="rounded-full bg-[#dff1cf] px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6]"
               >
                 Abrir WhatsApp
               </Link>
@@ -208,7 +208,7 @@ export default async function QuemSomosPage() {
                 href={contact.instagramUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-surface-strong/20 bg-white/70 px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-surface-strong"
+                className="rounded-full border border-surface-strong/15 bg-white/90 px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-white"
               >
                 Ver Instagram
               </Link>

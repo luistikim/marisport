@@ -1,4 +1,4 @@
-import { contactData } from "@/data/contact";
+import { contactData } from "./contact.ts";
 
 export type CatalogProduct = {
   id: string;

@@ -1,7 +1,7 @@
-import { brandBenefits, coupleStory, trustSignals } from "@/data/about";
-import { catalogSections } from "@/data/categories";
-import { contactData } from "@/data/contact";
-import { productGrid } from "@/data/product";
+import { brandBenefits, coupleStory, trustSignals } from "./about.ts";
+import { catalogSections } from "./categories.ts";
+import { contactData } from "./contact.ts";
+import { productGrid } from "./product.ts";
 
 export const homeHero = {
   eyebrow: "Mari Sport",

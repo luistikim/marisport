@@ -33,7 +33,7 @@ export function CtaSection({
           <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
             <Link
               href={primaryCta.href}
-              className="inline-flex items-center justify-center rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-surface-strong"
+              className="inline-flex items-center justify-center rounded-full bg-[#dff1cf] px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6]"
             >
               {primaryCta.label}
             </Link>
@@ -41,7 +41,7 @@ export function CtaSection({
               href={secondaryCta.href}
               target={secondaryCta.external ? "_blank" : undefined}
               rel={secondaryCta.external ? "noreferrer" : undefined}
-              className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-white"
+              className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/86 px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-white"
             >
               {secondaryCta.label}
             </Link>
@@ -51,4 +51,3 @@ export function CtaSection({
     </section>
   );
 }
-

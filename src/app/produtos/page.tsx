@@ -77,7 +77,7 @@ export default async function ProdutosPage() {
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full bg-accent px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
+                className="rounded-full bg-[#dff1cf] px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6]"
               >
                 Falar no WhatsApp
               </Link>
@@ -150,13 +150,13 @@ export default async function ProdutosPage() {
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-surface-strong"
+                className="inline-flex items-center justify-center rounded-full bg-[#dff1cf] px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6]"
               >
                 Consultar no WhatsApp
               </Link>
               <Link
                 href={`mailto:${contact.contactEmail}?subject=Catalogo%20Mari%20Sport`}
-                className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-white"
+                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/86 px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-white"
               >
                 Enviar e-mail
               </Link>

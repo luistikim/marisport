@@ -1,6 +1,6 @@
-import { brandBenefits, brandChannels, brandPillars, brandStoryMoments, coupleStory, trustSignals } from "@/data/about";
-import { categoryData, catalogSections } from "@/data/categories";
-import { contactData } from "@/data/contact";
+import { brandBenefits, brandChannels, brandPillars, brandStoryMoments, coupleStory, trustSignals } from "./about.ts";
+import { categoryData, catalogSections } from "./categories.ts";
+import { contactData } from "./contact.ts";
 import {
   buildProductInquiryMessage,
   buildProductInquiryLink,
@@ -9,7 +9,7 @@ import {
   formatCurrency,
   productGrid,
   type CatalogProduct,
-} from "@/data/product";
+} from "./product.ts";
 
 export type { CatalogProduct };
 

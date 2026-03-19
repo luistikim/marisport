@@ -53,7 +53,7 @@ export default async function SiteShell({ children }: SiteShellProps) {
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                className="hidden rounded-full bg-surface-strong px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white hover:bg-[#203235] sm:inline-flex"
+                className="hidden rounded-full bg-[#dff1cf] px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6] sm:inline-flex"
               >
                 WhatsApp
               </Link>
@@ -149,7 +149,7 @@ export default async function SiteShell({ children }: SiteShellProps) {
                   href={contact.instagramUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full border border-white/12 bg-white/6 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white"
+                  className="rounded-full border border-white/30 bg-white/86 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-white"
                 >
                   Instagram
                 </Link>

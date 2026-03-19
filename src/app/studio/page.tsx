@@ -2,7 +2,11 @@
 
 import { NextStudio } from "next-sanity/studio";
 import config from "../../../sanity.config";
-import { sanityConfigured } from "@/sanity/lib/env";
+
+const sanityConfigured = Boolean(
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim() &&
+    process.env.NEXT_PUBLIC_SANITY_DATASET?.trim(),
+);
 
 export default function StudioPage() {
   if (!sanityConfigured) {

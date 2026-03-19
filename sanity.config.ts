@@ -1,7 +1,9 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
-import { sanityDataset, sanityProjectId } from "./src/sanity/lib/env";
 import { schemaTypes } from "./src/sanity/schemaTypes";
+
+const sanityProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim() ?? "";
+const sanityDataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim() ?? "";
 
 export default defineConfig({
   name: "default",

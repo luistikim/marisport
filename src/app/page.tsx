@@ -58,9 +58,6 @@ export default async function Home() {
       />
 
       <ProductGridSection
-        eyebrow={home.featuredProducts.eyebrow}
-        title={home.featuredProducts.title}
-        description={home.featuredProducts.description}
         products={featuredProducts}
       />
 

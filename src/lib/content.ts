@@ -61,17 +61,33 @@ function mapSanityProduct(product: SanityProductDoc): CatalogProduct | null {
     return null;
   }
 
+  const galleryImages = (product.images ?? [])
+    .map((image) => ({
+      alt: image.alt?.trim() ?? product.name ?? "",
+      imageUrl: image.imageUrl ?? image.asset?.url ?? null,
+    }))
+    .filter((image) => image.imageUrl);
+
   return {
     id: product.slug.current,
     name: product.name,
     badge: product.badge ?? "Produto",
     description: product.shortDescription ?? product.fullDescription ?? "",
+    fullDescription: product.fullDescription ?? product.shortDescription ?? "",
     unitPrice: typeof product.unitPrice === "number" ? product.unitPrice : null,
     originalPrice:
       typeof product.originalPrice === "number" ? product.originalPrice : null,
-    imageSrc: product.imageSrc ?? undefined,
+    imageSrc: product.imageSrc ?? galleryImages[0]?.imageUrl ?? undefined,
     imageFit: product.imageFit ?? "contain",
     imagePosition: product.imagePosition ?? "center",
+    galleryImages: galleryImages.length
+      ? galleryImages.map((image) => ({
+          src: image.imageUrl as string,
+          alt: image.alt || product.name,
+        }))
+      : product.imageSrc
+        ? [{ src: product.imageSrc, alt: product.name }]
+        : undefined,
     category:
       product.categoryTitle === "Feminino" || product.categoryTitle === "Masculino"
         ? product.categoryTitle

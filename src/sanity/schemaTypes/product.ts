@@ -54,6 +54,28 @@ export const productType = defineType({
       options: { hotspot: true },
     }),
     defineField({
+      name: "images",
+      title: "Galeria de imagens",
+      type: "array",
+      description: "Adicione várias imagens e arraste para ordenar.",
+      of: [
+        defineField({
+          name: "galleryImage",
+          title: "Imagem",
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Texto alternativo",
+              type: "string",
+            }),
+          ],
+        }),
+      ],
+      validation: (Rule) => Rule.min(1).max(10),
+    }),
+    defineField({
       name: "category",
       title: "Categoria",
       type: "reference",
@@ -99,4 +121,3 @@ export const productType = defineType({
     },
   },
 });
-

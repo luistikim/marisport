@@ -79,6 +79,10 @@ export const productsQuery = `*[_type == "produto"] | order(order asc){
   unitPrice,
   originalPrice,
   "imageSrc": image.asset->url,
+  images[]{
+    alt,
+    "imageUrl": asset->url
+  },
   imageFit,
   imagePosition,
   "categorySlug": category->slug.current,
@@ -96,4 +100,3 @@ export const siteSettingsQuery = `*[_type == "configuracaoSite"][0]{
   siteKeywords,
   siteUrl
 }`;
-

@@ -5,11 +5,16 @@ export type CatalogProduct = {
   name: string;
   badge: string;
   description: string;
+  fullDescription?: string;
   unitPrice: number | null;
   originalPrice?: number | null;
   imageSrc?: string;
   imageFit?: "cover" | "contain";
   imagePosition?: string;
+  galleryImages?: Array<{
+    src: string;
+    alt: string;
+  }>;
   category?: "Feminino" | "Masculino";
   availability?: string[];
   statusLabel?: string;

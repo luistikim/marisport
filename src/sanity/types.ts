@@ -79,6 +79,13 @@ export type SanityProductDoc = {
   unitPrice?: number | null;
   originalPrice?: number | null;
   imageSrc?: string | null;
+  images?: Array<{
+    alt?: string;
+    imageUrl?: string | null;
+    asset?: {
+      url?: string | null;
+    };
+  }>;
   imageFit?: "cover" | "contain";
   imagePosition?: string;
   categorySlug?: string;
@@ -96,4 +103,3 @@ export type SanitySiteSettingsDoc = {
   siteKeywords?: string[];
   siteUrl?: string;
 };
-

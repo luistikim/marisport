@@ -15,11 +15,16 @@ type ProductCardProps = {
 export function ProductCard({ product, compact = false }: ProductCardProps) {
   const price = typeof product.unitPrice === "number" ? product.unitPrice : null;
   const hasPrice = price !== null && price > 0;
+  const detailHref = `/produtos/${product.id}`;
 
   return (
     <article className="group overflow-hidden rounded-[2rem] border border-[#d8e4db] bg-white shadow-[0_16px_40px_rgba(19,38,59,0.08)] transition-transform duration-300 hover:-translate-y-1">
       {product.imageSrc ? (
-        <div className="relative aspect-[4/5] overflow-hidden bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf6_48%,#e6efe2_100%)]">
+        <Link
+          href={detailHref}
+          className="relative block aspect-[4/5] overflow-hidden bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf6_48%,#e6efe2_100%)]"
+          aria-label={`Ver detalhes de ${product.name}`}
+        >
           <Image
             src={product.imageSrc}
             alt={product.name}
@@ -42,7 +47,7 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
               </span>
             ) : null}
           </div>
-        </div>
+        </Link>
       ) : (
         <div className="flex aspect-[4/5] items-end bg-[linear-gradient(135deg,#203a43_0%,#395a60_52%,#8da8ab_100%)] p-6 text-white">
           <h3 className="max-w-[14ch] text-3xl font-black uppercase leading-tight">
@@ -65,9 +70,11 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
               </span>
             ) : null}
           </div>
-          <h3 className="text-2xl font-black uppercase leading-tight text-surface-strong">
-            {product.name}
-          </h3>
+          <Link href={detailHref} className="block">
+            <h3 className="text-2xl font-black uppercase leading-tight text-surface-strong hover:text-accent">
+              {product.name}
+            </h3>
+          </Link>
           <p className="text-sm leading-7 text-[#536566]">{product.description}</p>
         </div>
 
@@ -120,6 +127,12 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
               Consultar disponibilidade
             </Link>
           )}
+          <Link
+            href={detailHref}
+            className="inline-flex items-center justify-center rounded-full border border-[#dbe5db] bg-white px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong transition-colors hover:border-accent hover:text-accent"
+          >
+            Ver detalhes
+          </Link>
           <p className="text-xs leading-6 text-[#6b7c79]">
             {hasPrice
               ? "Adicione ao carrinho e finalize depois com mais detalhes."

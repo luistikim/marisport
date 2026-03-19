@@ -56,11 +56,9 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
               </span>
             ) : null}
           </div>
-          <Link href={detailHref} className="block">
-            <h3 className="text-2xl font-black uppercase leading-tight text-surface-strong hover:text-accent">
-              {product.name}
-            </h3>
-          </Link>
+          <h3 className="text-2xl font-black uppercase leading-tight text-surface-strong">
+            {product.name}
+          </h3>
           <p className="text-sm leading-7 text-[#536566]">{product.description}</p>
         </div>
 

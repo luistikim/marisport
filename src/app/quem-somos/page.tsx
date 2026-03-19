@@ -2,16 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { SectionHero } from "@/components/section-hero";
-import {
-  brandChannels,
-  brandPillars,
-  brandStoryMoments,
-  coupleStory,
-  instagramLink,
-  siteDescription,
-  siteName,
-  whatsappLink,
-} from "@/data/site";
+import { buildWhatsAppLink } from "@/data/product";
+import { getAboutContent, getContactContent, getSiteContent } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Quem Somos",
@@ -21,19 +13,25 @@ export const metadata: Metadata = {
     canonical: "/quem-somos",
   },
   openGraph: {
-    title: `Quem Somos | ${siteName}`,
-    description: siteDescription,
+    title: `Quem Somos | ${getSiteContent().siteName}`,
+    description: getSiteContent().siteDescription,
     images: ["/logo-marisport.png"],
   },
 };
 
 export default function QuemSomosPage() {
+  const about = getAboutContent();
+  const contact = getContactContent();
+  const whatsappLink = buildWhatsAppLink(contact.whatsappPhone, contact.whatsappMessage);
+
   return (
     <main>
       <SectionHero
         eyebrow="Quem Somos"
         title="Uma marca criada para vestir o movimento com identidade."
         description="A Mari Sport organiza catalogo, comunidade e atendimento em uma proposta de moda fitness feita para treino, corrida e rotina ativa."
+        primaryAction={{ label: "Abrir WhatsApp", href: whatsappLink, external: true }}
+        secondaryAction={{ label: "Ver Instagram", href: contact.instagramUrl, external: true }}
       />
 
       <section className="px-5 pb-8 sm:px-8 lg:px-12">
@@ -51,7 +49,7 @@ export default function QuemSomosPage() {
               valoriza pecas reais, fotos de uso e atendimento direto.
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              {coupleStory.map((item) => (
+              {about.coupleStory.map((item) => (
                 <div key={item.title} className="rounded-[1.2rem] border border-white/10 bg-white/8 p-4">
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-soft">
                     {item.title}
@@ -63,7 +61,7 @@ export default function QuemSomosPage() {
           </article>
 
           <div className="grid gap-4">
-            {brandStoryMoments.map((item) => (
+            {about.brandStoryMoments.map((item) => (
               <article
                 key={item.title}
                 className="rounded-[1.75rem] border border-[#d9e5dc] bg-white p-6 shadow-[0_14px_30px_rgba(19,38,59,0.06)]"
@@ -98,7 +96,7 @@ export default function QuemSomosPage() {
           </div>
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {brandChannels.map((channel) => (
+            {about.brandChannels.map((channel) => (
               <article
                 key={channel.title}
                 className="rounded-[1.8rem] border border-[#d9e5dc] bg-white p-6 shadow-[0_16px_40px_rgba(19,38,59,0.06)]"
@@ -133,11 +131,11 @@ export default function QuemSomosPage() {
               O que guia a Mari Sport no produto e na comunicacao.
             </h2>
             <div className="mt-6 grid gap-4">
-              {brandPillars.map((pillar) => (
-                <div
-                  key={pillar.title}
-                  className="rounded-[1.4rem] border border-[#d9e5dc] bg-[#f8fbf8] p-5"
-                >
+            {about.brandPillars.map((pillar) => (
+              <div
+                key={pillar.title}
+                className="rounded-[1.4rem] border border-[#d9e5dc] bg-[#f8fbf8] p-5"
+              >
                   <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#4f6a56]">
                     {pillar.title}
                   </p>
@@ -157,7 +155,7 @@ export default function QuemSomosPage() {
               A marca ganha forca quando aparece em uso real.
             </h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
-              {brandStoryMoments.map((item, index) => (
+              {about.brandStoryMoments.map((item, index) => (
                 <div key={`${item.title}-${index}`} className="overflow-hidden rounded-[1.5rem] bg-white/8">
                   <div className="relative aspect-[4/5]">
                     <Image
@@ -204,7 +202,7 @@ export default function QuemSomosPage() {
                 Abrir WhatsApp
               </Link>
               <Link
-                href={instagramLink}
+                href={contact.instagramUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-full border border-surface-strong/20 bg-white/70 px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-surface-strong"

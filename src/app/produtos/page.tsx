@@ -4,13 +4,8 @@ import { ProductCard } from "@/components/product-card";
 import { SectionHero } from "@/components/section-hero";
 import {
   buildWhatsAppLink,
-  catalogSections,
-  instagramLink,
-  siteDescription,
-  siteName,
-  trustSignals,
-  whatsappLink,
-} from "@/data/site";
+} from "@/data/product";
+import { getAboutContent, getCatalogContent, getContactContent, getSiteContent } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Produtos",
@@ -20,19 +15,29 @@ export const metadata: Metadata = {
     canonical: "/produtos",
   },
   openGraph: {
-    title: `Produtos | ${siteName}`,
-    description: siteDescription,
+    title: `Produtos | ${getSiteContent().siteName}`,
+    description: getSiteContent().siteDescription,
     images: ["/logo-marisport.png"],
   },
 };
 
 export default function ProdutosPage() {
+  const { sections } = getCatalogContent();
+  const { trustSignals } = getAboutContent();
+  const contact = getContactContent();
+  const whatsappLink = buildWhatsAppLink(
+    contact.whatsappPhone,
+    "Ola! Quero consultar o catalogo da Mari Sport.",
+  );
+
   return (
     <main>
       <SectionHero
         eyebrow="Catalogo"
         title="Moda fitness masculina e feminina em uma vitrine clara e premium."
         description="Veja os produtos organizados por categoria, compare estilos e fale com a equipe para consultar disponibilidade, tamanhos e cores."
+        primaryAction={{ label: "Falar no WhatsApp", href: whatsappLink, external: true }}
+        secondaryAction={{ label: "Ver Instagram", href: contact.instagramUrl, external: true }}
       />
 
       <section className="px-5 pb-6 sm:px-8 lg:px-12">
@@ -72,7 +77,7 @@ export default function ProdutosPage() {
         </div>
       </section>
 
-      {catalogSections.map((section) => (
+      {sections.map((section) => (
         <section key={section.id} id={section.id} className="px-5 pb-10 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-6xl">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -133,7 +138,7 @@ export default function ProdutosPage() {
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
-                href={buildWhatsAppLink("Ola! Quero consultar o catalogo da Mari Sport.")}
+                href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center justify-center rounded-full bg-accent px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-surface-strong"
@@ -141,14 +146,14 @@ export default function ProdutosPage() {
                 Consultar no WhatsApp
               </Link>
               <Link
-                href={`mailto:marisport.fitwear@gmail.com?subject=Catalogo%20Mari%20Sport`}
+                href={`mailto:${contact.contactEmail}?subject=Catalogo%20Mari%20Sport`}
                 className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-white"
               >
                 Enviar e-mail
               </Link>
             </div>
             <Link
-              href={instagramLink}
+              href={contact.instagramUrl}
               target="_blank"
               rel="noreferrer"
               className="mt-6 inline-flex text-sm font-semibold text-accent-soft hover:text-white"

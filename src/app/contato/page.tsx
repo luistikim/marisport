@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHero } from "@/components/section-hero";
-import {
-  contactEmail,
-  contactPhone,
-  instagramLink,
-  siteDescription,
-  siteName,
-  whatsappLink,
-} from "@/data/site";
+import { buildWhatsAppLink } from "@/data/product";
+import { getContactContent, getSiteContent } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Contato",
@@ -18,19 +12,24 @@ export const metadata: Metadata = {
     canonical: "/contato",
   },
   openGraph: {
-    title: `Contato | ${siteName}`,
-    description: siteDescription,
+    title: `Contato | ${getSiteContent().siteName}`,
+    description: getSiteContent().siteDescription,
     images: ["/logo-marisport.png"],
   },
 };
 
 export default function ContatoPage() {
+  const contact = getContactContent();
+  const whatsappLink = buildWhatsAppLink(contact.whatsappPhone, contact.whatsappMessage);
+
   return (
     <main>
       <SectionHero
         eyebrow="Contato"
         title="Atendimento rapido, humano e pronto para tirar suas duvidas."
         description="Fale com a Mari Sport para consultar produtos, tamanhos, cores, disponibilidade e orientacao de compra."
+        primaryAction={{ label: "Abrir WhatsApp", href: whatsappLink, external: true }}
+        secondaryAction={{ label: "Ver Instagram", href: contact.instagramUrl, external: true }}
       />
 
       <section className="px-5 pb-8 sm:px-8 lg:px-12">
@@ -54,7 +53,7 @@ export default function ContatoPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#506859]">
                   WhatsApp
                 </p>
-                <p className="mt-2 text-lg font-semibold text-surface-strong">{contactPhone}</p>
+                <p className="mt-2 text-lg font-semibold text-surface-strong">{contact.contactPhone}</p>
                 <Link
                   href={whatsappLink}
                   target="_blank"
@@ -69,9 +68,9 @@ export default function ContatoPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#506859]">
                   E-mail
                 </p>
-                <p className="mt-2 text-lg font-semibold text-surface-strong">{contactEmail}</p>
+                <p className="mt-2 text-lg font-semibold text-surface-strong">{contact.contactEmail}</p>
                 <Link
-                  href={`mailto:${contactEmail}`}
+                  href={`mailto:${contact.contactEmail}`}
                   className="mt-4 inline-flex rounded-full border border-[#d9e5dc] bg-white px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
                 >
                   Enviar e-mail
@@ -82,9 +81,9 @@ export default function ContatoPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#506859]">
                   Instagram
                 </p>
-                <p className="mt-2 text-lg font-semibold text-surface-strong">@mari_sportfit</p>
+                <p className="mt-2 text-lg font-semibold text-surface-strong">{contact.instagramHandle}</p>
                 <Link
-                  href={instagramLink}
+                  href={contact.instagramUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="mt-4 inline-flex rounded-full border border-[#d9e5dc] bg-white px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"

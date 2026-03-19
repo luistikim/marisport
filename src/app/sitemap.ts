@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
-import { siteUrl } from "@/data/site";
+import { getSiteContent } from "@/lib/content";
 
 const routes = ["", "/produtos", "/quem-somos", "/contato", "/carrinho"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const { siteUrl } = getSiteContent();
   const updatedAt = new Date();
 
   return routes.map((route) => ({

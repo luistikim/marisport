@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
-import { siteUrl } from "@/data/site";
+import { getSiteContent } from "@/lib/content";
 
 export default function robots(): MetadataRoute.Robots {
+  const { siteUrl } = getSiteContent();
+
   return {
     rules: {
       userAgent: "*",

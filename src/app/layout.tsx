@@ -2,12 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/components/cart-provider";
 import { SiteShell } from "@/components/site-shell";
-import {
-  siteDescription,
-  siteKeywords,
-  siteName,
-  siteUrl,
-} from "@/data/site";
+import { getSiteContent } from "@/lib/content";
+
+const { siteDescription, siteKeywords, siteName, siteUrl } = getSiteContent();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

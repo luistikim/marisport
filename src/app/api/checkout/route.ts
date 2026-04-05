@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { CartItem } from "@/components/cart-provider";
 import { calculateSubtotal, saveOrder, type OrderRecord } from "@/lib/orders";
-import { getCatalogProducts } from "@/lib/content";
+import { getCatalogProductsNoCache } from "@/lib/content";
 
 type CheckoutRequestItem = {
   id: string;
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const catalogProducts = await getCatalogProducts();
+    const catalogProducts = await getCatalogProductsNoCache();
     const productById = new Map(catalogProducts.map((product) => [product.id, product]));
     const mergedItemsById = new Map<string, CheckoutRequestItem>();
 

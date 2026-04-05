@@ -27,7 +27,7 @@ import {
   homeIntro,
   homeTrust,
 } from "@/data/home";
-import { sanityClient } from "@/sanity/lib/client";
+import { sanityClient, sanityClientNoCache } from "@/sanity/lib/client";
 import {
   aboutQuery,
   categoriesQuery,
@@ -290,13 +290,28 @@ function buildCatalogSections(
   }));
 }
 
-async function fetchSanityDocument<T>(query: string) {
-  if (!sanityClient) {
+async function fetchSanityDocument<T>(
+  query: string,
+  client = sanityClient,
+) {
+  if (!client) {
     return null;
   }
 
   try {
-    return (await sanityClient.fetch<T>(query, {}, { next: { revalidate: 60 } })) ?? null;
+    return (await client.fetch<T>(query, {}, { next: { revalidate: 60 } })) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchSanityDocumentNoCache<T>(query: string) {
+  if (!sanityClientNoCache) {
+    return null;
+  }
+
+  try {
+    return (await sanityClientNoCache.fetch<T>(query, {}, { next: { revalidate: 0 } })) ?? null;
   } catch {
     return null;
   }
@@ -382,6 +397,15 @@ export async function getCatalogProducts() {
   return mappedProducts.length ? mappedProducts : productGrid;
 }
 
+export async function getCatalogProductsNoCache() {
+  const products = await fetchSanityDocumentNoCache<SanityProductDoc[]>(productsQuery);
+  const mappedProducts = (products ?? [])
+    .map(mapSanityProduct)
+    .filter(Boolean) as CatalogProduct[];
+
+  return mappedProducts.length ? mappedProducts : productGrid;
+}
+
 export async function getFeaturedProducts() {
   const products = await getCatalogProducts();
   const featured = products.filter((product) => product.featured);
@@ -391,6 +415,12 @@ export async function getFeaturedProducts() {
 
 export async function getCatalogProductById(productId: string) {
   const products = await getCatalogProducts();
+
+  return products.find((product) => product.id === productId) ?? null;
+}
+
+export async function getCatalogProductByIdNoCache(productId: string) {
+  const products = await getCatalogProductsNoCache();
 
   return products.find((product) => product.id === productId) ?? null;
 }

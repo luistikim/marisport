@@ -6,12 +6,24 @@ import {
   sanityProjectId,
 } from "@/sanity/lib/env";
 
-export const sanityClient = sanityConfigured
-  ? createClient({
-      projectId: sanityProjectId,
-      dataset: sanityDataset,
-      apiVersion: sanityApiVersion,
-      useCdn: true,
-    })
-  : null;
+function createSanityClient(useCdn: boolean) {
+  return sanityConfigured
+    ? createClient({
+        projectId: sanityProjectId,
+        dataset: sanityDataset,
+        apiVersion: sanityApiVersion,
+        useCdn,
+      })
+    : null;
+}
 
+export function getClient() {
+  return createSanityClient(true);
+}
+
+export function getClientNoCache() {
+  return createSanityClient(false);
+}
+
+export const sanityClient = getClient();
+export const sanityClientNoCache = getClientNoCache();

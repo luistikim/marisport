@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mari Sport
 
-## Getting Started
+Loja online da Mari Sport feita com Next.js e Sanity, com catálogo de produtos, carrinho, checkout e Studio para edição de conteúdo.
 
-First, run the development server:
+## Stack
+
+- Next.js 16
+- React 19
+- Sanity Studio
+- Tailwind CSS 4
+- Embla Carousel
+
+## Recursos
+
+- Home com seções institucionais e catálogo em destaque
+- Página de produtos com cards e detalhes individuais
+- Galeria de imagens por produto com carrossel e lightbox
+- Carrinho com envio por WhatsApp, e-mail e checkout
+- Studio em `/studio` para edição do conteúdo
+
+## Variáveis de ambiente
+
+Crie um arquivo `.env.local` com as variáveis necessárias:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_SANITY_PROJECT_ID=
+NEXT_PUBLIC_SANITY_DATASET=
+NEXT_PUBLIC_SANITY_API_VERSION=2026-03-19
+NEXT_PUBLIC_SITE_URL=
+NEXT_PUBLIC_CONTACT_WHATSAPP_PHONE=
+NEXT_PUBLIC_CONTACT_EMAIL=
+NEXT_PUBLIC_CONTACT_INSTAGRAM_URL=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Rodar localmente
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Abra:
 
-## Learn More
+- Site: `http://localhost:3000`
+- Studio: `http://localhost:3000/studio`
 
-To learn more about Next.js, take a look at the following resources:
+## Build e deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Para publicar na Vercel:
 
-## Deploy on Vercel
+```bash
+npx vercel --prod
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Sanity
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Os schemas ficam em `src/sanity/schemaTypes/`.
+
+O schema principal de produto é `src/sanity/schemaTypes/product.ts`, que inclui:
+
+- nome
+- slug
+- imagem principal
+- galeria de imagens
+- preço
+- categoria
+- tamanhos e cores
+
+## Observação
+
+Quando atualizar o conteúdo no Sanity Studio, faça deploy da aplicação para refletir as mudanças no site e no Studio hospedado.

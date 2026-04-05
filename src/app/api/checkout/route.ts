@@ -8,6 +8,11 @@ type CheckoutRequestItem = {
   quantity: number;
 };
 
+type CheckoutRequestBody = {
+  items?: CheckoutRequestItem[];
+  notes?: string;
+};
+
 const MAX_ITEM_QUANTITY = 10;
 
 function isValidCheckoutItem(item: unknown): item is CheckoutRequestItem {
@@ -51,9 +56,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = (await request.json()) as {
-      items?: CheckoutRequestItem[];
-    };
+    const body = (await request.json()) as CheckoutRequestBody;
 
     if (!body.items?.length) {
       return NextResponse.json(
@@ -125,6 +128,7 @@ export async function POST(request: Request) {
       status: "created",
       items,
       subtotal: calculateSubtotal(items),
+      notes: typeof body.notes === "string" ? body.notes.trim().slice(0, 500) : undefined,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

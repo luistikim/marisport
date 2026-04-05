@@ -9,6 +9,18 @@ export type OrderStatus =
   | "refunded"
   | "unknown";
 
+export type OrderCustomer = {
+  name?: string;
+  email?: string;
+  phone?: string;
+  identification?: {
+    type?: string;
+    number?: string;
+  };
+};
+
+export type OrderNotificationStatus = "pending" | "sent" | "failed" | "skipped";
+
 export type OrderRecord = {
   id: string;
   externalReference: string;
@@ -17,9 +29,15 @@ export type OrderRecord = {
   subtotal: number;
   createdAt: string;
   updatedAt: string;
+  notes?: string;
   paymentId?: string;
+  mercadoPagoPaymentId?: string;
   paymentStatus?: string;
   paymentStatusDetail?: string;
+  paymentApprovedAt?: string;
+  customer?: OrderCustomer;
+  notifiedAt?: string;
+  notificationStatus?: OrderNotificationStatus;
 };
 
 const KV_URL = process.env.KV_REST_API_URL;
@@ -64,6 +82,14 @@ function getPaymentKey(paymentId: string) {
   return `payment:${paymentId}`;
 }
 
+function getWebhookProcessedKey(paymentId: string) {
+  return `webhook:mercado-pago:processed:${paymentId}:approved`;
+}
+
+function getWebhookLockKey(paymentId: string) {
+  return `webhook:mercado-pago:lock:${paymentId}:approved`;
+}
+
 export async function saveOrder(order: OrderRecord) {
   const payload = JSON.stringify(order);
   const response = await runKvCommand(["SET", getOrderKey(order.id), payload]);
@@ -103,6 +129,53 @@ export async function getOrderIdByPayment(paymentId: string) {
   }
 
   return response.result ? String(response.result) : null;
+}
+
+export async function isWebhookEventProcessed(paymentId: string) {
+  const response = await runKvCommand(["GET", getWebhookProcessedKey(paymentId)]);
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  return Boolean(response.result);
+}
+
+export async function acquireWebhookEventLock(paymentId: string) {
+  const response = await runKvCommand([
+    "SET",
+    getWebhookLockKey(paymentId),
+    new Date().toISOString(),
+    "NX",
+    "EX",
+    300,
+  ]);
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  return response.result === "OK";
+}
+
+export async function releaseWebhookEventLock(paymentId: string) {
+  const response = await runKvCommand(["DEL", getWebhookLockKey(paymentId)]);
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+}
+
+export async function markWebhookEventProcessed(paymentId: string) {
+  const response = await runKvCommand([
+    "SET",
+    getWebhookProcessedKey(paymentId),
+    new Date().toISOString(),
+  ]);
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
 }
 
 export function calculateSubtotal(items: CartItem[]) {

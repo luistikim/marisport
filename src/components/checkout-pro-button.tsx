@@ -68,11 +68,13 @@ async function safeReadCheckoutResponse(response: Response) {
 
 type CheckoutProButtonProps = {
   items: CartItem[];
+  notes?: string;
   disabled?: boolean;
 };
 
 export function CheckoutProButton({
   items,
+  notes,
   disabled = false,
 }: CheckoutProButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -112,6 +114,7 @@ export function CheckoutProButton({
             id: item.id,
             quantity: item.quantity,
           })),
+          notes: notes?.trim() || undefined,
         }),
       });
 

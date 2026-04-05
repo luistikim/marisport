@@ -247,7 +247,7 @@ function OrderSummary({
       </label>
 
       <div className="mt-6 flex flex-col gap-3">
-        <CheckoutProButton items={items} disabled={hasUnpricedItems} />
+        <CheckoutProButton items={items} notes={notes} disabled={hasUnpricedItems} />
 
         <Link
           href={whatsappHref}

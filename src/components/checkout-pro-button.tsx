@@ -1,7 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { CartItem } from "@/components/cart-provider";
+
+type CheckoutErrorKind = "item" | "checkout" | "global";
+
+type CheckoutError = {
+  kind: CheckoutErrorKind;
+  message: string;
+};
+
+type CheckoutResponseBody = {
+  initPoint?: string;
+  error?: string;
+};
+
+const CHECKOUT_FALLBACK_MESSAGE =
+  "Nao conseguimos abrir o checkout agora. Seus itens continuam salvos no carrinho. Tente novamente em alguns instantes ou conclua o pedido pelo WhatsApp.";
+
+function buildCheckoutError(
+  kind: CheckoutErrorKind,
+  message?: string,
+): CheckoutError {
+  return {
+    kind,
+    message: message?.trim() || CHECKOUT_FALLBACK_MESSAGE,
+  };
+}
+
+function isValidCheckoutItems(items: CartItem[]) {
+  return (
+    Array.isArray(items) &&
+    items.length > 0 &&
+    items.every(
+      (item) =>
+        typeof item?.id === "string" &&
+        item.id.trim().length > 0 &&
+        Number.isInteger(item.quantity) &&
+        item.quantity > 0,
+    )
+  );
+}
+
+async function safeReadCheckoutResponse(response: Response) {
+  try {
+    const contentType = response.headers.get("content-type") ?? "";
+
+    if (contentType.includes("application/json")) {
+      return (await response.json()) as CheckoutResponseBody;
+    }
+
+    const text = await response.text();
+
+    if (!text.trim()) {
+      return {};
+    }
+
+    try {
+      return JSON.parse(text) as CheckoutResponseBody;
+    } catch {
+      return {};
+    }
+  } catch {
+    return {};
+  }
+}
 
 type CheckoutProButtonProps = {
   items: CartItem[];
@@ -13,12 +76,31 @@ export function CheckoutProButton({
   disabled = false,
 }: CheckoutProButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<CheckoutError | null>(null);
+  const isLoadingRef = useRef(false);
 
   async function handleCheckout() {
+    if (isLoadingRef.current) {
+      return;
+    }
+
+    if (!isValidCheckoutItems(items)) {
+      setCheckoutError(
+        buildCheckoutError(
+          "item",
+          "Seu carrinho esta vazio ou possui itens invalidos. Revise os produtos e tente novamente.",
+        ),
+      );
+      return;
+    }
+
+    isLoadingRef.current = true;
+    setIsLoading(true);
+
+    let didNavigate = false;
+
     try {
-      setIsLoading(true);
-      setErrorMessage(null);
+      setCheckoutError(null);
 
       const response = await fetch("/api/checkout", {
         method: "POST",
@@ -33,23 +115,29 @@ export function CheckoutProButton({
         }),
       });
 
-      const data = (await response.json()) as {
-        initPoint?: string;
-        error?: string;
-      };
+      const data = await safeReadCheckoutResponse(response);
 
       if (!response.ok || !data.initPoint) {
-        throw new Error(data.error ?? "Nao foi possivel iniciar o pagamento.");
+        const kind: CheckoutErrorKind =
+          response.status >= 500 ? "global" : "checkout";
+        setCheckoutError(buildCheckoutError(kind, data.error));
+        return;
       }
 
-      window.location.href = data.initPoint;
+      didNavigate = true;
+      window.location.assign(data.initPoint);
     } catch (error) {
-      setErrorMessage(
+      setCheckoutError(
         error instanceof Error
-          ? error.message
-          : "Nao foi possivel iniciar o pagamento.",
+          ? buildCheckoutError("global", error.message)
+          : buildCheckoutError("global"),
       );
-      setIsLoading(false);
+    } finally {
+      isLoadingRef.current = false;
+
+      if (!didNavigate) {
+        setIsLoading(false);
+      }
     }
   }
 
@@ -63,8 +151,10 @@ export function CheckoutProButton({
       >
         {isLoading ? "Abrindo checkout..." : "Pagar com Mercado Pago"}
       </button>
-      {errorMessage ? (
-        <p className="text-sm leading-6 text-[#8f5a45]">{errorMessage}</p>
+      {checkoutError ? (
+        <p className="text-sm leading-6 text-[#8f5a45]">
+          {checkoutError.message}
+        </p>
       ) : null}
     </div>
   );

@@ -34,6 +34,18 @@ export default async function ProdutosPage() {
     getAboutContent(),
     getContactContent(),
   ]);
+
+  const orderedSections = [...sections]
+    .filter((section) => section.id === "masculino" || section.id === "feminino")
+    .sort((a, b) => {
+      const order = {
+        masculino: 0,
+        feminino: 1,
+      } as const;
+
+      return order[a.id] - order[b.id];
+    });
+
   const whatsappLink = buildWhatsAppLink(
     contact.whatsappPhone,
     "Ola! Quero consultar o catalogo da Mari Sport.",
@@ -49,8 +61,8 @@ export default async function ProdutosPage() {
         secondaryAction={{ label: "Ver Instagram", href: contact.instagramUrl, external: true }}
       />
 
-      <section className="px-5 pb-6 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-[#d9e5dc] bg-white p-6 shadow-[0_16px_36px_rgba(19,38,59,0.06)]">
+      <section className="px-5 pb-5 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-[#d9e5dc] bg-white p-5 shadow-[0_16px_36px_rgba(19,38,59,0.06)] sm:p-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
@@ -86,27 +98,18 @@ export default async function ProdutosPage() {
         </div>
       </section>
 
-      {sections.map((section) => (
-        <section key={section.id} id={section.id} className="px-5 pb-10 sm:px-8 lg:px-12">
+      {orderedSections.map((section) => (
+        <section key={section.id} id={section.id} className="px-5 pb-8 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-6xl">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-                  {section.title}
-                </p>
-                <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-surface-strong sm:text-4xl">
-                  {section.description}
-                </h2>
-              </div>
-              <p className="max-w-lg text-sm leading-7 text-[#56686c]">
-                Cards com preco, status e disponibilidade para facilitar a
-                leitura no desktop e no mobile.
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                {section.title}
               </p>
             </div>
 
-            <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
               {section.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} compact />
               ))}
             </div>
           </div>

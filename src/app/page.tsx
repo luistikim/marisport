@@ -54,39 +54,43 @@ export default async function Home() {
         products={featuredProducts}
       />
 
-      <AboutBrandSection
-        eyebrow={home.about.eyebrow}
-        title={home.about.title}
-        description={home.about.description}
-        items={home.about.items}
-        whyChooseItems={about.whyChooseMariSport}
-        whyChooseTitle={home.about.whyChooseTitle}
-      />
+      {false && (
+        <>
+          <AboutBrandSection
+            eyebrow={home.about.eyebrow}
+            title={home.about.title}
+            description={home.about.description}
+            items={home.about.items}
+            whyChooseItems={about.whyChooseMariSport}
+            whyChooseTitle={home.about.whyChooseTitle}
+          />
 
-      <TrustSection
-        eyebrow={home.trust.eyebrow}
-        title={home.trust.title}
-        items={home.trust.items}
-      />
+          <TrustSection
+            eyebrow={home.trust.eyebrow}
+            title={home.trust.title}
+            items={home.trust.items}
+          />
 
-      <ContactSection
-        eyebrow="Contato"
-        title="Atendimento direto para responder rápido."
-        description="Se você quiser falar com a Mari Sport agora, os canais abaixo já apontam para WhatsApp e e-mail oficiais."
-        emailDescription={home.contact.emailDescription}
-        whatsappDescription={home.contact.whatsappDescription}
-        email={home.contact.email}
-        whatsappLink={whatsappLink}
-        emailLink={`mailto:${contact.contactEmail}?subject=Contato%20Mari%20Sport`}
-      />
+          <ContactSection
+            eyebrow="Contato"
+            title="Atendimento direto para responder rápido."
+            description="Se você quiser falar com a Mari Sport agora, os canais abaixo já apontam para WhatsApp e e-mail oficiais."
+            emailDescription={home.contact.emailDescription}
+            whatsappDescription={home.contact.whatsappDescription}
+            email={home.contact.email}
+            whatsappLink={whatsappLink}
+            emailLink={`mailto:${contact.contactEmail}?subject=Contato%20Mari%20Sport`}
+          />
 
-      <CtaSection
-        eyebrow={home.cta.eyebrow}
-        title={home.cta.title}
-        description={home.cta.description}
-        primaryCta={home.cta.primaryCta}
-        secondaryCta={home.cta.secondaryCta}
-      />
+          <CtaSection
+            eyebrow={home.cta.eyebrow}
+            title={home.cta.title}
+            description={home.cta.description}
+            primaryCta={home.cta.primaryCta}
+            secondaryCta={home.cta.secondaryCta}
+          />
+        </>
+      )}
     </main>
   );
 }

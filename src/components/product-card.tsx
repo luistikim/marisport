@@ -17,6 +17,37 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
   const hasPrice = price !== null && price > 0;
   const detailHref = `/produtos/${product.id}`;
 
+  if (compact) {
+    return (
+      <article className="group overflow-hidden rounded-[1.7rem] border border-[#d8e4db] bg-white shadow-[0_14px_34px_rgba(19,38,59,0.07)] transition-transform duration-300 hover:-translate-y-1">
+        <Link
+          href={detailHref}
+          aria-label={`Ver detalhes de ${product.name}`}
+          className="block"
+        >
+          {product.imageSrc ? (
+            <div className="relative aspect-[1/1.12] overflow-hidden bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf6_48%,#e6efe2_100%)]">
+              <Image
+                src={product.imageSrc}
+                alt={product.name}
+                fill
+                className={
+                  product.imageFit === "contain"
+                    ? "object-contain p-2.5 transition-transform duration-500 group-hover:scale-[1.03]"
+                    : "object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                }
+                style={{ objectPosition: product.imagePosition ?? "center" }}
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              />
+            </div>
+          ) : (
+            <div className="flex aspect-[1/1.12] items-center justify-center bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf6_48%,#e6efe2_100%)]" />
+          )}
+        </Link>
+      </article>
+    );
+  }
+
   return (
     <article className="group overflow-hidden rounded-[2rem] border border-[#d8e4db] bg-white shadow-[0_16px_40px_rgba(19,38,59,0.08)] transition-transform duration-300 hover:-translate-y-1">
       {product.imageSrc ? (

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import {
   getOrder,
   getOrderIdByPayment,
@@ -17,6 +18,83 @@ type MercadoPagoWebhookBody = {
   live_mode?: boolean;
   type?: string;
 };
+
+type MercadoPagoWebhookValidationResult =
+  | { ok: true }
+  | { ok: false; response: Response };
+
+function parseMercadoPagoSignature(signature: string) {
+  const values: Record<string, string> = {};
+
+  for (const part of signature.split(",")) {
+    const [key, value] = part.split("=", 2).map((item) => item.trim());
+
+    if (key && value) {
+      values[key] = value;
+    }
+  }
+
+  return {
+    ts: values.ts,
+    v1: values.v1,
+  };
+}
+
+function validateMercadoPagoWebhook(
+  request: Request,
+  body: MercadoPagoWebhookBody,
+): MercadoPagoWebhookValidationResult {
+  const webhookSecret = process.env.MERCADO_PAGO_WEBHOOK_SECRET;
+
+  if (!webhookSecret) {
+    throw new Error(
+      "Configure MERCADO_PAGO_WEBHOOK_SECRET para validar a autenticidade do webhook.",
+    );
+  }
+
+  const url = new URL(request.url);
+  const signature = request.headers.get("x-signature");
+  const requestId = request.headers.get("x-request-id");
+  const dataId = url.searchParams.get("data.id") ?? body.data?.id?.toString() ?? body.id?.toString();
+
+  // Esta validação confirma que a notificação veio mesmo do Mercado Pago.
+  // Sem isso, uma requisição forjada poderia simular pagamento aprovado e causar fraude.
+  if (!signature || !requestId || !dataId) {
+    return {
+      ok: false,
+      response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+    };
+  }
+
+  const { ts, v1 } = parseMercadoPagoSignature(signature);
+
+  if (!ts || !v1) {
+    return {
+      ok: false,
+      response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+    };
+  }
+
+  const manifest = `id:${dataId};request-id:${requestId};ts:${ts};`;
+  const expectedSignature = createHmac("sha256", webhookSecret)
+    .update(manifest)
+    .digest("hex");
+
+  const receivedSignature = Buffer.from(v1, "hex");
+  const calculatedSignature = Buffer.from(expectedSignature, "hex");
+
+  if (
+    receivedSignature.length !== calculatedSignature.length ||
+    !timingSafeEqual(receivedSignature, calculatedSignature)
+  ) {
+    return {
+      ok: false,
+      response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+    };
+  }
+
+  return { ok: true };
+}
 
 function getPaymentId(body: MercadoPagoWebhookBody, url: URL) {
   return (
@@ -60,6 +138,12 @@ export async function POST(request: Request) {
   try {
     const url = new URL(request.url);
     const body = (await request.json().catch(() => ({}))) as MercadoPagoWebhookBody;
+
+    const validationResult = validateMercadoPagoWebhook(request, body);
+
+    if (!validationResult.ok) {
+      return validationResult.response;
+    }
 
     if (body.type && body.type !== "payment") {
       return NextResponse.json({ received: true });

@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CheckoutProButton } from "@/components/checkout-pro-button";
 import { useCart } from "@/components/cart-provider";
 import type { CartItem } from "@/components/cart-provider";
-import { buildWhatsAppLink, contactEmail, formatCurrency } from "@/data/site";
+import { buildWhatsAppLink, contactEmail, formatCurrency, whatsappPhone } from "@/data/site";
 
 const MAX_ITEM_QUANTITY = 50;
 const NOTES_MAX_LENGTH = 500;
+const MAX_WHATSAPP_URL_LENGTH = 1800;
 
 // ─── Empty state ───────────────────────────────────────────────────────────────
 
@@ -43,6 +44,7 @@ function EmptyCartState() {
 type CartItemCardProps = {
   item: CartItem;
   isPending: boolean;
+  isRemoving: boolean;
   onRemove: (id: string) => void;
   onDecrease: (id: string, current: number) => void;
   onIncrease: (id: string, current: number) => void;
@@ -51,6 +53,7 @@ type CartItemCardProps = {
 function CartItemCard({
   item,
   isPending,
+  isRemoving,
   onRemove,
   onDecrease,
   onIncrease,
@@ -83,7 +86,7 @@ function CartItemCard({
           className="self-start rounded-full border border-[#d8e4db] bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong transition-colors hover:border-red-300 hover:text-red-600 disabled:cursor-not-allowed"
           aria-label={`Remover ${item.name} do carrinho`}
         >
-          {isPending ? "Removendo…" : "Remover"}
+          {isRemoving ? "Removendo…" : "Remover"}
         </button>
       </div>
 
@@ -297,24 +300,38 @@ export function CartPageContent() {
   const { items, itemCount, clearCart, removeItem, updateQuantity } = useCart();
   const [notes, setNotes] = useState("");
   const [pendingItemIds, setPendingItemIds] = useState<Set<string>>(() => new Set());
+  const [removingItemIds, setRemovingItemIds] = useState<Set<string>>(() => new Set());
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [isClearPending, setIsClearPending] = useState(false);
   const pendingItemIdsRef = useRef(pendingItemIds);
+  const removingItemIdsRef = useRef(removingItemIds);
   const pendingItemTokensRef = useRef(new Map<string, number>());
   const pendingTimersRef = useRef(new Map<string, number>());
   const clearCartTimerRef = useRef<number | null>(null);
   const pendingSequenceRef = useRef(0);
+
+  const syncPendingItemIds = useCallback((nextPendingItemIds: Set<string>) => {
+    pendingItemIdsRef.current = nextPendingItemIds;
+    setPendingItemIds(nextPendingItemIds);
+  }, []);
+
+  const syncRemovingItemIds = useCallback((nextRemovingItemIds: Set<string>) => {
+    removingItemIdsRef.current = nextRemovingItemIds;
+    setRemovingItemIds(nextRemovingItemIds);
+  }, []);
 
   useEffect(() => {
     return () => {
       pendingTimersRef.current.forEach((timerId) => window.clearTimeout(timerId));
       pendingTimersRef.current.clear();
       pendingItemTokensRef.current.clear();
+      removingItemIdsRef.current = new Set();
       if (clearCartTimerRef.current !== null) {
         window.clearTimeout(clearCartTimerRef.current);
+        clearCartTimerRef.current = null;
       }
     };
-  }, []);
+  }, [syncPendingItemIds, syncRemovingItemIds]);
 
   useEffect(() => {
     const activeItemIds = new Set(items.map((item) => item.id));
@@ -342,12 +359,7 @@ export function CartPageContent() {
     if (changed || nextPendingItemIds.size !== currentPendingIds.size) {
       syncPendingItemIds(nextPendingItemIds);
     }
-  }, [items]);
-
-  function syncPendingItemIds(nextPendingItemIds: Set<string>) {
-    pendingItemIdsRef.current = nextPendingItemIds;
-    setPendingItemIds(nextPendingItemIds);
-  }
+  }, [items, syncPendingItemIds]);
 
   function startPendingItem(id: string) {
     if (pendingItemIdsRef.current.has(id)) {
@@ -382,6 +394,7 @@ export function CartPageContent() {
     pendingTimersRef.current.clear();
     pendingItemTokensRef.current.clear();
     syncPendingItemIds(new Set());
+    syncRemovingItemIds(new Set());
   }
 
   function runItemAction(
@@ -389,11 +402,18 @@ export function CartPageContent() {
     delay: number,
     action: () => void,
     mode: "immediate" | "deferred",
+    feedback: "adjust" | "remove",
   ) {
     const token = startPendingItem(id);
 
     if (!token) {
       return;
+    }
+
+    if (feedback === "remove") {
+      const nextRemovingItemIds = new Set(removingItemIdsRef.current);
+      nextRemovingItemIds.add(id);
+      syncRemovingItemIds(nextRemovingItemIds);
     }
 
     const timerId = window.setTimeout(() => {
@@ -407,6 +427,11 @@ export function CartPageContent() {
         // Keep the UI stable and release the item lock even if the cart action fails.
       } finally {
         finishPendingItem(id, token);
+        if (feedback === "remove") {
+          const nextRemovingItemIds = new Set(removingItemIdsRef.current);
+          nextRemovingItemIds.delete(id);
+          syncRemovingItemIds(nextRemovingItemIds);
+        }
       }
     }, delay);
 
@@ -419,6 +444,11 @@ export function CartPageContent() {
         window.clearTimeout(timerId);
         pendingTimersRef.current.delete(id);
         finishPendingItem(id, token);
+        if (feedback === "remove") {
+          const nextRemovingItemIds = new Set(removingItemIdsRef.current);
+          nextRemovingItemIds.delete(id);
+          syncRemovingItemIds(nextRemovingItemIds);
+        }
       }
     }
   }
@@ -453,17 +483,32 @@ export function CartPageContent() {
       lines.push(`Subtotal: ${formatCurrency(subtotal)}`);
     }
 
-    return buildWhatsAppLink(lines.join("\n"));
-  }, [hasUnpricedItems, itemCount, items, notes, subtotal]);
+    const message = lines.join("\n");
+    const directLink = buildWhatsAppLink(whatsappPhone, message);
+
+    if (directLink.length <= MAX_WHATSAPP_URL_LENGTH) {
+      return directLink;
+    }
+
+    return buildWhatsAppLink(
+      whatsappPhone,
+      `Ola! Vim pelo site da Mari Sport e quero fechar meu pedido. Meu carrinho esta muito grande para enviar automaticamente. Total de itens: ${itemCount}.`,
+    );
+  }, [hasUnpricedItems, itemCount, items, notes, subtotal, whatsappPhone]);
 
   // Quantity decrease: if reaching 0 the provider removes the item.
   // Sync op + 300 ms cooldown per item to prevent double-clicks.
   function handleDecrease(id: string, current: number) {
+    if (current <= 1) {
+      return;
+    }
+
     runItemAction(
       id,
       300,
       () => updateQuantity(id, current - 1),
       "immediate",
+      "adjust",
     );
   }
 
@@ -475,13 +520,14 @@ export function CartPageContent() {
       300,
       () => updateQuantity(id, current + 1),
       "immediate",
+      "adjust",
     );
   }
 
   // Removal: brief visual delay so the user sees the "Removendo…" state
   // before the item disappears from the list.
   function handleRemove(id: string) {
-    runItemAction(id, 200, () => removeItem(id), "deferred");
+    runItemAction(id, 200, () => removeItem(id), "deferred", "remove");
   }
 
   function handleClearRequest() {
@@ -525,6 +571,7 @@ export function CartPageContent() {
               key={item.id}
               item={item}
               isPending={pendingItemIds.has(item.id)}
+              isRemoving={removingItemIds.has(item.id)}
               onRemove={handleRemove}
               onDecrease={handleDecrease}
               onIncrease={handleIncrease}

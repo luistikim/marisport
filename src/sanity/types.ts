@@ -62,17 +62,17 @@ export type SanityAboutDoc = {
 };
 
 export type SanityCategoryDoc = {
-  _id: string;
+  _id?: string;
   title?: string;
-  slug?: { current?: string };
+  slug?: string;
   description?: string;
   order?: number;
 };
 
 export type SanityProductDoc = {
-  _id: string;
+  _id?: string;
   name?: string;
-  slug?: { current?: string };
+  slug?: string;
   badge?: string;
   shortDescription?: string;
   fullDescription?: string;

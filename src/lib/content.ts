@@ -33,6 +33,7 @@ import {
   categoriesQuery,
   contactQuery,
   homeQuery,
+  productBySlugQuery,
   productsQuery,
   siteSettingsQuery,
 } from "@/sanity/lib/queries";
@@ -57,7 +58,7 @@ export function getSiteContent() {
 }
 
 function mapSanityProduct(product: SanityProductDoc): CatalogProduct | null {
-  if (!product.name || !product.slug?.current) {
+  if (!product.name || !product.slug) {
     return null;
   }
 
@@ -69,7 +70,7 @@ function mapSanityProduct(product: SanityProductDoc): CatalogProduct | null {
     .filter((image) => image.imageUrl);
 
   return {
-    id: product.slug.current,
+    id: product.slug,
     name: product.name,
     badge: product.badge ?? "Produto",
     description: product.shortDescription ?? product.fullDescription ?? "",
@@ -104,7 +105,7 @@ function mapSanityProduct(product: SanityProductDoc): CatalogProduct | null {
 function mapSanityCategories(categories: SanityCategoryDoc[]) {
   return categories
     .map((category) => {
-      const slug = category.slug?.current;
+      const slug = category.slug;
 
       if (!slug || !category.title) {
         return null;
@@ -292,6 +293,7 @@ function buildCatalogSections(
 
 async function fetchSanityDocument<T>(
   query: string,
+  params: Record<string, unknown> = {},
   client = sanityClient,
 ) {
   if (!client) {
@@ -299,19 +301,22 @@ async function fetchSanityDocument<T>(
   }
 
   try {
-    return (await client.fetch<T>(query, {}, { next: { revalidate: 60 } })) ?? null;
+    return (await client.fetch<T>(query, params, { next: { revalidate: 60 } })) ?? null;
   } catch {
     return null;
   }
 }
 
-async function fetchSanityDocumentNoCache<T>(query: string) {
+async function fetchSanityDocumentNoCache<T>(
+  query: string,
+  params: Record<string, unknown> = {},
+) {
   if (!sanityClientNoCache) {
     return null;
   }
 
   try {
-    return (await sanityClientNoCache.fetch<T>(query, {}, { next: { revalidate: 0 } })) ?? null;
+    return (await sanityClientNoCache.fetch<T>(query, params, { next: { revalidate: 0 } })) ?? null;
   } catch {
     return null;
   }
@@ -414,15 +419,21 @@ export async function getFeaturedProducts() {
 }
 
 export async function getCatalogProductById(productId: string) {
-  const products = await getCatalogProducts();
+  const product = await fetchSanityDocument<SanityProductDoc>(productBySlugQuery, {
+    slug: productId,
+  });
+  const mappedProduct = product ? mapSanityProduct(product) : null;
 
-  return products.find((product) => product.id === productId) ?? null;
+  return mappedProduct;
 }
 
 export async function getCatalogProductByIdNoCache(productId: string) {
-  const products = await getCatalogProductsNoCache();
+  const product = await fetchSanityDocumentNoCache<SanityProductDoc>(productBySlugQuery, {
+    slug: productId,
+  });
+  const mappedProduct = product ? mapSanityProduct(product) : null;
 
-  return products.find((product) => product.id === productId) ?? null;
+  return mappedProduct;
 }
 
 export async function getSiteSettings() {

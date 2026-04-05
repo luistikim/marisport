@@ -45,34 +45,28 @@ export const contactQuery = `*[_type == "contact"][0]{
   contactPhone,
   contactEmail,
   instagramHandle,
-  instagramUrl,
-  atendimentoTitle,
-  atendimentoDescription,
-  atendimentoSchedule,
-  atendimentoCoverage
+  instagramUrl
 }`;
 
 export const aboutQuery = `*[_type == "sobreMarca"][0]{
   "coupleStory": coupleStory[]{title, text},
   "brandPillars": brandPillars[]{title, text},
-  "brandStoryMoments": brandStoryMoments[]{title, text, image},
+  "brandStoryMoments": brandStoryMoments[]{title, text},
   "brandChannels": brandChannels[]{title, text, href, cta},
   "trustSignals": trustSignals,
   "whyChooseMariSport": whyChooseMariSport[]{title, text}
 }`;
 
 export const categoriesQuery = `*[_type == "categoria"] | order(order asc){
-  _id,
   title,
-  slug,
+  "slug": slug.current,
   description,
   order
 }`;
 
-export const productsQuery = `*[_type == "produto"] | order(order asc){
-  _id,
+const productProjection = `{
   name,
-  slug,
+  "slug": slug.current,
   badge,
   shortDescription,
   fullDescription,
@@ -85,14 +79,16 @@ export const productsQuery = `*[_type == "produto"] | order(order asc){
   },
   imageFit,
   imagePosition,
-  "categorySlug": category->slug.current,
   "categoryTitle": category->title,
   sizes,
   colors,
   statusLabel,
-  featured,
-  order
+  featured
 }`;
+
+export const productsQuery = `*[_type == "produto"] | order(order asc) ${productProjection}`;
+
+export const productBySlugQuery = `*[_type == "produto" && slug.current == $slug][0] ${productProjection}`;
 
 export const siteSettingsQuery = `*[_type == "configuracaoSite"][0]{
   siteName,

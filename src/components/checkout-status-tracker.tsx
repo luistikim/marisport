@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useCart } from "@/components/cart-provider";
 import type { OrderRecord } from "@/lib/orders";
@@ -10,6 +10,9 @@ import { formatCurrency } from "@/data/site";
 type CheckoutStatusTrackerProps = {
   fallbackStatus: "approved" | "pending" | "rejected";
 };
+
+const POLL_INTERVAL_MS = 5000;
+const MAX_POLL_ATTEMPTS = 12;
 
 function getStatusContent(status: OrderRecord["status"] | "rejected") {
   switch (status) {
@@ -44,44 +47,91 @@ export function CheckoutStatusTracker({
   const { clearCart } = useCart();
   const [order, setOrder] = useState<OrderRecord | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const activeRequestIdRef = useRef(0);
+  const pollTimeoutRef = useRef<number | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const isStoppedRef = useRef(false);
+  const pollAttemptsRef = useRef(0);
+  const clearCartRef = useRef(clearCart);
   const orderId = searchParams.get("order_id");
 
   useEffect(() => {
+    clearCartRef.current = clearCart;
+  }, [clearCart]);
+
+  useEffect(() => {
+    isStoppedRef.current = false;
+    pollAttemptsRef.current = 0;
+    setOrder(null);
+    setErrorMessage(null);
+
+    if (pollTimeoutRef.current !== null) {
+      window.clearTimeout(pollTimeoutRef.current);
+      pollTimeoutRef.current = null;
+    }
+
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
+
     if (!orderId) {
       return;
     }
 
-    let isMounted = true;
-    let timeoutId: number | undefined;
+    const runPoll = async () => {
+      if (isStoppedRef.current || !orderId) {
+        return;
+      }
 
-    async function loadOrder() {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      const requestId = activeRequestIdRef.current + 1;
+      activeRequestIdRef.current = requestId;
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
       try {
         const response = await fetch(`/api/orders/${orderId}`, {
           cache: "no-store",
+          signal: controller.signal,
         });
         const data = (await response.json()) as OrderRecord & { error?: string };
 
-        if (!response.ok) {
-          throw new Error(data.error ?? "Nao foi possivel consultar o pedido.");
+        if (isStoppedRef.current || activeRequestIdRef.current !== requestId) {
+          return;
         }
 
-        if (!isMounted) {
-          return;
+        if (!response.ok) {
+          throw new Error(data.error ?? "Nao foi possivel consultar o pedido.");
         }
 
         setOrder(data);
         setErrorMessage(null);
 
         if (data.status === "approved") {
-          clearCart();
+          clearCartRef.current();
           return;
         }
 
         if (data.status === "created" || data.status === "pending") {
-          timeoutId = window.setTimeout(loadOrder, 3000);
+          pollAttemptsRef.current += 1;
+
+          if (pollAttemptsRef.current >= MAX_POLL_ATTEMPTS) {
+            setErrorMessage(
+              "Ainda nao conseguimos confirmar o pagamento. Seu pedido continua salvo e voce pode falar com a loja para verificar o status.",
+            );
+            return;
+          }
+
+          pollTimeoutRef.current = window.setTimeout(runPoll, POLL_INTERVAL_MS);
         }
       } catch (error) {
-        if (!isMounted) {
+        if (
+          isStoppedRef.current ||
+          activeRequestIdRef.current !== requestId ||
+          (error instanceof DOMException && error.name === "AbortError")
+        ) {
           return;
         }
 
@@ -90,18 +140,25 @@ export function CheckoutStatusTracker({
             ? error.message
             : "Nao foi possivel consultar o pedido.",
         );
-      }
-    }
-
-    void loadOrder();
-
-    return () => {
-      isMounted = false;
-      if (timeoutId) {
-        window.clearTimeout(timeoutId);
+      } finally {
+        if (abortControllerRef.current === controller) {
+          abortControllerRef.current = null;
+        }
       }
     };
-  }, [clearCart, orderId]);
+
+    void runPoll();
+
+    return () => {
+      isStoppedRef.current = true;
+      if (pollTimeoutRef.current !== null) {
+        window.clearTimeout(pollTimeoutRef.current);
+        pollTimeoutRef.current = null;
+      }
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = null;
+    };
+  }, [orderId]);
 
   const resolvedStatus = useMemo(() => {
     if (!order) {

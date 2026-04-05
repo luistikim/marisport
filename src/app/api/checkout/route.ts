@@ -1,12 +1,31 @@
 import { NextResponse } from "next/server";
 import type { CartItem } from "@/components/cart-provider";
 import { calculateSubtotal, saveOrder, type OrderRecord } from "@/lib/orders";
-import { getCatalogProductById } from "@/lib/content";
+import { getCatalogProducts } from "@/lib/content";
 
 type CheckoutRequestItem = {
   id: string;
   quantity: number;
 };
+
+const MAX_ITEM_QUANTITY = 10;
+
+function isValidCheckoutItem(item: unknown): item is CheckoutRequestItem {
+  if (!item || typeof item !== "object") {
+    return false;
+  }
+
+  const typedItem = item as Partial<CheckoutRequestItem>;
+
+  return (
+    typeof typedItem.id === "string" &&
+    typedItem.id.trim().length > 0 &&
+    typeof typedItem.quantity === "number" &&
+    Number.isInteger(typedItem.quantity) &&
+    typedItem.quantity > 0 &&
+    typedItem.quantity <= MAX_ITEM_QUANTITY
+  );
+}
 
 function getBaseUrl(request: Request) {
   const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -43,17 +62,49 @@ export async function POST(request: Request) {
       );
     }
 
-    const items: CartItem[] = [];
+    if (!Array.isArray(body.items) || body.items.some((item) => !isValidCheckoutItem(item))) {
+      return NextResponse.json(
+        {
+          error: `Carrinho invalido. Cada item deve ter quantidade entre 1 e ${MAX_ITEM_QUANTITY}.`,
+        },
+        { status: 400 },
+      );
+    }
+
+    const catalogProducts = await getCatalogProducts();
+    const productById = new Map(catalogProducts.map((product) => [product.id, product]));
+    const mergedItemsById = new Map<string, CheckoutRequestItem>();
 
     for (const entry of body.items) {
-      const product = await getCatalogProductById(entry.id);
+      const normalizedId = entry.id.trim();
+      const current = mergedItemsById.get(normalizedId);
+      const nextQuantity = (current?.quantity ?? 0) + entry.quantity;
 
-      if (!product) {
-        throw new Error("Produto invalido no carrinho.");
+      if (nextQuantity > MAX_ITEM_QUANTITY) {
+        return NextResponse.json(
+          {
+            error: `Quantidade maxima por item excedida para "${normalizedId}". O limite e ${MAX_ITEM_QUANTITY}.`,
+          },
+          { status: 400 },
+        );
       }
 
-      if (!Number.isInteger(entry.quantity) || entry.quantity <= 0) {
-        throw new Error("Quantidade invalida no carrinho.");
+      mergedItemsById.set(normalizedId, {
+        id: normalizedId,
+        quantity: nextQuantity,
+      });
+    }
+
+    const items: CartItem[] = [];
+
+    for (const entry of mergedItemsById.values()) {
+      const product = productById.get(entry.id);
+
+      if (!product) {
+        return NextResponse.json(
+          { error: "Produto invalido no carrinho." },
+          { status: 400 },
+        );
       }
 
       if (typeof product.unitPrice !== "number" || product.unitPrice <= 0) {

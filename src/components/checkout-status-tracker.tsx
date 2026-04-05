@@ -12,7 +12,7 @@ type CheckoutStatusTrackerProps = {
 };
 
 const POLL_INTERVAL_MS = 5000;
-const MAX_POLL_ATTEMPTS = 12;
+const MAX_POLL_ATTEMPTS = 36;
 
 function getStatusContent(status: OrderRecord["status"] | "rejected") {
   switch (status) {
@@ -54,6 +54,7 @@ export function CheckoutStatusTracker({
   const pollAttemptsRef = useRef(0);
   const clearCartRef = useRef(clearCart);
   const orderId = searchParams.get("order_id");
+  const paymentId = searchParams.get("payment_id");
 
   useEffect(() => {
     clearCartRef.current = clearCart;
@@ -73,12 +74,25 @@ export function CheckoutStatusTracker({
     abortControllerRef.current?.abort();
     abortControllerRef.current = null;
 
-    if (!orderId) {
+    if (!orderId && !paymentId) {
       return;
     }
 
+    const scheduleNextPoll = (runPoll: () => Promise<void>) => {
+      pollAttemptsRef.current += 1;
+
+      if (pollAttemptsRef.current >= MAX_POLL_ATTEMPTS) {
+        setErrorMessage(
+          "Ainda nao conseguimos confirmar o pagamento. Seu pedido continua salvo e voce pode falar com a loja para verificar o status.",
+        );
+        return;
+      }
+
+      pollTimeoutRef.current = window.setTimeout(runPoll, POLL_INTERVAL_MS);
+    };
+
     const runPoll = async () => {
-      if (isStoppedRef.current || !orderId) {
+      if (isStoppedRef.current || (!orderId && !paymentId)) {
         return;
       }
 
@@ -92,10 +106,15 @@ export function CheckoutStatusTracker({
       abortControllerRef.current = controller;
 
       try {
-        const response = await fetch(`/api/orders/${orderId}`, {
-          cache: "no-store",
-          signal: controller.signal,
-        });
+        const response = await fetch(
+          orderId
+            ? `/api/orders/${orderId}`
+            : `/api/orders/by-payment/${paymentId}`,
+          {
+            cache: "no-store",
+            signal: controller.signal,
+          },
+        );
         const data = (await response.json()) as OrderRecord & { error?: string };
 
         if (isStoppedRef.current || activeRequestIdRef.current !== requestId) {
@@ -103,6 +122,11 @@ export function CheckoutStatusTracker({
         }
 
         if (!response.ok) {
+          if (response.status === 404 || response.status >= 500) {
+            scheduleNextPoll(runPoll);
+            return;
+          }
+
           throw new Error(data.error ?? "Nao foi possivel consultar o pedido.");
         }
 
@@ -115,16 +139,7 @@ export function CheckoutStatusTracker({
         }
 
         if (data.status === "created" || data.status === "pending") {
-          pollAttemptsRef.current += 1;
-
-          if (pollAttemptsRef.current >= MAX_POLL_ATTEMPTS) {
-            setErrorMessage(
-              "Ainda nao conseguimos confirmar o pagamento. Seu pedido continua salvo e voce pode falar com a loja para verificar o status.",
-            );
-            return;
-          }
-
-          pollTimeoutRef.current = window.setTimeout(runPoll, POLL_INTERVAL_MS);
+          scheduleNextPoll(runPoll);
         }
       } catch (error) {
         if (
@@ -135,11 +150,7 @@ export function CheckoutStatusTracker({
           return;
         }
 
-        setErrorMessage(
-          error instanceof Error
-            ? error.message
-            : "Nao foi possivel consultar o pedido.",
-        );
+        scheduleNextPoll(runPoll);
       } finally {
         if (abortControllerRef.current === controller) {
           abortControllerRef.current = null;
@@ -158,7 +169,7 @@ export function CheckoutStatusTracker({
       abortControllerRef.current?.abort();
       abortControllerRef.current = null;
     };
-  }, [orderId]);
+  }, [orderId, paymentId]);
 
   const resolvedStatus = useMemo(() => {
     if (!order) {

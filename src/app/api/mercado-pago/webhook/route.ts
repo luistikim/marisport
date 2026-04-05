@@ -365,6 +365,15 @@ export async function POST(request: Request) {
         });
       }
 
+      if (notificationStatus === "skipped") {
+        console.info("[mercado-pago:webhook]", {
+          orderId,
+          paymentId,
+          action: "notification-skipped",
+          reason: notificationResult.reason,
+        });
+      }
+
       if (notificationStatus === "failed") {
         console.error("[mercado-pago:webhook]", {
           orderId,

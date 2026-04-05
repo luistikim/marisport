@@ -36,19 +36,12 @@ export default async function Home() {
         identityEyebrow={home.hero.identityEyebrow}
         identityTitle={home.hero.identityTitle}
         identityDescription={home.hero.identityDescription}
-        conversionEyebrow={home.hero.conversionEyebrow}
-        conversionDescription={home.hero.conversionDescription}
         primaryAction={home.hero.primaryCta}
         secondaryAction={home.hero.secondaryCta}
         stats={home.hero.stats}
       />
 
-      <BenefitsSection
-        eyebrow={home.benefits.eyebrow}
-        title={home.benefits.title}
-        description={home.benefits.description}
-        items={home.benefits.items}
-      />
+      <BenefitsSection items={home.benefits.items} />
 
       <CategorySection
         eyebrow={home.catalog.eyebrow}

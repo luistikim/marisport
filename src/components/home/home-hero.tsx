@@ -14,8 +14,6 @@ type HomeHeroProps = {
   identityEyebrow: string;
   identityTitle: string;
   identityDescription: string;
-  conversionEyebrow: string;
-  conversionDescription: string;
   primaryAction: HeroAction;
   secondaryAction: HeroAction;
   stats: Array<{ label: string; value: string }>;
@@ -28,8 +26,6 @@ export function HomeHero({
   identityEyebrow,
   identityTitle,
   identityDescription,
-  conversionEyebrow,
-  conversionDescription,
   primaryAction,
   secondaryAction,
   stats,
@@ -53,7 +49,7 @@ export function HomeHero({
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 href={primaryAction.href}
-                className="inline-flex items-center justify-center rounded-full bg-[#dff1cf] px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-[#27402c] shadow-[0_16px_36px_rgba(125,187,56,0.18)] hover:-translate-y-0.5 hover:bg-[#cee4b6]"
+                className="brand-cta-primary"
               >
                 {primaryAction.label}
               </Link>
@@ -61,7 +57,7 @@ export function HomeHero({
                 href={secondaryAction.href}
                 target={secondaryAction.external ? "_blank" : undefined}
                 rel={secondaryAction.external ? "noreferrer" : undefined}
-                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/86 px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-surface-strong hover:bg-white"
+                className="brand-cta-secondary"
               >
                 {secondaryAction.label}
               </Link>
@@ -100,25 +96,15 @@ export function HomeHero({
             </p>
           </article>
 
-          <article className="overflow-hidden rounded-[2rem] border border-[#d9e5dc] bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf7_48%,#e2eddb_100%)] shadow-[0_16px_36px_rgba(19,38,59,0.08)]">
-            <div className="relative flex min-h-[22rem] items-center justify-center p-8 sm:p-10">
-              <Image
-                src="/logo-marisport.png"
-                alt="Mari Sport"
-                width={320}
-                height={160}
-                className="h-auto w-[70%] max-w-[18rem] object-contain"
-                priority
-              />
-            </div>
-            <div className="px-5 pb-6 text-center">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#6a8271]">
-                {conversionEyebrow}
-              </p>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-[#536566]">
-                {conversionDescription}
-              </p>
-            </div>
+          <article className="flex min-h-[13rem] items-center justify-center overflow-hidden rounded-[2rem] border border-[#d9e5dc] bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf7_48%,#e2eddb_100%)] p-6 shadow-[0_16px_36px_rgba(19,38,59,0.08)] sm:min-h-[16rem] sm:p-8">
+            <Image
+              src="/logo-marisport.png"
+              alt="Mari Sport"
+              width={320}
+              height={160}
+              className="h-auto w-[72%] max-w-[18rem] object-contain"
+              priority
+            />
           </article>
         </div>
       </div>

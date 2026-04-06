@@ -113,6 +113,8 @@ export function CheckoutProButton({
           items: items.map((item) => ({
             id: item.id,
             quantity: item.quantity,
+            selectedSize: item.selectedSize,
+            selectedColor: item.selectedColor,
           })),
           notes: notes?.trim() || undefined,
         }),

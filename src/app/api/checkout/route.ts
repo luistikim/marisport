@@ -6,6 +6,8 @@ import { getCatalogProductsNoCache } from "@/lib/content";
 type CheckoutRequestItem = {
   id: string;
   quantity: number;
+  selectedSize?: string;
+  selectedColor?: string;
 };
 
 type CheckoutRequestBody = {
@@ -28,8 +30,72 @@ function isValidCheckoutItem(item: unknown): item is CheckoutRequestItem {
     typeof typedItem.quantity === "number" &&
     Number.isInteger(typedItem.quantity) &&
     typedItem.quantity > 0 &&
-    typedItem.quantity <= MAX_ITEM_QUANTITY
+    typedItem.quantity <= MAX_ITEM_QUANTITY &&
+    (typedItem.selectedSize === undefined || typeof typedItem.selectedSize === "string") &&
+    (typedItem.selectedColor === undefined || typeof typedItem.selectedColor === "string")
   );
+}
+
+function normalizeVariationValue(value?: string) {
+  return value?.trim() || undefined;
+}
+
+function normalizeVariationLabel(value?: string) {
+  const normalized = normalizeVariationValue(value);
+
+  if (!normalized) {
+    return undefined;
+  }
+
+  return normalized
+    .toLocaleLowerCase("pt-BR")
+    .split(/\s+/)
+    .map((part) => {
+      if (!part) {
+        return part;
+      }
+
+      return part.charAt(0).toLocaleUpperCase("pt-BR") + part.slice(1);
+    })
+    .join(" ");
+}
+
+function buildCheckoutItemKey(item: CheckoutRequestItem) {
+  const size = normalizeVariationValue(item.selectedSize)?.toLocaleLowerCase("pt-BR") ?? "";
+  const color = normalizeVariationValue(item.selectedColor)?.toLocaleLowerCase("pt-BR") ?? "";
+
+  return [item.id.trim(), size, color].join("::");
+}
+
+function buildVariationTitle(itemName: string, item: CheckoutRequestItem) {
+  const parts = [itemName];
+
+  if (item.selectedSize) {
+    parts.push(normalizeVariationValue(item.selectedSize) ?? "");
+  }
+
+  if (item.selectedColor) {
+    parts.push(normalizeVariationLabel(item.selectedColor) ?? "");
+  }
+
+  return parts.filter(Boolean).join(" - ");
+}
+
+function buildVariationDescription(
+  itemDescription: string,
+  item: CheckoutRequestItem,
+) {
+  const parts = [itemDescription];
+
+  if (item.selectedSize) {
+    parts.push(`Tamanho: ${normalizeVariationValue(item.selectedSize)}`);
+  }
+
+  if (item.selectedColor) {
+    parts.push(`Cor: ${normalizeVariationLabel(item.selectedColor)}`);
+  }
+
+  return parts.filter(Boolean).join(" | ");
 }
 
 function getBaseUrl(request: Request) {
@@ -80,7 +146,11 @@ export async function POST(request: Request) {
 
     for (const entry of body.items) {
       const normalizedId = entry.id.trim();
-      const current = mergedItemsById.get(normalizedId);
+      const itemKey = buildCheckoutItemKey({
+        ...entry,
+        id: normalizedId,
+      });
+      const current = mergedItemsById.get(itemKey);
       const nextQuantity = (current?.quantity ?? 0) + entry.quantity;
 
       if (nextQuantity > MAX_ITEM_QUANTITY) {
@@ -92,7 +162,8 @@ export async function POST(request: Request) {
         );
       }
 
-      mergedItemsById.set(normalizedId, {
+      mergedItemsById.set(itemKey, {
+        ...entry,
         id: normalizedId,
         quantity: nextQuantity,
       });
@@ -101,7 +172,7 @@ export async function POST(request: Request) {
     const items: CartItem[] = [];
 
     for (const entry of mergedItemsById.values()) {
-      const product = productById.get(entry.id);
+          const product = productById.get(entry.id);
 
       if (!product) {
         return NextResponse.json(
@@ -116,7 +187,12 @@ export async function POST(request: Request) {
         );
       }
 
-      items.push({ ...product, quantity: entry.quantity } as CartItem);
+      items.push({
+        ...product,
+        quantity: entry.quantity,
+        selectedSize: normalizeVariationValue(entry.selectedSize),
+        selectedColor: normalizeVariationLabel(entry.selectedColor),
+      } as CartItem);
     }
 
     const baseUrl = getBaseUrl(request);
@@ -146,11 +222,27 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           items: items.map((item) => ({
             id: item.id,
-            title: item.name,
+            title:
+              item.selectedSize || item.selectedColor
+                ? buildVariationTitle(item.name, {
+                    id: item.id,
+                    quantity: item.quantity,
+                    selectedSize: item.selectedSize,
+                    selectedColor: item.selectedColor,
+                  })
+                : item.name,
             quantity: item.quantity,
             currency_id: "BRL",
             unit_price: item.unitPrice,
-            description: item.description,
+            description:
+              item.selectedSize || item.selectedColor
+                ? buildVariationDescription(item.description, {
+                    id: item.id,
+                    quantity: item.quantity,
+                    selectedSize: item.selectedSize,
+                    selectedColor: item.selectedColor,
+                  })
+                : item.description,
           })),
           back_urls: {
             success: `${baseUrl}/checkout/sucesso?order_id=${orderId}`,

@@ -1,11 +1,13 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { buildWhatsAppLink } from "@/data/product";
+import { buildWhatsAppLink, type CatalogProduct } from "@/data/product";
+import { useCart } from "@/components/cart-provider";
 
 type ProductDetailPurchaseProps = {
+  product: CatalogProduct;
   productName: string;
   whatsappPhone: string;
   availability?: string[];
@@ -122,10 +124,12 @@ function parseAvailabilityOptions(values: string[] = []): AvailabilityOptions {
 }
 
 export function ProductDetailPurchase({
+  product,
   productName,
   whatsappPhone,
   availability,
 }: ProductDetailPurchaseProps) {
+  const { addItem } = useCart();
   const { sizes, colors, notes } = useMemo(
     () => parseAvailabilityOptions(availability),
     [availability],
@@ -137,6 +141,17 @@ export function ProductDetailPurchase({
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [error, setError] = useState("");
+  const [wasAdded, setWasAdded] = useState(false);
+
+  useEffect(() => {
+    if (!wasAdded) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => setWasAdded(false), 1400);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [wasAdded]);
 
   const whatsappMessage = useMemo(() => {
     if (selectedSize && selectedColor) {
@@ -160,6 +175,18 @@ export function ProductDetailPurchase({
   );
 
   function handleWhatsAppClick(event: MouseEvent<HTMLAnchorElement>) {
+    const missingMessage = getMissingSelectionMessage();
+
+    if (missingMessage) {
+      event.preventDefault();
+      setError(missingMessage);
+      return;
+    }
+
+    setError("");
+  }
+
+  function getMissingSelectionMessage() {
     const missingItems: string[] = [];
 
     if (requiresSizes && !selectedSize) {
@@ -170,17 +197,33 @@ export function ProductDetailPurchase({
       missingItems.push("cor");
     }
 
-    if (missingItems.length > 0) {
-      event.preventDefault();
-      setError(
-        missingItems.length === 2
-          ? "Selecione um tamanho e uma cor antes de continuar."
-          : `Selecione uma ${missingItems[0]} antes de continuar.`,
-      );
+    if (missingItems.length === 2) {
+      return "Selecione um tamanho e uma cor antes de continuar.";
+    }
+
+    if (missingItems.length === 1) {
+      return missingItems[0] === "tamanho"
+        ? "Selecione um tamanho antes de continuar."
+        : "Selecione uma cor antes de continuar.";
+    }
+
+    return null;
+  }
+
+  function handleAddToCart() {
+    const missingMessage = getMissingSelectionMessage();
+
+    if (missingMessage) {
+      setError(missingMessage);
       return;
     }
 
+    addItem(product, {
+      selectedSize: selectedSize || undefined,
+      selectedColor: selectedColor || undefined,
+    });
     setError("");
+    setWasAdded(true);
   }
 
   function toggleSelection(
@@ -279,12 +322,19 @@ export function ProductDetailPurchase({
       ) : null}
 
       <div className="flex flex-col gap-3 sm:flex-row">
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className="brand-cta-primary"
+        >
+          {wasAdded ? "Adicionado" : "Comprar"}
+        </button>
         <a
           href={whatsappHref}
           target="_blank"
           rel="noreferrer"
           onClick={handleWhatsAppClick}
-          className="brand-cta-primary"
+          className="brand-cta-secondary"
         >
           Falar no WhatsApp
         </a>

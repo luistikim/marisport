@@ -14,18 +14,73 @@ const CART_STORAGE_KEY = "marisport-cart";
 
 export type CartItem = CatalogProduct & {
   quantity: number;
+  selectedSize?: string;
+  selectedColor?: string;
+  itemKey: string;
+};
+
+type CartSelection = {
+  selectedSize?: string;
+  selectedColor?: string;
 };
 
 type CartContextValue = {
   items: CartItem[];
   itemCount: number;
-  addItem: (product: CatalogProduct) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (product: CatalogProduct, selection?: CartSelection) => void;
+  removeItem: (itemKey: string) => void;
+  updateQuantity: (itemKey: string, quantity: number) => void;
   clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
+
+function normalizeVariationValue(value?: string) {
+  return value?.trim() || undefined;
+}
+
+function buildCartItemKey(
+  productId: string,
+  selection?: CartSelection,
+): string {
+  const selectedSize = normalizeVariationValue(selection?.selectedSize) ?? "";
+  const selectedColor = normalizeVariationValue(selection?.selectedColor) ?? "";
+
+  return [productId, selectedSize.toLowerCase(), selectedColor.toLowerCase()].join("::");
+}
+
+function normalizeCartItem(item: Partial<CartItem> & CatalogProduct): CartItem {
+  const selectedSize = normalizeVariationValue(item.selectedSize);
+  const selectedColor = normalizeVariationValue(item.selectedColor);
+  const itemKey =
+    item.itemKey ?? buildCartItemKey(item.id, { selectedSize, selectedColor });
+
+  return {
+    ...item,
+    quantity: item.quantity ?? 1,
+    selectedSize,
+    selectedColor,
+    itemKey,
+  };
+}
+
+function isPersistedCartItem(
+  item: unknown,
+): item is Partial<CartItem> & CatalogProduct {
+  if (!item || typeof item !== "object") {
+    return false;
+  }
+
+  const typedItem = item as Partial<CartItem> & CatalogProduct;
+
+  return (
+    typeof typedItem.id === "string" &&
+    typedItem.id.trim().length > 0 &&
+    typeof typedItem.quantity === "number" &&
+    Number.isInteger(typedItem.quantity) &&
+    typedItem.quantity > 0
+  );
+}
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -35,7 +90,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const storedCart = window.localStorage.getItem(CART_STORAGE_KEY);
       if (storedCart) {
-        setItems(JSON.parse(storedCart) as CartItem[]);
+        const parsedItems = JSON.parse(storedCart) as unknown[];
+        setItems(
+          parsedItems.filter(isPersistedCartItem).map(normalizeCartItem),
+        );
       }
     } catch {
       window.localStorage.removeItem(CART_STORAGE_KEY);
@@ -56,37 +114,53 @@ export function CartProvider({ children }: { children: ReactNode }) {
     () => ({
       items,
       itemCount: items.reduce((total, item) => total + item.quantity, 0),
-      addItem: (product) => {
+      addItem: (product, selection) => {
+        const selectedSize = normalizeVariationValue(selection?.selectedSize);
+        const selectedColor = normalizeVariationValue(selection?.selectedColor);
+        const itemKey = buildCartItemKey(product.id, {
+          selectedSize,
+          selectedColor,
+        });
+
         setItems((currentItems) => {
-          const existingItem = currentItems.find((item) => item.id === product.id);
+          const existingItem = currentItems.find((item) => item.itemKey === itemKey);
 
           if (existingItem) {
             return currentItems.map((item) =>
-              item.id === product.id
+              item.itemKey === itemKey
                 ? { ...item, quantity: item.quantity + 1 }
                 : item,
             );
           }
 
-          return [...currentItems, { ...product, quantity: 1 }];
+          return [
+            ...currentItems,
+            {
+              ...product,
+              quantity: 1,
+              selectedSize,
+              selectedColor,
+              itemKey,
+            },
+          ];
         });
       },
-      removeItem: (productId) => {
+      removeItem: (itemKey) => {
         setItems((currentItems) =>
-          currentItems.filter((item) => item.id !== productId),
+          currentItems.filter((item) => item.itemKey !== itemKey),
         );
       },
-      updateQuantity: (productId, quantity) => {
+      updateQuantity: (itemKey, quantity) => {
         if (quantity <= 0) {
           setItems((currentItems) =>
-            currentItems.filter((item) => item.id !== productId),
+            currentItems.filter((item) => item.itemKey !== itemKey),
           );
           return;
         }
 
         setItems((currentItems) =>
           currentItems.map((item) =>
-            item.id === productId ? { ...item, quantity } : item,
+            item.itemKey === itemKey ? { ...item, quantity } : item,
           ),
         );
       },

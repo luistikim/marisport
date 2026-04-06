@@ -73,6 +73,7 @@ export type SanityProductDoc = {
   _id?: string;
   name?: string;
   slug?: string;
+  ativo?: boolean;
   badge?: string;
   shortDescription?: string;
   fullDescription?: string;
@@ -94,11 +95,14 @@ export type SanityProductDoc = {
     size?: string;
     color?: string;
     stock?: number | null;
+    priceOverride?: number | null;
+    sku?: string;
   }>;
   sizes?: string[];
   colors?: string[];
   statusLabel?: string;
   featured?: boolean;
+  isNew?: boolean;
   order?: number;
 };
 

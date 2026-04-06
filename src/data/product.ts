@@ -4,6 +4,7 @@ export type ProductVariant = {
   size?: string;
   color?: string;
   stock?: number | null;
+  priceOverride?: number | null;
 };
 
 export type CatalogProduct = {
@@ -28,6 +29,7 @@ export type CatalogProduct = {
   availability?: string[];
   statusLabel?: string;
   featured?: boolean;
+  isNew?: boolean;
 };
 
 export const productGrid: CatalogProduct[] = [
@@ -253,15 +255,29 @@ function normalizeProductVariants(variants?: ProductVariant[]) {
         return null;
       }
 
+      const priceOverride =
+        typeof variant.priceOverride === "number" && variant.priceOverride > 0
+          ? variant.priceOverride
+          : undefined;
+
       return {
         size,
         color,
         stock,
+        priceOverride,
       };
     })
-    .filter(Boolean) as Array<{ size?: string; color?: string; stock?: number }>;
+    .filter(Boolean) as Array<{
+    size?: string;
+    color?: string;
+    stock?: number;
+    priceOverride?: number;
+  }>;
 
-  const uniqueVariants = new Map<string, { size?: string; color?: string; stock?: number }>();
+  const uniqueVariants = new Map<
+    string,
+    { size?: string; color?: string; stock?: number; priceOverride?: number }
+  >();
 
   for (const variant of normalized) {
     const key = buildVariantKey(variant.size, variant.color);
@@ -296,6 +312,7 @@ function deriveLegacyVariants(product: Pick<CatalogProduct, "sizes" | "colors">)
         size,
         color,
         stock: undefined,
+        priceOverride: undefined,
       })),
     );
   }
@@ -305,6 +322,7 @@ function deriveLegacyVariants(product: Pick<CatalogProduct, "sizes" | "colors">)
       size,
       color: undefined,
       stock: undefined,
+      priceOverride: undefined,
     }));
   }
 
@@ -313,6 +331,7 @@ function deriveLegacyVariants(product: Pick<CatalogProduct, "sizes" | "colors">)
       size: undefined,
       color,
       stock: undefined,
+      priceOverride: undefined,
     }));
   }
 

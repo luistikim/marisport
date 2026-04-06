@@ -6,6 +6,7 @@ import {
   buildMercadoPagoItemPayload,
   normalizeColorLabel,
 } from "@/lib/mercado-pago-items";
+import { findMatchingProductVariant } from "@/data/product";
 
 type CheckoutRequestItem = {
   id: string;
@@ -134,7 +135,17 @@ export async function POST(request: Request) {
         );
       }
 
-      if (typeof product.unitPrice !== "number" || product.unitPrice <= 0) {
+      // Usa priceOverride da variação correspondente, se disponível
+      const matchingVariant =
+        entry.selectedSize || entry.selectedColor
+          ? findMatchingProductVariant(product, entry.selectedSize, entry.selectedColor)
+          : null;
+      const effectiveUnitPrice =
+        typeof matchingVariant?.priceOverride === "number" && matchingVariant.priceOverride > 0
+          ? matchingVariant.priceOverride
+          : product.unitPrice;
+
+      if (typeof effectiveUnitPrice !== "number" || effectiveUnitPrice <= 0) {
         throw new Error(
           `Defina o preco do produto "${product.name}" antes de usar o Checkout Pro.`,
         );
@@ -142,6 +153,7 @@ export async function POST(request: Request) {
 
       items.push({
         ...product,
+        unitPrice: effectiveUnitPrice,
         quantity: entry.quantity,
         selectedSize: normalizeVariationValue(entry.selectedSize),
         selectedColor: normalizeColorLabel(entry.selectedColor),

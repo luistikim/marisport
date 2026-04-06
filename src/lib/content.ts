@@ -120,8 +120,18 @@ function mapSanityProduct(product: SanityProductDoc): CatalogProduct | null {
     return null;
   }
 
+  const sanityVariants = (product.variants ?? []).map((v) => ({
+    size: v.size,
+    color: v.color,
+    stock: v.stock,
+    priceOverride:
+      typeof v.priceOverride === "number" && v.priceOverride > 0
+        ? v.priceOverride
+        : undefined,
+  }));
+
   const variants = getProductVariants({
-    variants: product.variants,
+    variants: sanityVariants,
     sizes: splitStructuredVariationValues(product.sizes),
     colors: splitStructuredVariationValues(product.colors),
   });
@@ -179,6 +189,7 @@ function mapSanityProduct(product: SanityProductDoc): CatalogProduct | null {
     ],
     statusLabel: product.statusLabel ?? undefined,
     featured: product.featured ?? false,
+    isNew: product.isNew ?? false,
   };
 }
 

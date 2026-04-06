@@ -67,6 +67,7 @@ export const categoriesQuery = `*[_type == "categoria"] | order(order asc){
 const productProjection = `{
   name,
   "slug": slug.current,
+  ativo,
   badge,
   shortDescription,
   fullDescription,
@@ -83,17 +84,22 @@ const productProjection = `{
   variants[]{
     size,
     color,
-    stock
+    stock,
+    priceOverride,
+    sku
   },
   sizes,
   colors,
   statusLabel,
-  featured
+  featured,
+  isNew
 }`;
 
-export const productsQuery = `*[_type == "produto"] | order(order asc) ${productProjection}`;
+// Exclui produtos inativos (ativo == false).
+// Produtos sem o campo ativo (ativo == null/undefined) são incluídos por compatibilidade.
+export const productsQuery = `*[_type == "produto" && ativo != false] | order(order asc) ${productProjection}`;
 
-export const productBySlugQuery = `*[_type == "produto" && slug.current == $slug][0] ${productProjection}`;
+export const productBySlugQuery = `*[_type == "produto" && slug.current == $slug && ativo != false][0] ${productProjection}`;
 
 export const siteSettingsQuery = `*[_type == "configuracaoSite"][0]{
   siteName,

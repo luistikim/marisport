@@ -45,10 +45,24 @@ type CartItemCardProps = {
   item: CartItem;
   isPending: boolean;
   isRemoving: boolean;
-  onRemove: (id: string) => void;
-  onDecrease: (id: string, current: number) => void;
-  onIncrease: (id: string, current: number) => void;
+  onRemove: (itemKey: string) => void;
+  onDecrease: (itemKey: string, current: number) => void;
+  onIncrease: (itemKey: string, current: number) => void;
 };
+
+function formatItemVariation(item: CartItem) {
+  const parts: string[] = [];
+
+  if (item.selectedSize) {
+    parts.push(`Tamanho: ${item.selectedSize}`);
+  }
+
+  if (item.selectedColor) {
+    parts.push(`Cor: ${item.selectedColor}`);
+  }
+
+  return parts;
+}
 
 function CartItemCard({
   item,
@@ -58,7 +72,12 @@ function CartItemCard({
   onDecrease,
   onIncrease,
 }: CartItemCardProps) {
-  const atMax = item.quantity >= MAX_ITEM_QUANTITY;
+  const itemMaxQuantity = Math.min(MAX_ITEM_QUANTITY, item.availableStock ?? MAX_ITEM_QUANTITY);
+  const atMax = item.quantity >= itemMaxQuantity;
+  const variationParts = formatItemVariation(item);
+  const variationLabel = variationParts.length
+    ? ` (${variationParts.map((variation) => variation.toLowerCase()).join(", ")})`
+    : "";
 
   return (
     <article
@@ -74,6 +93,18 @@ function CartItemCard({
           <h2 className="mt-2 text-2xl font-black uppercase text-surface-strong">
             {item.name}
           </h2>
+          {variationParts.length ? (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {variationParts.map((variation) => (
+                <span
+                  key={variation}
+                  className="rounded-full border border-[#d8e4db] bg-[#f8fbf8] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#536566]"
+                >
+                  {variation}
+                </span>
+              ))}
+            </div>
+          ) : null}
           <p className="mt-3 max-w-xl text-sm leading-7 text-slate-600">
             {item.description}
           </p>
@@ -81,10 +112,10 @@ function CartItemCard({
 
         <button
           type="button"
-          onClick={() => onRemove(item.id)}
+          onClick={() => onRemove(item.itemKey)}
           disabled={isPending}
           className="self-start rounded-full border border-[#d8e4db] bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong transition-colors hover:border-red-300 hover:text-red-600 disabled:cursor-not-allowed"
-          aria-label={`Remover ${item.name} do carrinho`}
+          aria-label={`Remover ${item.name}${variationLabel} do carrinho`}
         >
           {isRemoving ? "Removendo…" : "Remover"}
         </button>
@@ -104,10 +135,10 @@ function CartItemCard({
           <div className="inline-flex items-center rounded-full border border-slate-300 bg-white">
             <button
               type="button"
-              onClick={() => onDecrease(item.id, item.quantity)}
+              onClick={() => onDecrease(item.itemKey, item.quantity)}
               disabled={isPending}
               className="px-4 py-2 text-lg font-bold text-surface-strong transition-colors hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label={`Diminuir quantidade de ${item.name}`}
+              aria-label={`Diminuir quantidade de ${item.name}${variationLabel}`}
             >
               −
             </button>
@@ -116,17 +147,17 @@ function CartItemCard({
             </span>
             <button
               type="button"
-              onClick={() => onIncrease(item.id, item.quantity)}
+              onClick={() => onIncrease(item.itemKey, item.quantity)}
               disabled={isPending || atMax}
               className="px-4 py-2 text-lg font-bold text-surface-strong transition-colors hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label={`Aumentar quantidade de ${item.name}`}
+              aria-label={`Aumentar quantidade de ${item.name}${variationLabel}`}
             >
               +
             </button>
           </div>
           {atMax && (
             <span className="text-xs text-slate-400">
-              Máx. {MAX_ITEM_QUANTITY}
+              Máx. {itemMaxQuantity}
             </span>
           )}
         </div>
@@ -334,7 +365,7 @@ export function CartPageContent() {
   }, [syncPendingItemIds, syncRemovingItemIds]);
 
   useEffect(() => {
-    const activeItemIds = new Set(items.map((item) => item.id));
+    const activeItemIds = new Set(items.map((item) => item.itemKey));
     const currentPendingIds = pendingItemIdsRef.current;
     let changed = false;
     const nextPendingItemIds = new Set<string>();
@@ -469,7 +500,12 @@ export function CartPageContent() {
           item.unitPrice === null
             ? "consulte disponibilidade"
             : formatCurrency(item.unitPrice * item.quantity);
-        return `- ${item.quantity}x ${item.name} (${lineTotal})`;
+        const variationParts = formatItemVariation(item);
+        const variationLabel = variationParts.length
+          ? ` - ${variationParts.map((part) => part.toLowerCase()).join(", ")}`
+          : "";
+
+        return `- ${item.quantity}x ${item.name}${variationLabel} (${lineTotal})`;
       }),
     ];
 
@@ -498,27 +534,27 @@ export function CartPageContent() {
 
   // Quantity decrease: if reaching 0 the provider removes the item.
   // Sync op + 300 ms cooldown per item to prevent double-clicks.
-  function handleDecrease(id: string, current: number) {
+  function handleDecrease(itemKey: string, current: number) {
     if (current <= 1) {
       return;
     }
 
     runItemAction(
-      id,
+      itemKey,
       300,
-      () => updateQuantity(id, current - 1),
+      () => updateQuantity(itemKey, current - 1),
       "immediate",
       "adjust",
     );
   }
 
-  function handleIncrease(id: string, current: number) {
+  function handleIncrease(itemKey: string, current: number) {
     if (current >= MAX_ITEM_QUANTITY) return;
 
     runItemAction(
-      id,
+      itemKey,
       300,
-      () => updateQuantity(id, current + 1),
+      () => updateQuantity(itemKey, current + 1),
       "immediate",
       "adjust",
     );
@@ -526,8 +562,8 @@ export function CartPageContent() {
 
   // Removal: brief visual delay so the user sees the "Removendo…" state
   // before the item disappears from the list.
-  function handleRemove(id: string) {
-    runItemAction(id, 200, () => removeItem(id), "deferred", "remove");
+  function handleRemove(itemKey: string) {
+    runItemAction(itemKey, 200, () => removeItem(itemKey), "deferred", "remove");
   }
 
   function handleClearRequest() {
@@ -568,10 +604,10 @@ export function CartPageContent() {
         <div className="space-y-5">
           {items.map((item) => (
             <CartItemCard
-              key={item.id}
+              key={item.itemKey}
               item={item}
-              isPending={pendingItemIds.has(item.id)}
-              isRemoving={removingItemIds.has(item.id)}
+              isPending={pendingItemIds.has(item.itemKey)}
+              isRemoving={removingItemIds.has(item.itemKey)}
               onRemove={handleRemove}
               onDecrease={handleDecrease}
               onIncrease={handleIncrease}

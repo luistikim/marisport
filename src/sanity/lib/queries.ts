@@ -80,6 +80,11 @@ const productProjection = `{
   imageFit,
   imagePosition,
   "categoryTitle": category->title,
+  variants[]{
+    size,
+    color,
+    stock
+  },
   sizes,
   colors,
   statusLabel,

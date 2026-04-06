@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
-import { buildWhatsAppLink, formatCurrency } from "@/data/product";
+import { ProductDetailPurchase } from "@/components/product-detail-purchase";
+import { formatCurrency } from "@/data/product";
 import {
   getCatalogProductById,
   getCatalogProducts,
@@ -73,11 +73,6 @@ export default async function ProductDetailPage({
       : product.imageSrc
         ? [{ src: product.imageSrc, alt: product.name }]
         : [];
-
-  const whatsappLink = buildWhatsAppLink(
-    contact.whatsappPhone,
-    `Ola! Quero saber mais sobre o produto ${product.name}.`,
-  );
   const hasPrice = typeof product.unitPrice === "number" && product.unitPrice > 0;
   const priceLabel =
     hasPrice && product.unitPrice !== null
@@ -123,42 +118,16 @@ export default async function ProductDetailPage({
               </div>
             </div>
 
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href={whatsappLink}
-                target="_blank"
-                rel="noreferrer"
-                className="brand-cta-primary"
-              >
-                Falar no WhatsApp
-              </Link>
-              <Link href="/produtos" className="brand-cta-secondary">
-                Voltar ao catalogo
-              </Link>
-            </div>
+            <ProductDetailPurchase
+              product={product}
+              productName={product.name}
+              whatsappPhone={contact.whatsappPhone}
+            />
 
             <div className="mt-4 space-y-4">
               <p className="text-sm leading-7 text-[#55686b]">
                 {product.fullDescription || product.description}
               </p>
-
-              {product.availability?.length ? (
-                <div className="rounded-[1.4rem] border border-[#dbe5db] bg-white p-4">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#6d8272]">
-                    Tamanhos e cores
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {product.availability.map((item) => (
-                      <span
-                        key={item}
-                        className="rounded-full border border-[#dbe5db] bg-[#f8fbf8] px-3 py-2 text-xs font-semibold text-[#536566]"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
             </div>
           </article>
         </div>

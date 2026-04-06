@@ -12,7 +12,7 @@ import {
   trustSignals,
   whyChooseMariSport,
 } from "../src/data/about.ts";
-import { productGrid } from "../src/data/product.ts";
+import { getProductVariants, productGrid } from "../src/data/product.ts";
 import {
   homeAbout,
   homeBenefits,
@@ -194,7 +194,18 @@ async function seedCategories() {
 function toSanityProductDoc(product: (typeof productGrid)[number], image: SanityImageField | null): SeedDoc {
   const isFeminino = product.category === "Feminino";
   const categoryId = isFeminino ? "categoria-feminino" : "categoria-masculino";
-  const availability = product.availability ?? [];
+  const variants = (product.variants?.length ? product.variants : getProductVariants(product)).map(
+    (variant, index) => ({
+      size: variant.size ?? undefined,
+      color: variant.color ?? undefined,
+      stock:
+        typeof variant.stock === "number"
+          ? variant.stock
+          : product.statusLabel === "Disponivel agora"
+            ? Math.max(1, 5 - (index % 3))
+            : 0,
+    }),
+  );
 
   return {
     _id: `produto-${product.id}`,
@@ -208,13 +219,9 @@ function toSanityProductDoc(product: (typeof productGrid)[number], image: Sanity
     originalPrice: product.originalPrice ?? null,
     image: createImageReference(image),
     category: slugReference(categoryId),
-    sizes: availability[0] ? [availability[0]] : [],
-    colors: availability[1]
-      ? availability[1]
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean)
-      : [],
+    variants,
+    sizes: product.sizes ?? variants.map((variant) => variant.size).filter(Boolean),
+    colors: product.colors ?? variants.map((variant) => variant.color).filter(Boolean),
     statusLabel: product.statusLabel,
     featured: Boolean(product.featured),
     order:

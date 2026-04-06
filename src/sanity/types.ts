@@ -90,6 +90,11 @@ export type SanityProductDoc = {
   imagePosition?: string;
   categorySlug?: string;
   categoryTitle?: string;
+  variants?: Array<{
+    size?: string;
+    color?: string;
+    stock?: number | null;
+  }>;
   sizes?: string[];
   colors?: string[];
   statusLabel?: string;

@@ -12,6 +12,7 @@ import {
   buildProductInquiryMessage,
   buildWhatsAppLink,
   formatCurrency,
+  getProductVariants,
   productGrid,
   type CatalogProduct,
 } from "@/data/product";
@@ -57,11 +58,87 @@ export function getSiteContent() {
   };
 }
 
+const SIZE_TOKENS = new Set([
+  "PP",
+  "P",
+  "M",
+  "G",
+  "GG",
+  "XG",
+  "U",
+  "UNICO",
+  "ÚNICO",
+]);
+
+function normalizeVariationText(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function splitStructuredVariationValues(values?: string[]) {
+  const items: string[] = [];
+
+  for (const value of values ?? []) {
+    const cleanedValue = value.trim();
+    if (!cleanedValue) {
+      continue;
+    }
+
+    const parts = cleanedValue
+      .split(/,|\/|\se\s/i)
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    if (parts.length > 1) {
+      items.push(...parts);
+      continue;
+    }
+
+    const normalizedParts = cleanedValue
+      .split(/\s+/)
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    if (
+      normalizedParts.length > 1 &&
+      normalizedParts.every((part) => SIZE_TOKENS.has(normalizeVariationText(part).toUpperCase()))
+    ) {
+      items.push(...normalizedParts);
+      continue;
+    }
+
+    items.push(cleanedValue);
+  }
+
+  return Array.from(new Set(items.map((item) => item.trim()).filter(Boolean)));
+}
+
 function mapSanityProduct(product: SanityProductDoc): CatalogProduct | null {
   if (!product.name || !product.slug) {
     return null;
   }
 
+  const variants = getProductVariants({
+    variants: product.variants,
+    sizes: splitStructuredVariationValues(product.sizes),
+    colors: splitStructuredVariationValues(product.colors),
+  });
+  const sizes = Array.from(
+    new Set(
+      variants
+        .map((variant) => variant.size?.trim())
+        .filter((value): value is string => Boolean(value)),
+    ),
+  );
+  const colors = Array.from(
+    new Set(
+      variants
+        .map((variant) => variant.color?.trim())
+        .filter((value): value is string => Boolean(value)),
+    ),
+  );
   const galleryImages = (product.images ?? [])
     .map((image) => ({
       alt: image.alt?.trim() ?? product.name ?? "",
@@ -93,10 +170,13 @@ function mapSanityProduct(product: SanityProductDoc): CatalogProduct | null {
       product.categoryTitle === "Feminino" || product.categoryTitle === "Masculino"
         ? product.categoryTitle
         : undefined,
+    variants,
+    sizes,
+    colors,
     availability: [
-      ...(product.sizes ?? []),
-      ...(product.colors?.length ? [product.colors.join(", ")] : []),
-    ].filter(Boolean),
+      ...(sizes.length ? [sizes.join(", ")] : []),
+      ...(colors.length ? [colors.join(", ")] : []),
+    ],
     statusLabel: product.statusLabel ?? undefined,
     featured: product.featured ?? false,
   };

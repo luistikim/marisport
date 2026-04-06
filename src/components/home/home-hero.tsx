@@ -31,10 +31,10 @@ export function HomeHero({
   stats,
 }: HomeHeroProps) {
   return (
-    <section className="px-5 pt-6 sm:px-8 lg:px-12">
-      <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1.08fr_0.92fr]">
-        <article className="relative overflow-hidden rounded-[2.4rem] bg-[linear-gradient(145deg,#132022_0%,#203235_45%,#35555a_100%)] p-7 text-white shadow-[0_22px_60px_rgba(19,32,34,0.22)] sm:p-10">
-          <div className="absolute inset-0 hero-grid opacity-20" aria-hidden="true" />
+    <section className="px-5 pb-3 pt-8 sm:px-8 sm:pt-10 lg:px-12 lg:pt-12">
+      <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:gap-6">
+        <article className="relative overflow-hidden rounded-[2.4rem] bg-[linear-gradient(145deg,#132022_0%,#203235_45%,#35555a_100%)] p-7 text-white shadow-[0_22px_60px_rgba(19,32,34,0.22)] sm:p-10 lg:min-h-[33rem] lg:p-12">
+          <div className="absolute inset-0 hero-grid opacity-18" aria-hidden="true" />
           <div className="relative z-10">
             <span className="inline-flex rounded-full bg-accent px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-surface-strong">
               {eyebrow}
@@ -65,7 +65,7 @@ export function HomeHero({
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
               {stats.map((item) => (
-                <div key={item.label} className="rounded-[1.4rem] border border-white/10 bg-white/8 p-4">
+                <div key={item.label} className="rounded-[1.4rem] border border-white/10 bg-white/8 p-4 shadow-[0_8px_18px_rgba(0,0,0,0.08)]">
                   <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent-soft">
                     {item.label}
                   </p>
@@ -77,7 +77,7 @@ export function HomeHero({
         </article>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-          <article className="section-shell rounded-[2rem] p-6">
+          <article className="section-shell h-full rounded-[2rem] p-6 sm:p-7">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#6a8271]">
@@ -96,7 +96,7 @@ export function HomeHero({
             </p>
           </article>
 
-          <article className="flex min-h-[13rem] items-center justify-center overflow-hidden rounded-[2rem] border border-[#d9e5dc] bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf7_48%,#e2eddb_100%)] p-6 shadow-[0_16px_36px_rgba(19,38,59,0.08)] sm:min-h-[16rem] sm:p-8">
+          <article className="flex min-h-[14rem] items-center justify-center overflow-hidden rounded-[2rem] border border-[#d9e5dc] bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf7_48%,#e2eddb_100%)] p-6 shadow-[0_16px_36px_rgba(19,38,59,0.08)] sm:min-h-[16rem] sm:p-8 lg:min-h-[18rem]">
             <Image
               src="/logo-marisport.png"
               alt="Mari Sport"

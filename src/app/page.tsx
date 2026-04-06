@@ -1,14 +1,9 @@
-import { getFeaturedProducts, getHomeContent } from "@/lib/content";
+import { getHomeContent } from "@/lib/content";
 import { BenefitsSection } from "@/components/home/benefits-section";
-import { CategorySection } from "@/components/home/category-section";
 import { HomeHero } from "@/components/home/home-hero";
-import { ProductGridSection } from "@/components/home/product-grid-section";
 
 export default async function Home() {
-  const [home, featuredProducts] = await Promise.all([
-    getHomeContent(),
-    getFeaturedProducts(),
-  ]);
+  const home = await getHomeContent();
 
   return (
     <main className="space-y-8 pb-10">
@@ -25,15 +20,6 @@ export default async function Home() {
       />
 
       <BenefitsSection items={home.benefits.items} />
-
-      <CategorySection
-        eyebrow={home.catalog.eyebrow}
-        title={home.catalog.title}
-        ctaLabel={home.catalog.ctaLabel}
-        sections={home.catalog.sections}
-      />
-
-      <ProductGridSection products={featuredProducts} />
     </main>
   );
 }

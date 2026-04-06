@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
-import { SectionHero } from "@/components/section-hero";
 import { buildWhatsAppLink } from "@/data/product";
 import {
   getAboutContent,
@@ -53,61 +52,21 @@ export default async function ProdutosPage() {
 
   return (
     <main>
-      <SectionHero
-        eyebrow="Catalogo"
-        title="Moda fitness masculina e feminina em uma vitrine clara e premium."
-        description="Veja os produtos organizados por categoria, compare estilos e fale com a equipe para consultar disponibilidade, tamanhos e cores."
-        primaryAction={{ label: "Falar no WhatsApp", href: whatsappLink, external: true }}
-        secondaryAction={{ label: "Ver Instagram", href: contact.instagramUrl, external: true }}
-      />
-
-      <section className="px-5 pb-5 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-[#d9e5dc] bg-white p-5 shadow-[0_16px_36px_rgba(19,38,59,0.06)] sm:p-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-                Navegacao rapida
-              </p>
-              <p className="mt-2 text-sm leading-7 text-[#56686c]">
-                Explore o catalogo por categoria ou fale direto com a Mari Sport.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="#feminino"
-                className="rounded-full border border-[#d9e5dc] bg-[#f8fbf8] px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
-              >
-                Feminino
-              </Link>
-              <Link
-                href="#masculino"
-                className="rounded-full border border-[#d9e5dc] bg-[#f8fbf8] px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-surface-strong"
-              >
-                Masculino
-              </Link>
-              <Link
-                href={whatsappLink}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full bg-[#dff1cf] px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#27402c] hover:bg-[#cee4b6]"
-              >
-                Falar no WhatsApp
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {orderedSections.map((section) => (
-        <section key={section.id} id={section.id} className="px-5 pb-8 sm:px-8 lg:px-12">
+        <section
+          key={section.id}
+          id={section.id}
+          className="px-5 pb-14 sm:px-8 sm:pb-18 lg:px-12"
+        >
           <div className="mx-auto max-w-6xl">
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+            <div className="mb-7 sm:mb-9">
+              <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-accent">
                 {section.title}
               </p>
+              <div className="mt-3 h-px w-8 bg-accent/40" />
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
               {section.products.map((product) => (
                 <ProductCard key={product.id} product={product} compact />
               ))}

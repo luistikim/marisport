@@ -19,29 +19,37 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
 
   if (compact) {
     return (
-      <article className="group overflow-hidden rounded-[1.7rem] border border-[#d8e4db] bg-white shadow-[0_14px_34px_rgba(19,38,59,0.07)] transition-transform duration-300 hover:-translate-y-1">
+      <article className="group relative overflow-hidden rounded-[1rem] bg-[#f0f2f0] shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-[box-shadow,transform] duration-300 ease-out hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] active:scale-[0.97] sm:rounded-[1.2rem]">
         <Link
           href={detailHref}
           aria-label={`Ver detalhes de ${product.name}`}
           className="block"
         >
           {product.imageSrc ? (
-            <div className="relative aspect-[1/1.12] overflow-hidden bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf6_48%,#e6efe2_100%)]">
+            <div className="relative aspect-[3/4] overflow-hidden">
               <Image
                 src={product.imageSrc}
                 alt={product.name}
                 fill
                 className={
                   product.imageFit === "contain"
-                    ? "object-contain p-2.5 transition-transform duration-500 group-hover:scale-[1.03]"
-                    : "object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    ? "object-contain p-3 transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+                    : "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.07]"
                 }
-                style={{ objectPosition: product.imagePosition ?? "center" }}
+                style={{ objectPosition: product.imagePosition ?? "center top" }}
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               />
+              {/* Overlay hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              {/* Nome no hover */}
+              <div className="absolute inset-x-0 bottom-0 translate-y-2 p-4 opacity-0 transition-[opacity,transform] duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+                <p className="truncate text-[10px] font-bold uppercase tracking-[0.18em] text-white drop-shadow-sm sm:text-[11px]">
+                  {product.name}
+                </p>
+              </div>
             </div>
           ) : (
-            <div className="flex aspect-[1/1.12] items-center justify-center bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf6_48%,#e6efe2_100%)]" />
+            <div className="flex aspect-[3/4] items-center justify-center bg-[#e8ebe8]" />
           )}
         </Link>
       </article>

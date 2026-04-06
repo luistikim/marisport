@@ -19,38 +19,42 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
 
   if (compact) {
     return (
-      <article className="group relative overflow-hidden rounded-[1rem] bg-[#f0f2f0] shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-[box-shadow,transform] duration-300 ease-out hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] active:scale-[0.97] sm:rounded-[1.2rem]">
+      <article className="group h-full overflow-hidden rounded-[1.25rem] border border-[#d9e5dc] bg-white shadow-[0_10px_26px_rgba(19,38,59,0.06)] transition-[box-shadow,transform] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_42px_rgba(19,38,59,0.1)] sm:rounded-[1.4rem]">
         <Link
           href={detailHref}
           aria-label={`Ver detalhes de ${product.name}`}
-          className="block"
+          className="block h-full"
         >
-          {product.imageSrc ? (
-            <div className="relative aspect-[3/4] overflow-hidden">
+          <div className="relative aspect-square overflow-hidden bg-[linear-gradient(135deg,#eef4ef_0%,#f7faf6_48%,#e6efe2_100%)]">
+            {product.imageSrc ? (
               <Image
                 src={product.imageSrc}
                 alt={product.name}
                 fill
                 className={
                   product.imageFit === "contain"
-                    ? "object-contain p-3 transition-transform duration-500 ease-out group-hover:scale-[1.05]"
-                    : "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.07]"
+                    ? "object-contain p-3 transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                    : "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
                 }
-                style={{ objectPosition: product.imagePosition ?? "center top" }}
+                style={{ objectPosition: product.imagePosition ?? "center" }}
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               />
-              {/* Overlay hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              {/* Nome no hover */}
-              <div className="absolute inset-x-0 bottom-0 translate-y-2 p-4 opacity-0 transition-[opacity,transform] duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                <p className="truncate text-[10px] font-bold uppercase tracking-[0.18em] text-white drop-shadow-sm sm:text-[11px]">
-                  {product.name}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="flex aspect-[3/4] items-center justify-center bg-[#e8ebe8]" />
-          )}
+            ) : null}
+          </div>
+
+          <div className="space-y-2 px-3 pb-3 pt-3 sm:px-4 sm:pb-4">
+            <h3 className="text-[0.95rem] font-semibold leading-snug text-surface-strong sm:text-[1rem]">
+              {product.name}
+            </h3>
+            {product.category ? (
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#6d8272]">
+                {product.category}
+              </p>
+            ) : null}
+            <p className="text-[0.98rem] font-black uppercase leading-none text-surface-strong sm:text-[1.05rem]">
+              {hasPrice && price !== null ? formatCurrency(price) : "Consulte"}
+            </p>
+          </div>
         </Link>
       </article>
     );

@@ -90,6 +90,10 @@ function getWebhookLockKey(paymentId: string) {
   return `webhook:mercado-pago:lock:${paymentId}:approved`;
 }
 
+function getWebhookProcessingKey(paymentId: string) {
+  return `webhook:mercado-pago:processing:${paymentId}`;
+}
+
 export async function saveOrder(order: OrderRecord) {
   const payload = JSON.stringify(order);
   const response = await runKvCommand(["SET", getOrderKey(order.id), payload]);
@@ -158,8 +162,33 @@ export async function acquireWebhookEventLock(paymentId: string) {
   return response.result === "OK";
 }
 
+export async function claimWebhookEventProcessing(paymentId: string) {
+  const response = await runKvCommand([
+    "SET",
+    getWebhookProcessingKey(paymentId),
+    new Date().toISOString(),
+    "NX",
+    "EX",
+    900,
+  ]);
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  return response.result === "OK";
+}
+
 export async function releaseWebhookEventLock(paymentId: string) {
   const response = await runKvCommand(["DEL", getWebhookLockKey(paymentId)]);
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+}
+
+export async function releaseWebhookEventProcessing(paymentId: string) {
+  const response = await runKvCommand(["DEL", getWebhookProcessingKey(paymentId)]);
 
   if (response.error) {
     throw new Error(response.error);

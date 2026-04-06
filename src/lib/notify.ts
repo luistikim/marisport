@@ -23,6 +23,20 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#39;");
 }
 
+function formatItemVariation(item: OrderRecord["items"][number]) {
+  const parts = [];
+
+  if (item.selectedSize) {
+    parts.push(`Tamanho: ${item.selectedSize}`);
+  }
+
+  if (item.selectedColor) {
+    parts.push(`Cor: ${item.selectedColor}`);
+  }
+
+  return parts.join(" | ");
+}
+
 function renderOrderItems(order: OrderRecord) {
   return order.items
     .map(
@@ -31,6 +45,7 @@ function renderOrderItems(order: OrderRecord) {
           ${escapeHtml(item.name)} - ${item.quantity}x ${
             item.unitPrice === null ? "Consulte disponibilidade" : formatCurrency(item.unitPrice)
           }
+          ${formatItemVariation(item) ? `<br /><small>${escapeHtml(formatItemVariation(item))}</small>` : ""}
         </li>
       `,
     )
@@ -71,7 +86,9 @@ export function buildOrderNotificationEmail(order: OrderRecord) {
     "Itens:",
     ...order.items.map(
       (item) =>
-        `- ${item.quantity}x ${item.name} (${
+        `- ${item.quantity}x ${item.name}${
+          formatItemVariation(item) ? ` [${formatItemVariation(item)}]` : ""
+        } (${
           item.unitPrice === null ? "Consulte disponibilidade" : formatCurrency(item.unitPrice)
         })`,
     ),

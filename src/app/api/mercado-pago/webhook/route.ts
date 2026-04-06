@@ -2,16 +2,29 @@ import { NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import {
   acquireWebhookEventLock,
+  claimWebhookEventProcessing,
   getOrder,
   getOrderIdByPayment,
   isWebhookEventProcessed,
+  releaseWebhookEventProcessing,
   linkPaymentToOrder,
-  mapMercadoPagoStatus,
+  type OrderRecord,
   markWebhookEventProcessed,
   releaseWebhookEventLock,
   saveOrder,
 } from "@/lib/orders";
 import { notifyOrderOwner } from "@/lib/notify";
+import {
+  buildMercadoPagoItemPayload,
+  reconcileMercadoPagoItems,
+} from "@/lib/mercado-pago-items";
+import {
+  buildPaymentStatusUpdate,
+  decideMercadoPagoStatusTransition,
+  fetchMercadoPagoPayment,
+  isFinalMercadoPagoOrderStatus,
+  type MercadoPagoPayment,
+} from "@/lib/mercado-pago-payment";
 
 type MercadoPagoWebhookBody = {
   action?: string;
@@ -24,30 +37,23 @@ type MercadoPagoWebhookBody = {
   type?: string;
 };
 
-type MercadoPagoPayment = {
-  id?: number | string;
-  status?: string;
-  status_detail?: string;
-  external_reference?: string;
-  date_approved?: string;
-  payer?: {
-    email?: string;
-    first_name?: string;
-    last_name?: string;
-    phone?: {
-      area_code?: string;
-      number?: string;
-    };
-    identification?: {
-      type?: string;
-      number?: string;
-    };
-  };
-};
-
 type MercadoPagoWebhookValidationResult =
   | { ok: true }
   | { ok: false; response: Response };
+
+type LogLevel = "info" | "warn" | "error";
+
+function logMercadoPagoWebhook(
+  level: LogLevel,
+  step: string,
+  details: Record<string, unknown> = {},
+) {
+  console[level]("[mercado-pago:webhook]", {
+    scope: "mercado_pago_webhook",
+    step,
+    ...details,
+  });
+}
 
 function parseMercadoPagoSignature(signature: string) {
   const values: Record<string, string> = {};
@@ -143,34 +149,76 @@ function getOrderIdFromExternalReference(externalReference?: string) {
   return orderId || null;
 }
 
-async function fetchPayment(paymentId: string) {
-  const accessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+function getPaymentItems(payment: MercadoPagoPayment) {
+  return payment.additional_info?.items ?? [];
+}
 
-  if (!accessToken) {
-    throw new Error("Configure MERCADO_PAGO_ACCESS_TOKEN para processar webhooks.");
+function buildPaymentState(
+  order: Awaited<ReturnType<typeof getOrder>>,
+  payment: MercadoPagoPayment,
+) {
+  if (!order) {
+    return null;
   }
 
-  const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-  });
+  const paymentUpdate = buildPaymentStatusUpdate(payment, order.paymentApprovedAt);
 
-  let data: MercadoPagoPayment = {};
+  const expectedItems = order.items.map((item) =>
+    buildMercadoPagoItemPayload({
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      selectedSize: item.selectedSize,
+      selectedColor: item.selectedColor,
+    }),
+  );
 
-  try {
-    data = (await response.json()) as MercadoPagoPayment;
-  } catch {
-    data = {};
-  }
+  const reconciliation = reconcileMercadoPagoItems(order.items, getPaymentItems(payment));
 
-  if (!response.ok) {
-    throw new Error("Mercado Pago nao retornou os dados do pagamento.");
-  }
+  return {
+    ...paymentUpdate,
+    expectedItems,
+    reconciliation,
+    customer: mergeCustomer(order.customer ?? {}, buildCustomerFromPayment(payment)),
+  };
+}
 
-  return data;
+function isOrderAlreadyApplied(
+  order: NonNullable<Awaited<ReturnType<typeof getOrder>>>,
+  paymentState: NonNullable<ReturnType<typeof buildPaymentState>>,
+) {
+  return (
+    order.paymentId === paymentState.paymentId &&
+    order.mercadoPagoPaymentId === paymentState.mercadoPagoPaymentId &&
+    order.paymentStatus === paymentState.paymentStatus &&
+    order.status === paymentState.orderStatus
+  );
+}
+
+function buildPersistedOrder(
+  order: NonNullable<Awaited<ReturnType<typeof getOrder>>>,
+  paymentState: NonNullable<ReturnType<typeof buildPaymentState>>,
+  nextStatus: OrderRecord["status"],
+): OrderRecord {
+  return {
+    ...order,
+    status: nextStatus,
+    paymentId: paymentState.paymentId,
+    mercadoPagoPaymentId: paymentState.mercadoPagoPaymentId,
+    paymentStatus: paymentState.paymentStatus,
+    paymentStatusDetail: paymentState.paymentStatusDetail,
+    paymentApprovedAt: paymentState.paymentApprovedAt,
+    customer: paymentState.customer,
+    notificationStatus:
+      paymentState.orderStatus === "approved"
+        ? order.notificationStatus === "sent"
+          ? "sent"
+          : "pending"
+        : "skipped",
+    updatedAt: new Date().toISOString(),
+  };
 }
 
 function buildCustomerFromPayment(payment: MercadoPagoPayment) {
@@ -215,26 +263,49 @@ export async function POST(request: Request) {
     const url = new URL(request.url);
     const body = (await request.json().catch(() => ({}))) as MercadoPagoWebhookBody;
 
+    logMercadoPagoWebhook("info", "webhook_received", {
+      url: request.url,
+      body,
+    });
+
     const validationResult = validateMercadoPagoWebhook(request, body);
 
     if (!validationResult.ok) {
+      logMercadoPagoWebhook("warn", "signature_invalid", {
+        url: request.url,
+      });
       return validationResult.response;
     }
 
+    logMercadoPagoWebhook("info", "signature_validated", {
+      type: body.type ?? "unknown",
+      dataId: body.data?.id?.toString() ?? body.id?.toString() ?? url.searchParams.get("data.id") ?? url.searchParams.get("id") ?? null,
+    });
+
     if (body.type && body.type !== "payment") {
+      logMercadoPagoWebhook("info", "event_ignored", {
+        type: body.type,
+      });
       return NextResponse.json({ received: true });
     }
 
     const paymentId = getPaymentId(body, url);
 
     if (!paymentId) {
+      logMercadoPagoWebhook("warn", "payment_id_missing", {
+        message: "Webhook recebido sem paymentId.",
+      });
       return NextResponse.json({ received: true });
     }
 
+    logMercadoPagoWebhook("info", "payment_id_found", {
+      paymentId,
+    });
+
     if (await isWebhookEventProcessed(paymentId)) {
-      console.info("[mercado-pago:webhook]", {
+      logMercadoPagoWebhook("info", "duplicate_detected", {
         paymentId,
-        action: "already-processed",
+        reason: "processed",
       });
 
       return NextResponse.json({ received: true });
@@ -243,167 +314,307 @@ export async function POST(request: Request) {
     const lockAcquired = await acquireWebhookEventLock(paymentId);
 
     if (!lockAcquired) {
-      console.info("[mercado-pago:webhook]", {
+      logMercadoPagoWebhook("info", "duplicate_detected", {
         paymentId,
-        action: "processing-locked",
+        reason: "lock_busy",
       });
 
       return NextResponse.json({ received: true });
     }
 
-    try {
-      const payment = await fetchPayment(paymentId);
-      const externalReference = payment.external_reference;
+    const processingClaimed = await claimWebhookEventProcessing(paymentId);
 
-      if (payment.status !== "approved") {
-        console.info("[mercado-pago:webhook]", {
+    if (!processingClaimed) {
+      logMercadoPagoWebhook("info", "duplicate_detected", {
+        paymentId,
+        reason: "processing_claimed",
+      });
+
+      try {
+        await releaseWebhookEventLock(paymentId);
+      } catch (error) {
+        logMercadoPagoWebhook("warn", "lock_release_failed", {
           paymentId,
-          status: payment.status ?? "unknown",
-          action: "ignored-non-approved",
+          error: error instanceof Error ? error.message : "unknown-error",
         });
-
-        return NextResponse.json({ received: true });
       }
 
+      return NextResponse.json({ received: true });
+    }
+
+    try {
+      logMercadoPagoWebhook("info", "payment_fetch_started", {
+        paymentId,
+      });
+
+      const accessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+
+      if (!accessToken) {
+        throw new Error("Configure MERCADO_PAGO_ACCESS_TOKEN para processar webhooks.");
+      }
+
+      const payment = await fetchMercadoPagoPayment(paymentId, {
+        accessToken,
+      });
+      const paymentItems = getPaymentItems(payment);
+      const paymentStatus = payment.status ?? "unknown";
+
+      logMercadoPagoWebhook("info", "payment_fetched", {
+        paymentId,
+        status: paymentStatus,
+        statusDetail: payment.status_detail ?? "unknown",
+        itemsCount: paymentItems.length,
+        externalReference: payment.external_reference ?? null,
+      });
+
+      logMercadoPagoWebhook("info", "payment_context_loaded", {
+        paymentId,
+        status: paymentStatus,
+      });
+
       const orderId =
-        getOrderIdFromExternalReference(externalReference) ??
+        getOrderIdFromExternalReference(payment.external_reference) ??
         (await getOrderIdByPayment(paymentId));
 
       if (!orderId) {
+        logMercadoPagoWebhook("warn", "order_not_found", {
+          paymentId,
+          status: paymentStatus,
+          externalReference: payment.external_reference ?? null,
+        });
+
         return NextResponse.json({ received: true });
       }
 
       const order = await getOrder(orderId);
 
       if (!order) {
+        logMercadoPagoWebhook("warn", "order_missing", {
+          paymentId,
+          orderId,
+        });
         return NextResponse.json({ received: true });
       }
 
       await linkPaymentToOrder(paymentId, orderId);
 
-      const paymentApprovedAt = payment.date_approved ?? new Date().toISOString();
-      const customer = mergeCustomer(order.customer ?? {}, buildCustomerFromPayment(payment));
-      const mercadoPagoPaymentId = String(payment.id ?? paymentId);
-      const orderStatus = mapMercadoPagoStatus(payment.status);
+      logMercadoPagoWebhook("info", "payment_linked_to_order", {
+        paymentId,
+        orderId,
+      });
 
-      if (order.notificationStatus === "sent") {
-        const notifiedAt = order.notifiedAt ?? new Date().toISOString();
+      const paymentState = buildPaymentState(order, payment);
 
-        await saveOrder({
-          ...order,
-          status: orderStatus,
+      if (!paymentState) {
+        logMercadoPagoWebhook("error", "payment_state_unavailable", {
           paymentId,
-          mercadoPagoPaymentId,
-          paymentStatus: payment.status,
-          paymentStatusDetail: payment.status_detail,
-          paymentApprovedAt,
-          customer,
-          notifiedAt,
-          notificationStatus: "sent",
-          updatedAt: new Date().toISOString(),
+          orderId,
+        });
+        return NextResponse.json({ received: true });
+      }
+
+      if (paymentState.reconciliation.matched) {
+        logMercadoPagoWebhook("info", "reconciliation_ok", {
+          paymentId,
+          orderId,
+          itemsCount: paymentState.reconciliation.expectedCount,
+        });
+      } else {
+        logMercadoPagoWebhook("warn", "reconciliation_divergence", {
+          paymentId,
+          orderId,
+          itemsCount: paymentState.reconciliation.expectedCount,
+          paymentItemsCount: paymentState.reconciliation.paymentCount,
+          differences: paymentState.reconciliation.differences,
+        });
+      }
+
+      const statusDecision = decideMercadoPagoStatusTransition(
+        order.status,
+        paymentState.orderStatus,
+        "webhook",
+      );
+
+      if (statusDecision.action === "ignore") {
+        logMercadoPagoWebhook("warn", "status_transition_ignored", {
+          paymentId,
+          orderId,
+          previousStatus: statusDecision.currentStatus,
+          nextStatus: statusDecision.nextStatus,
+          source: statusDecision.source,
+          reason: statusDecision.reason,
+          message: statusDecision.message,
+        });
+
+        if (isFinalMercadoPagoOrderStatus(order.status)) {
+          try {
+            await markWebhookEventProcessed(paymentId);
+            logMercadoPagoWebhook("info", "event_marked_processed", {
+              paymentId,
+              orderId,
+              status: order.status,
+              reason: "final_status_preserved",
+            });
+          } catch (error) {
+            logMercadoPagoWebhook("error", "event_marked_process_failed", {
+              paymentId,
+              orderId,
+              error: error instanceof Error ? error.message : "unknown-error",
+            });
+          }
+        } else {
+          logMercadoPagoWebhook("info", "event_not_marked_processed", {
+            paymentId,
+            orderId,
+            status: order.status,
+            reason: "non_final_status_requires_future_retry",
+          });
+        }
+
+        return NextResponse.json({ received: true });
+      }
+
+      if (isOrderAlreadyApplied(order, paymentState)) {
+        logMercadoPagoWebhook("info", "decision_already_applied", {
+          paymentId,
+          orderId,
+          status: paymentState.paymentStatus,
         });
 
         await markWebhookEventProcessed(paymentId);
-        console.info("[mercado-pago:webhook]", {
-          orderId,
+        logMercadoPagoWebhook("info", "event_marked_processed", {
           paymentId,
-          action: "notification-already-sent",
+          orderId,
+          status: paymentState.paymentStatus,
         });
 
         return NextResponse.json({ received: true });
       }
 
-      await saveOrder({
-        ...order,
-        status: orderStatus,
+      const persistedOrder = buildPersistedOrder(
+        order,
+        paymentState,
+        statusDecision.nextStatus,
+      );
+      await saveOrder(persistedOrder);
+      logMercadoPagoWebhook("info", "status_transition_applied", {
         paymentId,
-        mercadoPagoPaymentId,
-        paymentStatus: payment.status,
-        paymentStatusDetail: payment.status_detail,
-        paymentApprovedAt,
-        customer,
-        notificationStatus: "pending",
-        updatedAt: new Date().toISOString(),
+        orderId,
+        previousStatus: statusDecision.currentStatus,
+        nextStatus: persistedOrder.status,
+        source: statusDecision.source,
+        reason: statusDecision.reason,
+        paymentStatus: persistedOrder.paymentStatus,
       });
-
-      const notificationResult = await notifyOrderOwner({
-        ...order,
-        status: "approved",
+      logMercadoPagoWebhook("info", "order_persisted", {
         paymentId,
-        mercadoPagoPaymentId,
-        paymentStatus: payment.status,
-        paymentStatusDetail: payment.status_detail,
-        paymentApprovedAt,
-        customer,
-        notificationStatus: "pending",
-        updatedAt: new Date().toISOString(),
+        orderId,
+        previousStatus: statusDecision.currentStatus,
+        nextStatus: persistedOrder.status,
+        source: statusDecision.source,
+        reason: statusDecision.reason,
+        paymentStatus: persistedOrder.paymentStatus,
       });
-
-      const notificationStatus = notificationResult.status;
-      const notifiedAt =
-        notificationStatus === "sent" ? new Date().toISOString() : order.notifiedAt;
-
-      await saveOrder({
-        ...order,
-        status: orderStatus,
-        paymentId,
-        mercadoPagoPaymentId,
-        paymentStatus: payment.status,
-        paymentStatusDetail: payment.status_detail,
-        paymentApprovedAt,
-        customer,
-        notifiedAt,
-        notificationStatus,
-        updatedAt: new Date().toISOString(),
-      });
-
-      if (notificationStatus === "sent") {
-        console.info("[mercado-pago:webhook]", {
-          orderId,
-          paymentId,
-          action: "notification-sent",
-        });
-      }
-
-      if (notificationStatus === "skipped") {
-        console.info("[mercado-pago:webhook]", {
-          orderId,
-          paymentId,
-          action: "notification-skipped",
-          reason: notificationResult.reason,
-        });
-      }
-
-      if (notificationStatus === "failed") {
-        console.error("[mercado-pago:webhook]", {
-          orderId,
-          paymentId,
-          action: "notification-failed",
-          error: notificationResult.error,
-        });
-
-        await markWebhookEventProcessed(paymentId);
-
-        return NextResponse.json({ received: true });
-      }
 
       await markWebhookEventProcessed(paymentId);
+      logMercadoPagoWebhook("info", "event_marked_processed", {
+        paymentId,
+        orderId,
+        status: persistedOrder.status,
+      });
+
+      if (paymentState.orderStatus !== "approved") {
+        logMercadoPagoWebhook("info", "decision_status_persisted", {
+          paymentId,
+          orderId,
+          status: persistedOrder.status,
+        });
+        return NextResponse.json({ received: true });
+      }
+
+      const notificationResult = await notifyOrderOwner({
+        ...persistedOrder,
+        status: "approved",
+        notificationStatus: "pending",
+      });
+
+      const notifiedAt =
+        notificationResult.status === "sent"
+          ? new Date().toISOString()
+          : persistedOrder.notifiedAt;
+
+      const finalOrder = {
+        ...persistedOrder,
+        notifiedAt,
+        notificationStatus: notificationResult.status,
+        updatedAt: new Date().toISOString(),
+      };
+
+      try {
+        await saveOrder(finalOrder);
+      } catch (error) {
+        logMercadoPagoWebhook("error", "notification_state_persist_failed", {
+          paymentId,
+          orderId,
+          error: error instanceof Error ? error.message : "unknown-error",
+        });
+        return NextResponse.json({ received: true });
+      }
+
+      if (notificationResult.status === "sent") {
+        logMercadoPagoWebhook("info", "decision_notification_sent", {
+          paymentId,
+          orderId,
+          emailId: notificationResult.emailId ?? null,
+        });
+      } else if (notificationResult.status === "skipped") {
+        logMercadoPagoWebhook("info", "decision_notification_skipped", {
+          paymentId,
+          orderId,
+          reason: notificationResult.reason,
+        });
+      } else {
+        logMercadoPagoWebhook("error", "decision_notification_failed", {
+          paymentId,
+          orderId,
+          error: notificationResult.error,
+        });
+      }
 
       return NextResponse.json({ received: true });
+    } catch (error) {
+      logMercadoPagoWebhook("error", "webhook_error", {
+        paymentId,
+        error: error instanceof Error ? error.message : "unknown-error",
+      });
+
+      return NextResponse.json(
+        {
+          error: "Nao foi possivel processar o webhook.",
+        },
+        { status: 500 },
+      );
     } finally {
+      try {
+        await releaseWebhookEventProcessing(paymentId);
+      } catch (error) {
+        logMercadoPagoWebhook("warn", "processing_release_failed", {
+          paymentId,
+          error: error instanceof Error ? error.message : "unknown-error",
+        });
+      }
+
       try {
         await releaseWebhookEventLock(paymentId);
       } catch (error) {
-        console.warn("[mercado-pago:webhook]", {
+        logMercadoPagoWebhook("warn", "lock_release_failed", {
           paymentId,
-          action: "lock-release-failed",
           error: error instanceof Error ? error.message : "unknown-error",
         });
       }
     }
   } catch (error) {
-    console.error("[mercado-pago:webhook]", {
-      action: "failed",
+    logMercadoPagoWebhook("error", "webhook_failed", {
       error: error instanceof Error ? error.message : "unknown-error",
     });
 

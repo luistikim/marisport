@@ -11,8 +11,13 @@ type CheckoutStatusTrackerProps = {
   fallbackStatus: "approved" | "pending" | "rejected";
 };
 
-const POLL_INTERVAL_MS = 5000;
-const MAX_POLL_ATTEMPTS = 36;
+type ResolvePaymentResponse = OrderRecord & {
+  resolvedFrom?: "cache" | "mercado_pago";
+  message?: string;
+};
+
+const FALLBACK_INTERVAL_MS = 2500;
+const MAX_FALLBACK_ATTEMPTS = 3;
 
 function getStatusContent(status: OrderRecord["status"] | "rejected") {
   switch (status) {
@@ -40,6 +45,20 @@ function getStatusContent(status: OrderRecord["status"] | "rejected") {
   }
 }
 
+function getOrderItemVariationLabel(item: OrderRecord["items"][number]) {
+  const parts = [];
+
+  if (item.selectedSize) {
+    parts.push(`Tamanho: ${item.selectedSize}`);
+  }
+
+  if (item.selectedColor) {
+    parts.push(`Cor: ${item.selectedColor}`);
+  }
+
+  return parts.join(" | ");
+}
+
 export function CheckoutStatusTracker({
   fallbackStatus,
 }: CheckoutStatusTrackerProps) {
@@ -51,7 +70,7 @@ export function CheckoutStatusTracker({
   const pollTimeoutRef = useRef<number | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const isStoppedRef = useRef(false);
-  const pollAttemptsRef = useRef(0);
+  const fallbackAttemptsRef = useRef(0);
   const clearCartRef = useRef(clearCart);
   const orderId = searchParams.get("order_id");
   const paymentId = searchParams.get("payment_id");
@@ -62,7 +81,7 @@ export function CheckoutStatusTracker({
 
   useEffect(() => {
     isStoppedRef.current = false;
-    pollAttemptsRef.current = 0;
+    fallbackAttemptsRef.current = 0;
     setOrder(null);
     setErrorMessage(null);
 
@@ -79,16 +98,16 @@ export function CheckoutStatusTracker({
     }
 
     const scheduleNextPoll = (runPoll: () => Promise<void>) => {
-      pollAttemptsRef.current += 1;
+      fallbackAttemptsRef.current += 1;
 
-      if (pollAttemptsRef.current >= MAX_POLL_ATTEMPTS) {
+      if (fallbackAttemptsRef.current >= MAX_FALLBACK_ATTEMPTS) {
         setErrorMessage(
           "Ainda nao conseguimos confirmar o pagamento. Seu pedido continua salvo e voce pode falar com a loja para verificar o status.",
         );
         return;
       }
 
-      pollTimeoutRef.current = window.setTimeout(runPoll, POLL_INTERVAL_MS);
+      pollTimeoutRef.current = window.setTimeout(runPoll, FALLBACK_INTERVAL_MS);
     };
 
     const runPoll = async () => {
@@ -106,16 +125,21 @@ export function CheckoutStatusTracker({
       abortControllerRef.current = controller;
 
       try {
-        const response = await fetch(
-          orderId
-            ? `/api/orders/${orderId}`
-            : `/api/orders/by-payment/${paymentId}`,
-          {
-            cache: "no-store",
-            signal: controller.signal,
+        const response = await fetch("/api/orders/resolve-payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
-        const data = (await response.json()) as OrderRecord & { error?: string };
+          body: JSON.stringify({
+            orderId: orderId ?? undefined,
+            paymentId: paymentId ?? undefined,
+          }),
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        const data = (await response.json()) as ResolvePaymentResponse & {
+          error?: string;
+        };
 
         if (isStoppedRef.current || activeRequestIdRef.current !== requestId) {
           return;
@@ -138,7 +162,11 @@ export function CheckoutStatusTracker({
           return;
         }
 
-        if (data.status === "created" || data.status === "pending") {
+        if (data.status === "rejected" || data.status === "cancelled") {
+          return;
+        }
+
+        if (data.status === "created" || data.status === "pending" || !data.paymentStatus) {
           scheduleNextPoll(runPoll);
         }
       } catch (error) {
@@ -215,9 +243,16 @@ export function CheckoutStatusTracker({
             </p>
             <div className="mt-4 space-y-2 text-sm text-slate-200">
               {order.items.map((item) => (
-                <p key={item.id}>
-                  {item.quantity}x {item.name}
-                </p>
+                <div key={item.itemKey ?? `${item.id}-${item.selectedSize ?? "no-size"}-${item.selectedColor ?? "no-color"}`}>
+                  <p>
+                    {item.quantity}x {item.name}
+                  </p>
+                  {getOrderItemVariationLabel(item) ? (
+                    <p className="text-xs uppercase tracking-[0.14em] text-slate-300">
+                      {getOrderItemVariationLabel(item)}
+                    </p>
+                  ) : null}
+                </div>
               ))}
             </div>
           </div>

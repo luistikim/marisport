@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import type { CartItem } from "@/components/cart-provider";
 import { calculateSubtotal, saveOrder, type OrderRecord } from "@/lib/orders";
 import { getCatalogProductsNoCache } from "@/lib/content";
+import {
+  buildMercadoPagoItemPayload,
+  normalizeColorLabel,
+} from "@/lib/mercado-pago-items";
 
 type CheckoutRequestItem = {
   id: string;
@@ -40,62 +44,11 @@ function normalizeVariationValue(value?: string) {
   return value?.trim() || undefined;
 }
 
-function normalizeVariationLabel(value?: string) {
-  const normalized = normalizeVariationValue(value);
-
-  if (!normalized) {
-    return undefined;
-  }
-
-  return normalized
-    .toLocaleLowerCase("pt-BR")
-    .split(/\s+/)
-    .map((part) => {
-      if (!part) {
-        return part;
-      }
-
-      return part.charAt(0).toLocaleUpperCase("pt-BR") + part.slice(1);
-    })
-    .join(" ");
-}
-
 function buildCheckoutItemKey(item: CheckoutRequestItem) {
   const size = normalizeVariationValue(item.selectedSize)?.toLocaleLowerCase("pt-BR") ?? "";
   const color = normalizeVariationValue(item.selectedColor)?.toLocaleLowerCase("pt-BR") ?? "";
 
   return [item.id.trim(), size, color].join("::");
-}
-
-function buildVariationTitle(itemName: string, item: CheckoutRequestItem) {
-  const parts = [itemName];
-
-  if (item.selectedSize) {
-    parts.push(normalizeVariationValue(item.selectedSize) ?? "");
-  }
-
-  if (item.selectedColor) {
-    parts.push(normalizeVariationLabel(item.selectedColor) ?? "");
-  }
-
-  return parts.filter(Boolean).join(" - ");
-}
-
-function buildVariationDescription(
-  itemDescription: string,
-  item: CheckoutRequestItem,
-) {
-  const parts = [itemDescription];
-
-  if (item.selectedSize) {
-    parts.push(`Tamanho: ${normalizeVariationValue(item.selectedSize)}`);
-  }
-
-  if (item.selectedColor) {
-    parts.push(`Cor: ${normalizeVariationLabel(item.selectedColor)}`);
-  }
-
-  return parts.filter(Boolean).join(" | ");
 }
 
 function getBaseUrl(request: Request) {
@@ -172,7 +125,7 @@ export async function POST(request: Request) {
     const items: CartItem[] = [];
 
     for (const entry of mergedItemsById.values()) {
-          const product = productById.get(entry.id);
+      const product = productById.get(entry.id);
 
       if (!product) {
         return NextResponse.json(
@@ -191,7 +144,11 @@ export async function POST(request: Request) {
         ...product,
         quantity: entry.quantity,
         selectedSize: normalizeVariationValue(entry.selectedSize),
-        selectedColor: normalizeVariationLabel(entry.selectedColor),
+        selectedColor: normalizeColorLabel(entry.selectedColor),
+        itemKey: buildCheckoutItemKey({
+          ...entry,
+          id: product.id,
+        }),
       } as CartItem);
     }
 
@@ -220,30 +177,17 @@ export async function POST(request: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          items: items.map((item) => ({
-            id: item.id,
-            title:
-              item.selectedSize || item.selectedColor
-                ? buildVariationTitle(item.name, {
-                    id: item.id,
-                    quantity: item.quantity,
-                    selectedSize: item.selectedSize,
-                    selectedColor: item.selectedColor,
-                  })
-                : item.name,
-            quantity: item.quantity,
-            currency_id: "BRL",
-            unit_price: item.unitPrice,
-            description:
-              item.selectedSize || item.selectedColor
-                ? buildVariationDescription(item.description, {
-                    id: item.id,
-                    quantity: item.quantity,
-                    selectedSize: item.selectedSize,
-                    selectedColor: item.selectedColor,
-                  })
-                : item.description,
-          })),
+          items: items.map((item) =>
+            buildMercadoPagoItemPayload({
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+              selectedSize: item.selectedSize,
+              selectedColor: item.selectedColor,
+            }),
+          ),
           back_urls: {
             success: `${baseUrl}/checkout/sucesso?order_id=${orderId}`,
             pending: `${baseUrl}/checkout/pendente?order_id=${orderId}`,

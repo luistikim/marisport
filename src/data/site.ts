@@ -49,7 +49,6 @@ export const navLinks = [
   { href: "/produtos", label: "Produtos" },
   { href: "/quem-somos", label: "Quem Somos" },
   { href: "/contato", label: "Contato" },
-  { href: "/carrinho", label: "Carrinho" },
 ];
 
 export const footerColumns = [
